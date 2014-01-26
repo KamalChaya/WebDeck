@@ -21,7 +21,6 @@
 			for(var i = 2; i < 10; i++){
 				card_map[toString(i)] = i;
 			}
-			
 					
 			//Function: init()
 			//Description: Makes the card div "draggable"
@@ -33,9 +32,9 @@
 				card_array[id].change_opacity();
 			}
 			
-			function make_card(){
+			function make_card(input_letter){
 				//alert('Clicked!');
-				var letter = document.getElementById('card_num_input').value;
+				var letter = input_letter;
 				var new_card = new card(card_map[letter], letter, card_array.length);
 				new_card.create_card();
 				card_array.push(new_card);
@@ -47,6 +46,12 @@
 				place_card(10, 10, new_card.id);
 			}
 
+			//Function: place_card()
+			//Description: Places a card at the given x and y
+			//	relative to the top and left of the screen
+			//Parameters: 	x_pos: x offset of the card
+			//				y_pos: y offest of the card
+			//				card_id: id of the card
 			function place_card(x_pos, y_pos, card_id) {
 				//alert('place_card called on card' + card_id);
 				$('#' + 'card' + card_id).css('position', 'absolute');
@@ -82,7 +87,7 @@
 				//Methods
 					this.change_opacity = change_opacity
 					function change_opacity(){
-						alert("This.id: " + this.id);
+						//alert("This.id: " + this.id);
 						if(this.opacity == 1){
 							this.opacity = 0;
 							document.getElementById('card' + this.id).style.background = 'black';
@@ -104,7 +109,7 @@
 		<div id = 'make_card'>
 			<div id = 'card_form'>
 				<label>Number: </label><input type = 'text' id = 'card_num_input' />
-				<button onclick = 'make_card();'>Make Card</button>
+				<button onclick = "make_card(document.getElementById('card_num_input').value);">Make Card</button>
 			</div><!--card_form-->
 		</div><!--make_card-->
 	</body>
