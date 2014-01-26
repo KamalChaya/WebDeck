@@ -11,7 +11,7 @@
 			var card_array = new Array();
 			var card_map = new Array();
 			
-			// Face cards.
+			// Face cards
 			card_map ['J'] = 10;
 			card_map ['Q'] = 11;
 			card_map ['K'] = 12;
@@ -43,7 +43,13 @@
 				for (var i = 0; i < card_array.length; i++){
 					$('#card' + i).draggable({containment: '#container'});
 				}
-				
+				place_card(0, 0, card_array.length);
+			}
+
+			function place_card(x_pos, y_pos, card_id) {
+				$('#card' + card_id).style.position = "absolute";
+				$('#card' + card_id).style.left = x.pos+'px';
+				$('#card' + card_id).style.top = y.pos+'px';
 			}
 			
 			//Function: card()
