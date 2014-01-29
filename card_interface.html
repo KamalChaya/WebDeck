@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>WebDeck Spike</title>
+		<title>WebDeck Card Interface</title>
 		
 		<link rel = 'stylesheet' type = 'text/css' href = 'spike.css'>
 		
@@ -79,20 +79,20 @@
 				//this.opacity = 1; //Make it visible.
 				this.id = id;
 				//this.num = num;
-				this.fname = fname;
-				
+				this.front = fname;
+				this.back = '';
+				this.image = this.front;
+
 				this.create_card = create_card
 				function create_card(){
-					var contDiv = document.getElementById('container');
-					var cardPrefix = "card" + this.id;
-					var cardDiv = "<div id = '" + cardPrefix + "' onclick = ''>";
-					cardDiv += "<div id = '" + cardPrefix + "_main' class = 'card_main'>"
-					var location = 'card_fronts/' + fname;
-					cardDiv += "<image src='card_fronts/" + fname + "' alt='Card' height=100>"
-					cardDiv += "</div>"
-					//cardDiv += "<image src='king.jpg' alt='King of Clubs' height=200>"
-					cardDiv += "</div>";
-					contDiv.innerHTML += cardDiv;
+					var cont_div = document.getElementById('container');
+					var card_name = "card" + this.id;
+
+					var card_div = "<div id = '" + card_name + "' onclick = 'alert(\""+ card_name +"\")'>";
+					var path = 'card_fronts/' + fname;
+					card_div += "<image src='" + path + "' alt='Card' height=100>"
+					card_div += "</div>";
+					cont_div.innerHTML += card_div;
 				}
 				
 				//Methods
