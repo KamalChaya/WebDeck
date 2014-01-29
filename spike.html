@@ -10,6 +10,7 @@
 			
 			var card_array = new Array();
 			var card_map = new Array();
+			var top_z = 53;
 			
 			// Face cards
 			card_map [10] = 'J';
@@ -57,6 +58,15 @@
 				}
 
 				place_card(10, 10, new_card.id);
+
+				/*
+			 	 * BUG: Currently, the mousedown function is only being applied
+			 	 * to the most recently created card
+			 	 */
+				$('#' + 'card' + new_card.id).mousedown(function() {
+					//alert("Mouse down on card " + this.id);
+					bring_to_top(this.id);
+				});
 			}
 
 			//Function: place_card()
@@ -72,6 +82,16 @@
 				$('#' + 'card' + card_id).css('left', y_pos);
 			}
 			
+			//Function: bring_to_top()
+			//Description: Brings a specified card in front of all other cards
+			//Parameters: 	card_id: id of the card to be modified   
+
+			function bring_to_top(card_id) {
+				alert('bring to top called on card ' + card_id);
+				$('#' + 'card' + card_id).style.position = 'relative';
+				$('#' + 'card' + card_id).style.zIndex = ++top_z;
+			}
+
 			//Function: card()
 			//Description: This is the constructor for the card object
 			//Parameters: Letter: the alphanumeric character to display on the card
@@ -100,7 +120,7 @@
 				//Methods
 					this.change_opacity = change_opacity
 					function change_opacity(){
-						//alert("This.id: " + this.id);
+						alert("This.id: " + this.id);
 						if(this.opacity == 1){
 							this.opacity = 0;
 							document.getElementById('card' + this.id).style.background = 'black';
