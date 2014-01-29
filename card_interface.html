@@ -36,7 +36,7 @@
 				//Replace with appropriate graphic assignment when graphics are ready
 				for(var suit = 0; suit < 4; suit++) {
 					for(var value = 1; value < 14; value++) {
-						make_card(suit_map[suit] + card_map[value] + '.svg');
+						make_card(card_map[value] + suit_map[suit] + '.svg');
 					}
 				}
 				for (var i = 0; i < card_array.length; i++){
@@ -48,10 +48,9 @@
 				card_array[id].change_opacity();
 			}
 			
-			function make_card(input_letter){
+			function make_card(fname){
 				//alert('Clicked!');
-				var letter = input_letter;
-				var new_card = new card(card_map[letter], letter, card_array.length);
+				var new_card = new card(fname, card_array.length);
 				new_card.create_card();
 				card_array.push(new_card);
 				//$('#card0').draggable({containment: '#container'});
@@ -75,24 +74,24 @@
 			//Description: This is the constructor for the card object
 			//Parameters: Letter: the alphanumeric character to display on the card
 			//		Num: the numeric value of the card
-			function card(num, letter, id){
+			function card(fname, id){
 				//Constructor
-				this.opacity = 1; //Make it visible.
+				//this.opacity = 1; //Make it visible.
 				this.id = id;
-				this.num = num;
-				this.letter = letter;
+				//this.num = num;
+				this.fname = fname;
 				
 				this.create_card = create_card
 				function create_card(){
 					var contDiv = document.getElementById('container');
-					//alert(id);
 					var cardPrefix = "card" + this.id;
-					var cardDiv = "<div id = '" + cardPrefix + "' class = 'card' onclick = ''>";
-					cardDiv += "<div id = '" + cardPrefix + "_top_num' class = 'card_top_num'>" + this.letter + "</div>";
-					cardDiv += "<div id = '" + cardPrefix + "_main' class = 'card_main'></div>";
-					cardDiv += "<div id = '" + cardPrefix + "_bot_num' class = 'card_bot_num'>" + this.letter + "</div>";
+					var cardDiv = "<div id = '" + cardPrefix + "' onclick = ''>";
+					cardDiv += "<div id = '" + cardPrefix + "_main' class = 'card_main'>"
+					var location = 'card_fronts/' + fname;
+					cardDiv += "<image src='card_fronts/" + fname + "' alt='Card' height=100>"
+					cardDiv += "</div>"
+					//cardDiv += "<image src='king.jpg' alt='King of Clubs' height=200>"
 					cardDiv += "</div>";
-					
 					contDiv.innerHTML += cardDiv;
 				}
 				
