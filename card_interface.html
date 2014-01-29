@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<title>WebDeck Spike</title>
+		
+		<link rel = 'stylesheet' type = 'text/css' href = 'spike.css'>
+		
+		<script type = 'text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js'></script>
+		<script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+		<script type = 'text/javascript'>
+			
+			var card_array = new Array();
+			var card_map = new Array();
+			
+			// Face cards
+			card_map [11] = 'J';
+			card_map [12] = 'Q';
+			card_map [13] = 'K';
+			card_map [1] = 'A';
+			
+			// Regular Cards
+			for(var i = 2; i < 11; i++){
+				card_map[i] = i;
+			}
+					
+			//Function: init()
+			//Description: Makes 52 card objects
+			function init(){
+
+				suit_map = new Array();
+				suit_map [0] = 'C';
+				suit_map [1] = 'D';
+				suit_map [2] = 'H';
+				suit_map [3] = 'S';
+				
+				//TODO:
+				//Replace with appropriate graphic assignment when graphics are ready
+				for(var suit = 0; suit < 4; suit++) {
+					for(var value = 1; value < 14; value++) {
+						make_card(suit_map[suit] + card_map[value] + '.svg');
+					}
+				}
+				for (var i = 0; i < card_array.length; i++){
+					$('#card' + i).draggable({containment: '#container'});
+				}
+			}
+			
+			function flip_card(id){
+				card_array[id].change_opacity();
+			}
+			
+			function make_card(input_letter){
+				//alert('Clicked!');
+				var letter = input_letter;
+				var new_card = new card(card_map[letter], letter, card_array.length);
+				new_card.create_card();
+				card_array.push(new_card);
+				//$('#card0').draggable({containment: '#container'});
+				place_card(10, 10, new_card.id);
+			}
+
+			//Function: place_card()
+			//Description: Places a card at the given x and y
+			//	relative to the top and left of the screen
+			//Parameters: 	x_pos: x offset of the card
+			//				y_pos: y offest of the card
+			//				card_id: id of the card
+			function place_card(x_pos, y_pos, card_id) {
+				//alert('place_card called on card' + card_id);
+				$('#' + 'card' + card_id).css('position', 'absolute');
+				$('#' + 'card' + card_id).css('top', x_pos);
+				$('#' + 'card' + card_id).css('left', y_pos);
+			}
+			
+			//Function: card()
+			//Description: This is the constructor for the card object
+			//Parameters: Letter: the alphanumeric character to display on the card
+			//		Num: the numeric value of the card
+			function card(num, letter, id){
+				//Constructor
+				this.opacity = 1; //Make it visible.
+				this.id = id;
+				this.num = num;
+				this.letter = letter;
+				
+				this.create_card = create_card
+				function create_card(){
+					var contDiv = document.getElementById('container');
+					//alert(id);
+					var cardPrefix = "card" + this.id;
+					var cardDiv = "<div id = '" + cardPrefix + "' class = 'card' onclick = ''>";
+					cardDiv += "<div id = '" + cardPrefix + "_top_num' class = 'card_top_num'>" + this.letter + "</div>";
+					cardDiv += "<div id = '" + cardPrefix + "_main' class = 'card_main'></div>";
+					cardDiv += "<div id = '" + cardPrefix + "_bot_num' class = 'card_bot_num'>" + this.letter + "</div>";
+					cardDiv += "</div>";
+					
+					contDiv.innerHTML += cardDiv;
+				}
+				
+				//Methods
+					this.change_opacity = change_opacity
+					function change_opacity(){
+						//alert("This.id: " + this.id);
+						if(this.opacity == 1){
+							this.opacity = 0;
+							document.getElementById('card' + this.id).style.background = 'black';
+						}
+						else{
+							this.opacity = 1;
+							document.getElementById('card' + this.id).style.background = 'white';
+						}
+					}
+				//Members
+					//opacity
+			}
+		</script>
+	</head>
+	<body onload = 'init();'>
+		<div id = 'container'>
+			
+		</div><!--container-->
+	</body>
+</html>
