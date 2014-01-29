@@ -12,10 +12,10 @@
 			var card_map = new Array();
 			
 			// Face cards
-			card_map ['J'] = 10;
-			card_map ['Q'] = 11;
-			card_map ['K'] = 12;
-			card_map ['A'] = 1;
+			card_map [10] = 'J';
+			card_map [11] = 'Q';
+			card_map [12] = 'K';
+			card_map [1] = 'A';
 			
 			// Regular Cards
 			for(var i = 2; i < 10; i++){
@@ -23,9 +23,22 @@
 			}
 					
 			//Function: init()
-			//Description: Makes the card div "draggable"
+			//Description: Makes 52 card objects
 			function init(){
-				//$('#card').draggable({ containment: '#container'});
+
+				suit_map = new Array();
+				suit_map [0] = 'Clubs';
+				suit_map [1] = 'Diamonds';
+				suit_map [2] = 'Hearts';
+				suit_map [3] = 'Spades';
+				
+				//TODO:
+				//Replace with appropriate graphic assignment when graphics are ready
+				for(var suit = 0; suit < 4; suit++) {
+					for(var value = 1; value < 13; value++) {
+						make_card(suit_map[suit] + '-' + value);
+					}
+				}
 			}
 			
 			function flip_card(id){
