@@ -63,10 +63,13 @@
 			 	 * BUG: Currently, the mousedown function is only being applied
 			 	 * to the most recently created card
 			 	 */
+			 	/*
 				$('#' + 'card' + new_card.id).mousedown(function() {
 					//alert("Mouse down on card " + this.id);
-					bring_to_top(this.id);
+					//bring_to_top(this.id);
+					new_card.change_opacity();
 				});
+				*/
 			}
 
 			//Function: place_card()
@@ -108,7 +111,7 @@
 					var contDiv = document.getElementById('container');
 					//alert(id);
 					var cardPrefix = "card" + this.id;
-					var cardDiv = "<div id = '" + cardPrefix + "' class = 'card' onclick = ''>";
+					var cardDiv = "<div id = '" + cardPrefix + "' class = 'card' onmousedown = 'this.change_opacity()'>";
 					cardDiv += "<div id = '" + cardPrefix + "_top_num' class = 'card_top_num'>" + this.letter + "</div>";
 					cardDiv += "<div id = '" + cardPrefix + "_main' class = 'card_main'></div>";
 					cardDiv += "<div id = '" + cardPrefix + "_bot_num' class = 'card_bot_num'>" + this.letter + "</div>";
@@ -120,7 +123,7 @@
 				//Methods
 					this.change_opacity = change_opacity
 					function change_opacity(){
-						alert("This.id: " + this.id);
+						//alert("This.id: " + this.id);
 						if(this.opacity == 1){
 							this.opacity = 0;
 							document.getElementById('card' + this.id).style.background = 'black';
