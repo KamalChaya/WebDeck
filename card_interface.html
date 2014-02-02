@@ -49,18 +49,15 @@
 				for (var i = 0; i < card_array.length; i++){
 
 					$('#' + 'card' + i).css('position', 'absolute');
-            		$('#' + 'card' + i).css('zIndex', i);
+            		$('#' + 'card' + i).css('z-index', 0);
 
-					//alert("Z of card " + i + ": " + $('#' + 'card' + i).css('zIndex'));
+					//alert("Z of card " + i + ": " + $('#' + 'card' + i).css('z-index'));
 					$('#card' + i).draggable({containment: '#container'});
 					
-					$('#card' + i).mousedown(function(){
-
+					$('#card' + i).mousedown(function() {
 						bring_to_top(this.id);
-						//alert("You clicked on card " + this.id);
 					});
 				}
-				bring_to_top(card_array[5].id);
 			}
 			
 			function flip_card(id){
@@ -68,11 +65,9 @@
 			}
 			
 			function make_card(fname){
-				//alert('Clicked!');
 				var new_card = new card(fname, card_array.length);
 				new_card.create_card();
 				card_array.push(new_card);
-				//$('#card0').draggable({containment: '#container'});
 				place_card(10, 10, new_card.id);
 			}
 
@@ -89,18 +84,28 @@
 				$('#' + 'card' + card_id).css('left', y_pos);
 			}
 
+			/*
+			 * IMPORTANT NOTE:
+			 * 	When calling functions based on mousedown (or any other
+			 *	method that is not specifically targeting an index in
+			 *	the array), the card_id ALREADY CONTAINS "card". To
+			 *	specify the element you wish to modify, then, you
+			 *	MUST USE $('#' + card_id), NOT $('#' + 'card' + card_id)
+			 *										-Isaac
+			 */
+
 			 //Function: bring_to_top()
                         //Description: Brings a specified card in front of all other cards
                         //Parameters:         card_id: id of the card to be modified
 
             function bring_to_top(card_id) {
-            	alert('Card ' + card_id + ' set to z index ' + $('#' + 'card' + card_id).css('zIndex'));
-            	alert('top_z: ' + top_z);
-            	$('#' + 'card' + card_id).css('position', 'absolute');
-            	$('#' + 'card' + card_id).css('zIndex', top_z);
+            	//alert('Card ' + card_id + ' set to z index ' + $('#' + card_id).css('z-index'));
+            	//alert('top_z: ' + top_z);
+            	$('#' + card_id).css('position', 'absolute');
+            	$('#' + card_id).css('z-index', top_z);
             	top_z = top_z + 1;
-            	alert('top_z: ' + top_z);
-           		alert('Card ' + card_id + ' set to z index ' + $('#' + 'card' + card_id).css('zIndex'));
+            	//alert('top_z: ' + top_z);
+           		//alert('Card ' + card_id + ' set to z index ' + $('#' + card_id).css('z-index'));
             }
 
 
@@ -123,7 +128,7 @@
 					var cont_div = document.getElementById('container');
 					var card_name = "card" + this.id;
 
-					var card_div = "<div id = '" + card_name + "' onclick = 'alert(\""+ card_name +"\")'>";
+					var card_div = "<div id = '" + card_name + "' onclick = ''>";
 					var path = 'card_fronts/' + fname;
 					card_div += "<image src='" + path + "' alt='Card' height=100>"
 					card_div += "</div>";
