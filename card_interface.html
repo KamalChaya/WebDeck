@@ -17,13 +17,7 @@
 			card_map [12] = 'Q';
 			card_map [13] = 'K';
 			card_map [1] = 'A';
-/*
-			$(document).ready(function(){
-				$("div").mousedown(function(){
-    				alert("div clicked!");
- 				});
-			});
-*/			
+
 			// Regular Cards
 			for(var i = 2; i < 11; i++){
 				card_map[i] = i;
@@ -38,9 +32,7 @@
 				suit_map [1] = 'D';
 				suit_map [2] = 'H';
 				suit_map [3] = 'S';
-				
-				//TODO:
-				//Replace with appropriate graphic assignment when graphics are ready
+
 				for(var suit = 0; suit < 4; suit++) {
 					for(var value = 1; value < 14; value++) {
 						make_card(card_map[value] + suit_map[suit] + '.svg');
@@ -51,7 +43,6 @@
 					$('#' + 'card' + i).css('position', 'absolute');
             		$('#' + 'card' + i).css('z-index', 0);
 
-					//alert("Z of card " + i + ": " + $('#' + 'card' + i).css('z-index'));
 					$('#card' + i).draggable({containment: '#container'});
 					$('#card' + i).mousedown(function(event) {
 						if(event.button == 0) {
@@ -83,7 +74,6 @@
 			//				y_pos: y offest of the card
 			//				card_id: id of the card
 			function place_card(x_pos, y_pos, card_id) {
-				//alert('place_card called on card' + card_id);
 				$('#' + 'card' + card_id).css('position', 'absolute');
 				$('#' + 'card' + card_id).css('top', x_pos);
 				$('#' + 'card' + card_id).css('left', y_pos);
@@ -104,13 +94,9 @@
                         //Parameters:         card_id: id of the card to be modified
 
             function bring_to_top(card_id) {
-            	//alert('Card ' + card_id + ' set to z index ' + $('#' + card_id).css('z-index'));
-            	//alert('top_z: ' + top_z);
             	$('#' + card_id).css('position', 'absolute');
             	$('#' + card_id).css('z-index', top_z);
             	top_z = top_z + 1;
-            	//alert('top_z: ' + top_z);
-           		//alert('Card ' + card_id + ' set to z index ' + $('#' + card_id).css('z-index'));
             }
 
 
