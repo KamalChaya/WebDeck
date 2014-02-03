@@ -49,16 +49,10 @@
 							//alert("O button clicked");
 							bring_to_top(this.id);
 						}
-						else if(event.button == 2) {
-							alert("2 button clicked");
-						}
 					});
 				}
 			}
 			
-			function flip_card(id){
-				card_array[id].change_opacity();
-			}
 			
 			function make_card(fname){
 				var new_card = new card(fname, card_array.length);
@@ -99,7 +93,21 @@
             	top_z = top_z + 1;
             }
 
-
+			function flip_card(id) {
+				alert(id);
+				var keys = "";
+				for(key in card_array){
+					keys += key + ", ";
+				}
+				alert(keys);
+				
+				if (card_array[id].image == card_array[id].front){
+					card_array[id].image = card_array[id].back;
+				} else {
+					card_array[id].image = card_array[id].front;
+				}
+				document.getElementById("card" + id + "_img").src = card_array[id].image;
+			}
 			
 			//Function: card()
 			//Description: This is the constructor for the card object
@@ -110,23 +118,36 @@
 				//this.opacity = 1; //Make it visible.
 				this.id = id;
 				//this.num = num;
-				this.front = fname;
-				this.back = '';
+				this.front = 'card_fronts/' + fname;
+				this.back = "card_backs/blue_back.svg";
 				this.image = this.front;
-
+				this.card_name = "card" + this.id;
+				this.imgid = this.card_name + "_img";
+				
 				this.create_card = create_card
 				function create_card(){
 					var cont_div = document.getElementById('container');
-					var card_name = "card" + this.id;
-
-					var card_div = "<div id = '" + card_name + "' onclick = ''>";
-					var path = 'card_fronts/' + fname;
-					card_div += "<image src='" + path + "' alt='Card' height=100>"
+					//var card_div = "<div id = '" + this.card_name + "' onclick = '" + $('#' + this.card_name) + ".flip()'>";
+					var card_div = "<div id = '" + this.card_name + "' onmousedown = 'card_array[" + id + "].flip_card(event);'>";
+					card_div += "<image id = '" + this.imgid + "' src='" + this.image +"' alt='Card' height=100>";
 					card_div += "</div>";
 					cont_div.innerHTML += card_div;
 				}
 				
 				//Methods
+					this.flip_card = flip_card
+					function flip_card(event){
+						//alert("I will flip card " + this.id);
+						if(event.button == 2) {
+							if (this.image == this.front){
+								this.image = this.back;
+							} else {
+								this.image = this.front;
+							}
+							document.getElementById("card" + this.id + "_img").src = this.image;
+						}
+					}
+					
 					this.change_opacity = change_opacity
 					function change_opacity(){
 						alert("This.id: " + this.id);
@@ -146,7 +167,7 @@
 			}
 		</script>
 	</head>
-	<body onload = 'init();'>
+	<body oncontextmenu="return false;" onload = 'init();'>
 		<div id = 'container'>
 			
 		</div><!--container-->
