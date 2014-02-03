@@ -10,12 +10,13 @@
 			
 			var card_array = new Array();
 			var card_map = new Array();
+			var top_z = 53;
 			
 			// Face cards
-			card_map ['J'] = 10;
-			card_map ['Q'] = 11;
-			card_map ['K'] = 12;
-			card_map ['A'] = 1;
+			card_map [10] = 'J';
+			card_map [11] = 'Q';
+			card_map [12] = 'K';
+			card_map [1] = 'A';
 			
 			// Regular Cards
 			for(var i = 2; i < 10; i++){
@@ -23,9 +24,22 @@
 			}
 					
 			//Function: init()
-			//Description: Makes the card div "draggable"
+			//Description: Makes 52 card objects
 			function init(){
-				//$('#card').draggable({ containment: '#container'});
+
+				suit_map = new Array();
+				suit_map [0] = 'Clubs';
+				suit_map [1] = 'Diamonds';
+				suit_map [2] = 'Hearts';
+				suit_map [3] = 'Spades';
+				
+				//TODO:
+				//Replace with appropriate graphic assignment when graphics are ready
+				for(var suit = 0; suit < 4; suit++) {
+					for(var value = 1; value < 13; value++) {
+						make_card(suit_map[suit] + '-' + value);
+					}
+				}
 			}
 			
 			function flip_card(id){
@@ -44,6 +58,18 @@
 				}
 
 				place_card(10, 10, new_card.id);
+
+				/*
+			 	 * BUG: Currently, the mousedown function is only being applied
+			 	 * to the most recently created card
+			 	 */
+			 	/*
+				$('#' + 'card' + new_card.id).mousedown(function() {
+					//alert("Mouse down on card " + this.id);
+					//bring_to_top(this.id);
+					new_card.change_opacity();
+				});
+				*/
 			}
 
 			//Function: place_card()
@@ -59,6 +85,16 @@
 				$('#' + 'card' + card_id).css('left', y_pos);
 			}
 			
+			//Function: bring_to_top()
+			//Description: Brings a specified card in front of all other cards
+			//Parameters: 	card_id: id of the card to be modified   
+
+			function bring_to_top(card_id) {
+				alert('bring to top called on card ' + card_id);
+				$('#' + 'card' + card_id).style.position = 'relative';
+				$('#' + 'card' + card_id).style.zIndex = ++top_z;
+			}
+
 			//Function: card()
 			//Description: This is the constructor for the card object
 			//Parameters: Letter: the alphanumeric character to display on the card
@@ -75,7 +111,7 @@
 					var contDiv = document.getElementById('container');
 					//alert(id);
 					var cardPrefix = "card" + this.id;
-					var cardDiv = "<div id = '" + cardPrefix + "' class = 'card' onclick = ''>";
+					var cardDiv = "<div id = '" + cardPrefix + "' class = 'card' onmousedown = 'this.change_opacity()'>";
 					cardDiv += "<div id = '" + cardPrefix + "_top_num' class = 'card_top_num'>" + this.letter + "</div>";
 					cardDiv += "<div id = '" + cardPrefix + "_main' class = 'card_main'></div>";
 					cardDiv += "<div id = '" + cardPrefix + "_bot_num' class = 'card_bot_num'>" + this.letter + "</div>";

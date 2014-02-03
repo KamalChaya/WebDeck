@@ -26,10 +26,7 @@ body{
 	width:90px;
 	border:1px solid red;
 	background-color:white;
-}
-.card2{
-	height:150px;
-	width:90px;
+	position:absolute;
 }
 
 .card_top_num{
@@ -53,6 +50,21 @@ body{
 
 /************ Card Form
 ******************************************/
+.input{
+	width:500px;
+	height:500px;
+}
+
+#input1{
+	width:500px;
+	height:100px;
+}
+
+#input2{
+	width:500px;
+	height:100px;
+}
+
 #make_card{
 	width:500px;
 	height:100px;

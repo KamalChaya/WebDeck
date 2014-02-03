@@ -1,0 +1,172 @@
+<html>
+	<head>
+		<title>WebDeck Card Interface</title>
+		
+		<link rel = 'stylesheet' type = 'text/css' href = 'spike.css'>
+		
+		<script type = 'text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js'></script>
+		<script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+		<script type = 'text/javascript'>
+			
+			var card_array = new Array();
+			var card_map = new Array();
+			var top_z = 70;
+			
+			// Face cards
+			card_map [11] = 'J';
+			card_map [12] = 'Q';
+			card_map [13] = 'K';
+			card_map [1] = 'A';
+
+			// Regular Cards
+			for(var i = 2; i < 11; i++){
+				card_map[i] = i;
+			}
+					
+			//Function: init()
+			//Description: Makes 52 card objects
+			function init(){
+
+				suit_map = new Array();
+				suit_map [0] = 'C';
+				suit_map [1] = 'D';
+				suit_map [2] = 'H';
+				suit_map [3] = 'S';
+
+				for(var suit = 0; suit < 4; suit++) {
+					for(var value = 1; value < 14; value++) {
+						make_card(card_map[value] + suit_map[suit] + '.svg');
+					}
+				}
+				for (var i = 0; i < card_array.length; i++){
+
+					$('#' + 'card' + i).css('position', 'absolute');
+            		$('#' + 'card' + i).css('z-index', 0);
+
+					$('#card' + i).draggable({containment: '#container'});
+					$('#card' + i).mousedown(function(event) {
+						bring_to_top(this.id);
+					});
+				}
+			}
+			
+			
+			function make_card(fname){
+				var new_card = new card(fname, card_array.length);
+				new_card.create_card();
+				card_array.push(new_card);
+				place_card(10, 10, new_card.id);
+			}
+
+			//Function: place_card()
+			//Description: Places a card at the given x and y
+			//	relative to the top and left of the screen
+			//Parameters: 	x_pos: x offset of the card
+			//				y_pos: y offest of the card
+			//				card_id: id of the card
+			function place_card(x_pos, y_pos, card_id) {
+				$('#' + 'card' + card_id).css('position', 'absolute');
+				$('#' + 'card' + card_id).css('top', x_pos);
+				$('#' + 'card' + card_id).css('left', y_pos);
+			}
+
+			/*
+			 * IMPORTANT NOTE:
+			 * 	When calling functions based on mousedown (or any other
+			 *	method that is not specifically targeting an index in
+			 *	the array), the card_id ALREADY CONTAINS "card". To
+			 *	specify the element you wish to modify, then, you
+			 *	MUST USE $('#' + card_id), NOT $('#' + 'card' + card_id)
+			 *										-Isaac
+			 */
+
+			 //Function: bring_to_top()
+                        //Description: Brings a specified card in front of all other cards
+                        //Parameters:         card_id: id of the card to be modified
+
+            function bring_to_top(card_id) {
+            	$('#' + card_id).css('position', 'absolute');
+            	$('#' + card_id).css('z-index', top_z);
+            	top_z = top_z + 1;
+            }
+
+			function flip_card(id) {
+				alert(id);
+				var keys = "";
+				for(key in card_array){
+					keys += key + ", ";
+				}
+				alert(keys);
+				
+				if (card_array[id].image == card_array[id].front){
+					card_array[id].image = card_array[id].back;
+				} else {
+					card_array[id].image = card_array[id].front;
+				}
+				document.getElementById("card" + id + "_img").src = card_array[id].image;
+			}
+			
+			//Function: card()
+			//Description: This is the constructor for the card object
+			//Parameters: Letter: the alphanumeric character to display on the card
+			//		Num: the numeric value of the card
+			function card(fname, id){
+				//Constructor
+				//this.opacity = 1; //Make it visible.
+				this.id = id;
+				//this.num = num;
+				this.front = 'card_fronts/' + fname;
+				this.back = "card_backs/blue_back.svg";
+				this.image = this.front;
+				this.card_name = "card" + this.id;
+				this.imgid = this.card_name + "_img";
+				
+				this.create_card = create_card
+				function create_card(){
+					var cont_div = document.getElementById('container');
+					//var card_div = "<div id = '" + this.card_name + "' onclick = '" + $('#' + this.card_name) + ".flip()'>";
+					var card_div = "<div id = '" + this.card_name + "' onmousedown = 'card_array[" + id + "].flip_card(event);'>";
+					card_div += "<image id = '" + this.imgid + "' src='" + this.image +"' alt='Card' height=100>";
+					card_div += "</div>";
+					cont_div.innerHTML += card_div;
+				}
+				
+				//Methods
+					this.flip_card = flip_card
+					function flip_card(event){
+						//alert("I will flip card " + this.id);
+						if(event.button == 2) {
+							if (this.image == this.front){
+								this.image = this.back;
+							} else {
+								this.image = this.front;
+							}
+							document.getElementById("card" + this.id + "_img").src = this.image;
+						}
+					}
+					
+					this.change_opacity = change_opacity
+					function change_opacity(){
+						alert("This.id: " + this.id);
+						/*
+						if(this.opacity == 1){
+							this.opacity = 0;
+							document.getElementById('card' + this.id).style.background = 'black';
+						}
+						else{
+							this.opacity = 1;
+							document.getElementById('card' + this.id).style.background = 'white';
+						}
+						*/
+					}
+				//Members
+					//opacity
+			}
+		</script>
+	</head>
+	<body oncontextmenu="return false;" onload = 'init();'>
+		<div id = 'container'>
+			
+		</div><!--container-->
+	</body>
+</html>
