@@ -4,7 +4,8 @@
 //		Num: the numeric value of the card
 
 
-function card(fname, id){
+function card(fname, id)
+{
 	//Members
 	this.id = id;
 	this.card_id = "card" + this.id;
@@ -12,6 +13,7 @@ function card(fname, id){
 	this.back = "card_backs/blue_back.svg";
 	this.image = this.back;
 	this.imgid = this.card_id + "_img";
+	this.select = 0;
 
 	//Methods
 	this.flip_card = function (event)
@@ -26,7 +28,8 @@ function card(fname, id){
 		}
 	}
 
-	function bring_to_top() {
+	this.bring_to_top = function() 
+	{
     	$('#' + this.card_id).css('position', 'absolute');
     	$('#' + this.card_id).css('z-index', top_z);
     	top_z = top_z + 1;
@@ -41,8 +44,8 @@ function card(fname, id){
 
 	//Constructor
 	var cont_div = document.getElementById('container');
-	var card_div = "<div id = '" + this.card_id + "' onmousedown = 'card_array[" + id + "].flip_card(event);'>";
-	card_div += "<image id = '" + this.imgid + "' src='" + this.image +"' alt='Card' height=100>";
+	var card_div = "<div id = '" + this.card_id + "' onmousedown = 'card_array[" + id + "].flip_card(event); card_array[" + id + "].bring_to_top();'>";
+	card_div += "<image id = '" + this.imgid + "' src='" + this.image +"' alt='' height=100>";
 	card_div += "</div>";
 	cont_div.innerHTML += card_div;
 	card_array.push(this);
