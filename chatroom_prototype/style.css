@@ -4,7 +4,7 @@ h2                              { color: #fa9f00; font: 30px Helvetica, Sans-Ser
 #page-wrap                      { width: 500px; margin: 30px auto; position: relative; }
 
 #chat-wrap                      { border: 1px solid #eee; margin: 0 0 15px 0; }
-#chat-area                      { position: fixed; right:500px; height: 300px; overflow: auto; border: 1px solid #666; padding: 20px; background: white;}
+#chat-area                      { position: absolute; right:500px; height: 300px; overflow: auto; border: 1px solid #666; padding: 20px; background: white;}
 #chat-area span                 { color: white; background: #333; padding: 4px 8px; -moz-border-radius: 5px; -webkit-border-radius: 8px; margin: 0 5px 0 0; }
 #chat-area p                    { padding: 8px 0; border-bottom: 1px solid #ccc; }
 
