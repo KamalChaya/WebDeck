@@ -13,7 +13,7 @@ function card(fname, id)
 	this.back = "card_backs/blue_back.svg";
 	this.image = this.back;
 	this.imgid = this.card_id + "_img";
-	this.select = 0;
+	this.select = 0;					//The id of the user that has this card selected. -1 is no owner
 
 	//Methods
 	this.flip_card = function (event)
@@ -21,19 +21,36 @@ function card(fname, id)
 		if(event.button == 2) {
 			if (this.image == this.front){
 				this.image = this.back;
+				//flipdb(0)
 			} else {
 				this.image = this.front;
+				//flipdb(1)
 			}
 			document.getElementById("card" + this.id + "_img").src = this.image;
 		}
 	}
-
+	
+	this.select_card = function()
+	{
+		if (this.select == -1){
+			//User can select this card
+			var got_lock = network.get_lock(card_id);
+			if(got_lock == 1){
+				//We got the lock, highlight the card
+			} else{
+				//No lock, don't highlight the card.
+			}
+		} else {
+			//Do nothing.
+		}
+	}
+	
 	this.bring_to_top = function() 
 	{
-    	$('#' + this.card_id).css('position', 'absolute');
-    	$('#' + this.card_id).css('z-index', top_z);
-    	top_z = top_z + 1;
-    }
+		$('#' + this.card_id).css('position', 'absolute');
+		$('#' + this.card_id).css('z-index', top_z);
+		top_z = top_z + 1;
+	}
 
 	this.set_position = function (x_pos, y_pos)
 	{
