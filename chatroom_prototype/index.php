@@ -16,23 +16,23 @@
         var name = prompt("Enter your chat name:", "Guest");
         
         // default name is 'Guest'
-    	if (!name || name === ' ') {
-    	   name = "Guest";	
-    	}
-    	
-    	// strip tags
-    	name = name.replace(/(<([^>]+)>)/ig,"");
-    	
-    	// display name on page
-    	$("#name-area").html("You are: <span>" + name + "</span>");
-    	
-    	// kick off chat
+        if (!name || name === ' ') {
+           name = "Guest";  
+        }
+        
+        // strip tags
+        name = name.replace(/(<([^>]+)>)/ig,"");
+        
+        // display name on page
+        $("#name-area").html("You are: <span>" + name + "</span>");
+        
+        // kick off chat
         var chat =  new Chat();
-    	$(function() {
-    	
-    		 chat.getState(); 
-    		 
-    		 // watch textarea for key presses
+        $(function() {
+        
+             chat.getState(); 
+             
+             // watch textarea for key presses
              $("#sendie").keydown(function(event) {  
              
                  var key = event.which;  
@@ -48,33 +48,33 @@
                          event.preventDefault();  
                      }  
                   }  
-    		 																																																});
-    		 // watch textarea for release of key press
-    		 $('#sendie').keyup(function(e) {	
-    		 					 
-    			  if (e.keyCode == 13) { 
-    			  
+                                                                                                                                                                                                            });
+             // watch textarea for release of key press
+             $('#sendie').keyup(function(e) {   
+                                 
+                  if (e.keyCode == 13) { 
+                  
                     var text = $(this).val();
-    				var maxLength = $(this).attr("maxlength");  
+                    var maxLength = $(this).attr("maxlength");  
                     var length = text.length; 
                      
                     // send 
                     if (length <= maxLength + 1) { 
                      
-    			        chat.send(text, name);	
-    			        $(this).val("");
-    			        
+                        chat.send(text, name);  
+                        $(this).val("");
+                        
                     } else {
                     
-    					$(this).val(text.substring(0, maxLength));
-    					
-    				}	
-    				
-    				
-    			  }
+                        $(this).val(text.substring(0, maxLength));
+                        
+                    }   
+                    
+                    
+                  }
              });
             
-    	});
+        });
     </script>
 
 </head>
@@ -91,7 +91,7 @@
         
         <form id="send-message-area">
             <p>message: </p>
-            <textarea id="sendie" maxlength = '100' ></textarea>
+            <textarea id="sendie" maxlength='1024'></textarea>
         </form>
     
     </div>
