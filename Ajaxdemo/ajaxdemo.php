@@ -159,7 +159,7 @@
 			//	The position of every card in the page.
 			function perform_updates(ajax_obj){
 				//alert(ajax_obj.responseText);
-				var new_pos = JSEntityDecoder(ajax_obj.responseText, customDelim);
+				var new_pos = JSON.parse(ajax_obj.responseText);
 				
 				for(key in new_pos){
 					if((+isTableKey(key)) != 1){
