@@ -25,6 +25,7 @@ function card(fname, id)
 	this.handle_click = function (event)
 	{
 		if(event.button == 2) {
+			//Right click
 			if (this.image == this.front){
 				if((+network.flipdb(this.id, 0)) == 1){
 					this.image = this.back;
@@ -38,8 +39,8 @@ function card(fname, id)
 			document.getElementById("card" + this.id + "_img").src = this.image;
 			
 		} else if (event.button == 0) {
-			//alert("Beginning transmission");
-			network.trans_card_pos(this.id);
+			//left click
+			network.send_card_pos(this.id);
 			
 		}
 	}
@@ -50,7 +51,7 @@ function card(fname, id)
 			//Do nothing, the card is flipped.
 		} else if (event.button == 0) {
 			//Release the card
-			network.stop_trans(this.id);
+			network.stop_send(this.id);
 		}
 	}
 	
@@ -98,7 +99,8 @@ function card(fname, id)
 	}
 	
 	//draggable: 1 to make the card draggable, 0 to make it not draggable
-	this.set_drag = function(draggable){
+	this.set_drag = function(draggable)
+	{
 		if (draggable == 1){
 			$('#' + this.card_id).draggable({containment: '#container'});
 		} else {
@@ -108,9 +110,10 @@ function card(fname, id)
 	
 	//If selected, a black border is drawn around the card
 	//	If another player selected it, it gets a red border.
-	this.set_selected = function(selected){
+	this.set_selected = function(selected)
+	{
 		if (selected == 1){
-			document.getElementById(this.card_id).style.border = "2px solid black";
+			document.getElementById(this.card_id).style.border = "2px solid blue";
 		} else if(selected == 0) {
 			document.getElementById(this.card_id).style.border = "0px solid black";
 		} else if(selected == -1){

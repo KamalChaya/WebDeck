@@ -3,24 +3,57 @@
 <script type = 'text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js'></script>
 		<script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
 		<script type = "text/javascript" src="card_class.js"></script>
-		<script type = "text/javascript" src="network_class_json.js"></script>
+		<script type = "text/javascript" src="network_class.js"></script>
+		<script type = "text/javascript" src = "js_table_decoder.js"></script>
 		<script src="init.js"></script>
 		<script type = 'text/javascript'>
 			var last_update = (8 * 3600) + 1; 	//The EPOCH was 16:00 our time........... The server has a locale!
 			var selected_card = "";
-		</script>
+			var player_id = 1;
+			var shift_down = 0;
+			
+			window.onclick = function(e)
+			{
+				//alert("You clicked on the page!");
+				if(e.button == 0){
+					//We got a left click
+					//release all locks
+					network.release_locks();
+				}
+			}
+			/*$(document).click(function(e) {
+				var target = $(e.target);
+				alert(target.attr('id'));
+			});*/
+			
+			window.onkeydown = function(e)
+			{
+				if(e.keyCode == 16){
+					alert("Got shift down!");
+					shift_down = 1;
+				}
+			}
+			
+			window.onkeyup = function(e)
+			{
+				if(e.keyCode == 16){
+					alert("Shift was released!");
+					shift_down = 0;
+				}
+			}
+			</script>
 
 
 <body onload = "init();">
 <link rel = 'stylesheet' type = 'text/css' href = 'interface.css'>
 
-<div id="container">
-<div id="hand">HAND</div>
-</div>
-<div id="chat_bar">
-<iframe id="sub_chat_bar" src="http://web.engr.oregonstate.edu/~zhumi/prototype/"></iframe>
-<div> 
-<div id="context_menu">CONTEXT MENU</div>
+	<div id="container">
+		<div id="hand">HAND</div>
+		<div id="context_menu">CONTEXT MENU</div>
+	</div>
+	<div id="chat_bar">
+		<iframe id="sub_chat_bar" src="http://web.engr.oregonstate.edu/~zhumi/prototype/"></iframe>
+	</div> 
 </body>	
 
 <!-- Include whatever scripts you want in the section below.-->
