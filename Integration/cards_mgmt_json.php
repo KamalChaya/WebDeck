@@ -1,6 +1,6 @@
 <?php
 	include('db_connect.php');
-	include('php_table_encode.php');
+	include('php_table_encode_json.php');
 	
 	$customDelim = "~";
 	
@@ -56,13 +56,13 @@
 		echo "   '".$sql."'      ";
 		$res = execute_query($sql);
 		if($res == true){
-			echo $customDelim . "1" . $customDelim;
+			echo "1";
 		} else {
-			echo $customDelim . "0" . $customDelim;
+			echo "0";
 		}
 	}
 	
-	
+	//Case 1
 	function move_card(){
 		global $customDelim;
 		global $mysqli;
@@ -83,27 +83,13 @@
 		echo "     " . $sql . "      ";
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
-			echo $customDelim . "1" . $customDelim;
+			echo "1";
 		} else {
-			echo $customDelim . "0" . $customDelim;
+			echo "0";
 		}
 	}
-	
-	
-	function enter_session(){
-		$game_id = $_POST['game_id'];
-		
-		echo 'Game ID: ' . $game_id;
-		
-		$sql = "	SELECT cid, x_pos, y_pos, flipped, locked
-				FROM Cards
-				WHERE game = $game_id;";
-		$result = execute_query($sql);	
-		$tableString = php_entity_encode($result);
-		echo $tableString;
-	}
-	
-	
+
+	//Case 2
 	function get_positions(){
 		$game_id = $_POST['game_id'];
 		$time = $_POST['lastu'];
@@ -119,10 +105,26 @@
 		echo "\n\n" . $sql . "\n\n";
 		$result = execute_query($sql);	
 		$tableString = php_entity_encode($result);
-		echo "|" . time() . "|";	//That's ugly
+		//echo "|" . time() . "|";	//That's ugly
 		echo $tableString;
 	}
 	
+	
+	//Case 3
+	function enter_session(){
+		$game_id = $_POST['game_id'];
+		
+		echo 'Game ID: ' . $game_id;
+		
+		$sql = "	SELECT cid, x_pos, y_pos, flipped, locked
+				FROM Cards
+				WHERE game = $game_id;";
+		$result = execute_query($sql);	
+		$tableString = php_entity_encode($result);
+		echo $tableString;
+	}
+	
+	//Case 4
 	//lock = -1 means the card is unlocked
 	function secure_lock()
 	{
@@ -144,15 +146,13 @@
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
-			//echo "They got the lock!";
-			echo $customDelim . "1" . $customDelim;
-			
+			echo "1";
 		} else {
-			//echo "Somebody has it locked!";
-			echo $customDelim . "0" . $customDelim;
+			echo "0";
 		}
 	}
 	
+	//Case 5
 	//Returns 1 on successful release.
 	//Returns 0 on a failed release: user did not have possession of the 
 	//	CID and game sent in.
@@ -176,16 +176,15 @@
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
-			echo "Lock Released";
-			echo $customDelim . "1" . $customDelim;
-			
+			//echo "Lock Released";
+			echo "1";
 		} else {
-			echo "Problems";
-			echo $customDelim . "0" . $customDelim;
+			//echo "Problems"
+			echo "0";
 		}
 	}
 	
-	
+	//Case 6
 	//Card must be unlocked (-1) to be flippable.
 	function flip_card()
 	{
@@ -206,12 +205,11 @@
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
-			echo "Card Flipped!";
-			echo $customDelim . "1" . $customDelim;
-			
+			//echo "Card Flipped!";
+			echo "1";
 		} else {
-			echo "Card not flipped";
-			echo $customDelim . "0" . $customDelim;
+			//echo "Card not flipped"
+			echo "0";
 		}
 	}
 ?>

@@ -3,7 +3,7 @@
 //	of a synchronous ajax call. If you see it, you did something wrong.
 function err_funct(ajax_obj)
 {
-	alert("This function should only be specified for a synchronous AJAX request! check your function call!");
+	alert("This function should only be specified for a synchronous AJAX request! Check your function call!");
 }
 
 //This function is simply a placeholder when the responseText of
@@ -33,15 +33,20 @@ function mk_network()
 		//alert("Initializing board through network class");
 		var var_string = 'op=3&game_id=' + this.game_id;
 		var ajax_obj = this.ajax('cards_mgmt.php', var_string, this.finish_board_update, false);
-		var new_game = JSEntityDecoder(ajax_obj.responseText, customDelim);
+		var new_game = JSON.parse(ajax_obj.responseText);
 		//alert(new_game.fieldNames);
-		for(key in new_game){
+
+		for(key in new_game.Cards){
+			/*
 			if((+isTableKey(key)) != 1){
 				//alert("Making Card");
 				var fname = key + '.svg';
 				var new_card = new card(fname, key);
 				//alert(new_card.id);
 			}
+			*/
+			var fname = key.cid + '.svg';
+			var new_card = new card(fname, key.cid);
 		}
 		
 		//Make the cards draggable
@@ -70,12 +75,14 @@ function mk_network()
 		//alert(ajax_obj.responseText);
 		var results = ajax_obj.responseText.split("|");
 		last_update = results[1];
+
 		//alert(last_update);
 		//var new_game = JSEntityDecoder(ajax_obj.responseText, customDelim);
-		var new_game = JSEntityDecoder(results[2], customDelim);
+		var new_game = JSON.parse(results[2]);
 		var added_card = 0;
 		//alert(new_game.fieldNames);
 		for(key in new_game){
+			/*
 			if((+isTableKey(key)) != 1){
 				//alert(new_game[key]['cid']);
 				if (typeof card_array[key] == "undefined"){
@@ -84,6 +91,10 @@ function mk_network()
 					added_card = 1;
 				}
 			}
+			*/
+			var fname = key.cid + '.svg';
+			var new_card = new card(fname, key.cid);
+			added_card = 1;
 		}
 		
 		//Make the cards draggable again
@@ -97,26 +108,23 @@ function mk_network()
 		//TODO!! Perhaps remove the entry from the JSON or table instead of doing check
 		//TODO!! The thing still updates the selected card, even though I told it not to...
 		for(key in new_game){
-			if((+isTableKey(key)) != 1){
-				//Set position
-				if (selected_card != key) {
-					//alert("Updating key:" + key);
-					var card_div = document.getElementById('card' + key);
-					card_div.style.left = new_game[key]['x_pos'] + 'px';
-					card_div.style.top = new_game[key]['y_pos'] + 'px';
+			if (selected_card != key) {
+				//alert("Updating key:" + key);
+				var card_div = document.getElementById('card' + key.cid);
+				card_div.style.left = key.x_pos + 'px';
+				card_div.style.top = key.y_pos + 'px';
+				
+				card_array[key.cid].db_flip_card((+key.flipped));
+				if((+key.locked) == -1){
+					card_array[key.cid].set_selected(0);
 					
-					card_array[key].db_flip_card((+new_game[key]['flipped']));
-					if((+new_game[key]['locked']) == -1){
-						card_array[key].set_selected(0);
-						
-					} else if((+new_game[key]['locked']) != this.player_id){
-						//alert("Card with red border: " + key);
-						card_array[key].set_selected(-1);
-					}
-					
-				} else {
-					//alert("Skipping card update");
+				} else if((+key.locked) != this.player_id){
+					//alert("Card with red border: " + key);
+					card_array[key.cid].set_selected(-1);
 				}
+				
+			} else {
+				//alert("Skipping card update");
 			}
 		}
 	}
@@ -191,10 +199,10 @@ function mk_network()
 		//alert(var_string);
 		
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, err_funct, false);
-		var ajax_obj = ajax_obj.responseText.split(customDelim);
+		var ajax_obj = JSON.parse(ajax_obj.responseText);
 		//alert(ajax_obj[0]);
 		
-		return (+ajax_obj[1]);	//temp: will return database response soon
+		return (+ajax_obj);	//temp: will return database response soon
 	}//Asks the database for a selection lock. Returns 1 if successful
 	
 	//Will remove the user's lock on the currently selected card
@@ -204,9 +212,9 @@ function mk_network()
 		var var_string =  "op=5&player_id=" + this.player_id + "&card_id=" + card_idx + "&game_id=" + this.game_id;
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, err_funct, false);
 		//alert(ajax_obj.responseText);
-		var ajax_obj = ajax_obj.responseText.split(customDelim);
+		var ajax_obj = JSON.parse(ajax_obj.responseText);
 		
-		if ((+ajax_obj[1]) == 0){
+		if ((+ajax_obj) == 0){
 			alert("We have lock release failures!");
 		}
 	}
@@ -218,8 +226,8 @@ function mk_network()
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, err_funct, false);
 		//alert(ajax_obj.responseText);
 		
-		var out_str = ajax_obj.responseText.split(customDelim);
-		return out_str[1];
+		var out_str = JSON.parse(ajax_obj.responseText);
+		return out_str;
 	}	//Sets "flipped" to the new flip_val
 	
 	//Responsible for carrying out AJAX requests
