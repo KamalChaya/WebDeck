@@ -3,7 +3,7 @@
 //	of a synchronous ajax call. If you see it, you did something wrong.
 function err_funct(ajax_obj)
 {
-	alert("This function should only be specified for a synchronous AJAX request! check your function call!");
+	alert("This function should only be specified for a synchronous AJAX request! Check your function call!");
 }
 
 //This function is simply a placeholder when the responseText of
