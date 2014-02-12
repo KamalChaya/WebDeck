@@ -58,14 +58,15 @@
 	function move_card(){
 		global $customDelim;
 		
-		$card_id = $_POST['uid'];
+		$card_id = $_POST['cid'];
 		$x_pos = $_POST['x_pos'];
 		$y_pos = $_POST['y_pos'];
 		$game = $_POST['game_id'];
+		$player_id = $_POST['pid'];
 		
 		$sql = "UPDATE Cards C
 				SET last_change = current_time, x_pos = $x_pos, y_pos = $y_pos
-				WHERE C.uid = $card_id AND C.locked = 0;";
+				WHERE C.cid = $card_id AND C.locked = $player_id";
 		
 		echo "     " . $sql . "      ";
 		$result = execute_query($sql);
@@ -82,7 +83,7 @@
 		
 		echo 'Game ID: ' . $game_id;
 		
-		$sql = "	SELECT uid, cid, x_pos, y_pos, flipped
+		$sql = "	SELECT cid, x_pos, y_pos, flipped
 				FROM Cards
 				WHERE game = $game_id;";
 		$result = execute_query($sql);	
@@ -96,7 +97,7 @@
 		
 		echo 'Game ID: ' . $game_id;
 		
-		$sql = "	SELECT uid, cid, x_pos, y_pos, flipped
+		$sql = "	SELECT cid, x_pos, y_pos, flipped
 				FROM Cards
 				WHERE game = $game_id;";
 		$result = execute_query($sql);	

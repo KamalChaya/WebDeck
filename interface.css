@@ -65,8 +65,11 @@ body{
 	background-color: white;
 }
 .card2{
-	height: 150px;
-	width: 90px;
+	
+}
+
+.card2 img{
+	height:100px;
 }
 
 .card_top_num{
