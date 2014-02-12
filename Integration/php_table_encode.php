@@ -17,33 +17,15 @@
 	//include("./bookTrader_test_harnesses.php");
 	
 	function php_entity_encode($result){
-		global $customDelim;
-		$tableString = "";
-		
-		//Set up the header: two delims, field/row counts, field names
-		$tableString .= $customDelim . $customDelim;
-		$tableString .= ($result->field_count - 1) . $customDelim . $result->num_rows;
-		//skip the id column, set $i at 1, not zero
-		for($i = 1; $i < $result->field_count; $i  = $i + 1){
-			$field = $result->fetch_field_direct($i);
-			$tableString .= $customDelim . $field->name;
+		$returnArray = array();
+
+		$tmp = array();
+		while($row = $result->fetch_object()) {
+			$tmp = $row;
+			array_push($returnArray, $tmp);
 		}
-		$tableString .= $customDelim . $customDelim;
-		
-		/*if($result->field_count == NULL){
-			echo "She's null.";
-			echo ($result->field_count);
-		}else{
-			echo "Not null..";
-		}*/
-		//die($tableString);
-		
-		
-		//Enter all of the rows into the string
-		$tableString .= get_rows($result);
-		
-		//Return the result for processing/echoing
-		return $tableString;
+
+		return json_encode($returnArray);
 	}
 	
 	
