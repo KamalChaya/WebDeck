@@ -34,6 +34,10 @@
 		case 6:	//Set a card's flipped field to the passed in variable
 			flip_card();
 			break;
+		
+		case 7: 	//Release all locks and send back lock information
+			release_locks();
+			break;
 			
 		default:
 			echo 'unrecognized operation' . $op;
@@ -213,5 +217,27 @@
 			echo "Card not flipped";
 			echo $customDelim . "0" . $customDelim;
 		}
+	}
+	
+	function release_locks()
+	{
+		$game_id = $_POST['game_id'];
+		$player_id = $_POST['player_id'];
+		
+		//die("Got vars");
+		
+		$sql = "	SELECT C.cid
+				FROM Cards C
+				WHERE C.locked = $player_id AND C.game = $game_id;";
+		//die("Initiated function");
+		$result = execute_query($sql);
+		$tableString = php_entity_encode($result);
+		echo $tableString;
+
+		
+		$sql2 = "	UPDATE Cards C
+				SET C.locked = -1
+				WHERE C.locked = $player_id AND C.game = $game_id;";
+		$result = execute_query($sql2);
 	}
 ?>

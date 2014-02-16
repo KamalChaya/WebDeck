@@ -9,12 +9,45 @@
 		<script type = 'text/javascript'>
 			var last_update = (8 * 3600) + 1; 	//The EPOCH was 16:00 our time........... The server has a locale!
 			var selected_card = "";
-		</script>
+			var player_id = 1;
+			var shift_down = 0;
+			
+			window.onclick = function(e)
+			{
+				//alert("You clicked on the page!");
+				if(e.button == 0){
+					//We got a left click
+					//release all locks
+					network.release_locks();
+				}
+			}
+			/*$(document).click(function(e) {
+				var target = $(e.target);
+				alert(target.attr('id'));
+			});*/
+			
+			window.onkeydown = function(e)
+			{
+				if(e.keyCode == 16){
+					alert("Got shift down!");
+					shift_down = 1;
+				}
+			}
+			
+			window.onkeyup = function(e)
+			{
+				if(e.keyCode == 16){
+					alert("Shift was released!");
+					shift_down = 0;
+				}
+			}
+			</script>
 
 
 <body onload = "init();">
 <link rel = 'stylesheet' type = 'text/css' href = 'interface.css'>
 
+<<<<<<< HEAD
 <div id="container">
 
 	<div id="hand">HAND</div>
@@ -29,6 +62,15 @@
 
 <div id="context_menu">CONTEXT MENU</div>
 
+=======
+	<div id="container">
+		<div id="hand">HAND</div>
+		<div id="context_menu">CONTEXT MENU</div>
+	</div>
+	<div id="chat_bar">
+		<iframe id="sub_chat_bar" src="http://web.engr.oregonstate.edu/~zhumi/prototype/"></iframe>
+	</div> 
+>>>>>>> 748370b03fc5b7fc9d120eb58d38515586c775d8
 </body>	
 
 <!-- Include whatever scripts you want in the section below.-->
