@@ -33,24 +33,14 @@ function mk_network()
 		//alert("Initializing board through network class");
 		var var_string = 'op=3&game_id=' + this.game_id;
 		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
-		var new_game = JSEntityDecoder(ajax_obj.responseText, customDelim);
-		//alert(new_game.fieldNames);
-		for(key in new_game){
-			if((+isTableKey(key)) != 1){
-				//alert("Making Card");
-				var fname = key + '.svg';
-				var new_card = new card(fname, key);
-				//alert(new_card.id);
-			}
+		var new_game = JSON.parse(ajax_obj.responseText);
+
+		for(key in new_game.Cards){
+			cur_key = new_game.Cards[key];
+			var fname = cur_key.cid + '.svg';
+			var new_card = new card(fname, cur_key.cid);
 		}
-		
-		//Make the cards draggable
-		/*for(key in card_array){
-			//alert("Making card"+key+" draggable");
-			//$('#card' + key).draggable({containment: '#container'});
-			//card_array[key].set_drag(1);
-		}*/
-		
+
 		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
 		board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
 	}
@@ -60,34 +50,26 @@ function mk_network()
 	{
 		//alert("Updating Board: " + last_update);
 		var var_string = 'op=2&game_id=' + this.game_id + "&lastu=" + last_update;
-		//alert(var_string);
 		this.ajax('cards_mgmt.php', var_string, this.finish_board_update, true);
 	}
 	
 	//Get x,y positions and flip value
 	this.finish_board_update = function(ajax_obj)
 	{
-		//alert(ajax_obj.responseText);
-		var results = ajax_obj.responseText.split("|");
-		last_update = results[1];
-		//alert(last_update);
-		//var new_game = JSEntityDecoder(ajax_obj.responseText, customDelim);
-		var new_game = JSEntityDecoder(results[2], customDelim);
-		var added_card = 0;
-		//alert(new_game.fieldNames);
-		for(card in new_game){
-			if((+isTableKey(card)) != 1){
-				//alert(new_game[key]['cid']);
-				if (typeof card_array[card] == "undefined"){
-					var fname = card + '.svg';
-					var new_card = new card(fname, card);
-					added_card = 1;
-				}
+		var results = JSON.parse(ajax_obj.responseText);
+		last_update = results.time;
+		var added_care = 0;
+
+		for (key in results.query) {
+			var cur_key = results.query[key];
+			if (typeof card_array[cur_key.cid] == "undefined") {
+				var fname = cur_key.cid + '.svg';
+				var new_card = new card(fname, cur_key.cid);
+
+				added_card = 1;
 			}
 		}
-		
-		//alert(player_id);
-		
+
 		if (added_card == 1){
 			for(key in card_array){
 				if ((+new_game[key]['locked']) == player_id){
@@ -99,27 +81,22 @@ function mk_network()
 		//Set positions, flipped and locks.
 		//TODO!! Perhaps remove the entry from the JSON or table instead of doing check
 		//TODO!! The thing still updates the selected card, even though I told it not to...
-		for(key in new_game){
-			if((+isTableKey(key)) != 1){
-				//Set position
-				if (selected_card != key) {
-					//alert("Updating key:" + key);
-					var card_div = document.getElementById('card' + key);
-					card_div.style.left = new_game[key]['x_pos'] + 'px';
-					card_div.style.top = new_game[key]['y_pos'] + 'px';
-					
-					card_array[key].db_flip_card((+new_game[key]['flipped']));
-					if((+new_game[key]['locked']) == -1){
-						card_array[key].set_selected(0);
-						
-					} else if((+new_game[key]['locked']) != player_id){
-						//alert("Card with red border: " + key);
-						card_array[key].set_selected(-1);
-					}
-					
-				} else {
-					//alert("Skipping card update");
+		for (key in results.query) {
+			var cur_key = results.query[key];
+
+			if (selected_card != cur_key.cid) {
+				var card_div = document.getElementById('card' + cur_key.cid);
+				card_div.style.left = cur_key.xpos + 'px';
+				card_div.style.top = cur_key.y_pos + 'px';
+
+				card_array[cur_key.cid].db_flip_card((+cur_key.flipped));
+				if ((+cur_key.locked) == -1) {
+					card_array[cur_key.cid].set_selected(0);
+				} else if ((+cur_key.locked) != this.player_id) {
+					card_array[cur_key.cid].set_selected(-1);
 				}
+			} else {
+				//alert("skipping card update");
 			}
 		}
 	}
@@ -192,13 +169,11 @@ function mk_network()
 	this.secure_lock = function (card_idx)
 	{
 		var var_string = "op=4&player_id=" + this.player_id + "&card_id=" + card_idx + "&game_id=" + this.game_id;
-		//alert(var_string);
 		
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, err_funct, false);
-		var ajax_obj = ajax_obj.responseText.split(customDelim);
-		//alert(ajax_obj[0]);
+		var ajax_obj = JSON.parse(ajax_obj.responseText);
 		
-		return (+ajax_obj[1]);	//temp: will return database response soon
+		return (+ajax_obj);	//temp: will return database response soon
 	}//Asks the database for a selection lock. Returns 1 if successful
 	
 	//Will remove the user's lock on the currently selected card
@@ -207,10 +182,9 @@ function mk_network()
 	{
 		var var_string =  "op=5&player_id=" + this.player_id + "&card_id=" + card_idx + "&game_id=" + this.game_id;
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, err_funct, false);
-		//alert(ajax_obj.responseText);
-		var ajax_obj = ajax_obj.responseText.split(customDelim);
+		var ajax_obj = JSON.parse(ajax_obj.responseText);
 		
-		if ((+ajax_obj[1]) == 0){
+		if ((+ajax_obj) == 0){
 			alert("We have lock release failures!");
 		}
 	}
@@ -220,13 +194,10 @@ function mk_network()
 		var var_string = 'op=7&game_id=' + this.game_id + "&player_id=" + this.player_id;
 		//alert(var_string);
 		var result = this.ajax('cards_mgmt.php', var_string, err_funct, false);
-		var cards = JSEntityDecoder(result.responseText, customDelim);
+		var cards = JSON.parse(result.responseText);
 		
 		for(card_idx in cards){
-			if((+isTableKey(card_idx)) != 1){
-				//alert(new_game[key]['cid']);
-				card_array[card_idx].set_selected(0);
-			}
+			card_array[card_idx].set_selected(0);
 		}
 	}
 	
@@ -237,8 +208,8 @@ function mk_network()
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, err_funct, false);
 		//alert(ajax_obj.responseText);
 		
-		var out_str = ajax_obj.responseText.split(customDelim);
-		return out_str[1];
+		var out_str = JSON.parse(ajax_obj.responseText);
+		return out_str;
 	}	//Sets "flipped" to the new flip_val
 	
 	//Responsible for carrying out AJAX requests

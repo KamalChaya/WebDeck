@@ -57,12 +57,12 @@
 		
 		$sql = "INSERT INTO Cards (uid, cid, last_change, owner, x_pos, y_pos, flipped, game, locked)
 				VALUES (NULL, $card_id, current_time, $owner_id, $x_pos, $y_pos, 0, $game, 0);";
-		echo "   '".$sql."'      ";
+		//echo "   '".$sql."'      ";
 		$res = execute_query($sql);
 		if($res == true){
-			echo $customDelim . "1" . $customDelim;
+			echo "1";
 		} else {
-			echo $customDelim . "0" . $customDelim;
+			echo "0";
 		}
 	}
 	
@@ -84,12 +84,12 @@
 				SET last_change = '$time', x_pos = $x_pos, y_pos = $y_pos
 				WHERE C.cid = '$card_id' AND C.game = $game AND C.locked = $player_id";
 		
-		echo "     " . $sql . "      ";
+		//echo "     " . $sql . "      ";
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
-			echo $customDelim . "1" . $customDelim;
+			echo "1";
 		} else {
-			echo $customDelim . "0" . $customDelim;
+			echo "0";
 		}
 	}
 	
@@ -97,7 +97,7 @@
 	function enter_session(){
 		$game_id = $_POST['game_id'];
 		
-		echo 'Game ID: ' . $game_id;
+		//echo 'Game ID: ' . $game_id;
 		
 		$sql = "	SELECT cid, x_pos, y_pos, flipped, locked
 				FROM Cards
@@ -113,17 +113,17 @@
 		$time = $_POST['lastu'];
 		
 		$time = date('H:i:s', ($time));
-		echo $time;
-		echo 'Game ID: ' . $game_id;
+
+		//echo 'Game ID: ' . $game_id;
 		
 		$sql = "	SELECT cid, x_pos, y_pos, flipped, locked
 				FROM Cards
 				WHERE game = $game_id AND last_change >= '$time';";
 		
-		echo "\n\n" . $sql . "\n\n";
-		$result = execute_query($sql);	
-		$tableString = php_entity_encode($result);
-		echo "|" . time() . "|";	//That's ugly
+		//echo "\n\n" . $sql . "\n\n";
+		$result = execute_query($sql);
+		$tableString = '{"time":"' . $time . '","query":'
+			. php_entity_encode($result) . '}';
 		echo $tableString;
 	}
 	
@@ -144,16 +144,16 @@
 				SET C.locked = $player_id, last_change = '$time'
 				WHERE C.locked = -1 AND C.game = $game_id AND C.cid = '$card_id' ;";
 				
-		echo "\n\n" . $sql . "\n\n";
+		//echo "\n\n" . $sql . "\n\n";
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
 			//echo "They got the lock!";
-			echo $customDelim . "1" . $customDelim;
+			echo "1";
 			
 		} else {
 			//echo "Somebody has it locked!";
-			echo $customDelim . "0" . $customDelim;
+			echo "0";
 		}
 	}
 	
@@ -176,16 +176,16 @@
 				SET C.locked = -1, last_change = '$time'
 				WHERE C.locked = $player_id AND C.game = $game_id AND C.cid = '$card_id' ;";
 				
-		echo "\n\n" . $sql . "\n\n";
+		//echo "\n\n" . $sql . "\n\n";
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
-			echo "Lock Released";
-			echo $customDelim . "1" . $customDelim;
+			//echo "Lock Released";
+			echo "1";
 			
 		} else {
-			echo "Problems";
-			echo $customDelim . "0" . $customDelim;
+			//echo "Problems";
+			echo "0";
 		}
 	}
 	
@@ -206,16 +206,17 @@
 		$sql = "	UPDATE Cards C
 				SET C.flipped = $flipped, C.last_change = '$time'
 				WHERE C.locked = -1 AND C.cid = '$card_id' AND C.game = $game_id;";
-		echo "\n\n" . $sql . "\n\n";
+		
+		//echo "\n\n" . $sql . "\n\n";
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
-			echo "Card Flipped!";
-			echo $customDelim . "1" . $customDelim;
+			//echo "Card Flipped!";
+			echo "1";
 			
 		} else {
-			echo "Card not flipped";
-			echo $customDelim . "0" . $customDelim;
+			//echo "Card not flipped";
+			echo "0";
 		}
 	}
 	
