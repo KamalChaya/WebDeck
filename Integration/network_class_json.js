@@ -33,31 +33,18 @@ function mk_network()
 		//alert("Initializing board through network class");
 		var var_string = 'op=3&game_id=' + this.game_id;
 		var ajax_obj = this.ajax('cards_mgmt.php', var_string, this.finish_board_update, false);
-		//alert(ajax_obj.responseText);
 		var new_game = JSON.parse(ajax_obj.responseText);
-		//alert(new_game.fieldNames);
 
 		for(key in new_game.Cards){
-			/*
-			if((+isTableKey(key)) != 1){
-				//alert("Making Card");
-				var fname = key + '.svg';
-				var new_card = new card(fname, key);
-				//alert(new_card.id);
-			}
-			*/
 			var fname = new_game.Cards[key].cid + '.svg';
 			var new_card = new card(fname, new_game.Cards[key].cid);
 		}
 		
 		//Make the cards draggable
 		for(key in card_array){
-			//alert("Making card"+key+" draggable");
-			//$('#card' + key).draggable({containment: '#container'});
 			card_array[key].set_drag(1);
 		}
 		
-		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
 		board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
 	}
 	
@@ -66,41 +53,22 @@ function mk_network()
 	{
 		//alert("Updating Board: " + last_update);
 		var var_string = 'op=2&game_id=' + this.game_id + "&lastu=" + last_update;
-		//alert(var_string);
 		this.ajax('cards_mgmt.php', var_string, this.finish_board_update, true);
 	}
 	
 	//Get x,y positions and flip value
 	this.finish_board_update = function(ajax_obj)
 	{
-		//alert(ajax_obj.responseText);
-		//var results = ajax_obj.responseText.split("|");
-		//last_update = results[1];
-		//last_update = date('H:i:s', time());
-
-		//alert(last_update);
-		//var new_game = JSEntityDecoder(ajax_obj.responseText, customDelim);
-		//var new_game = JSON.parse(results[2]);
 		var new_game = JSON.parse(ajax_obj.responseText);
-		//alert(new_game.time);
-		//alert(new_game.query[0].cid);
 		last_update = new_game.time;
 		var added_card = 0;
-		//alert(new_game.fieldNames);
 		for(key in new_game.query){
-			/*
-			if((+isTableKey(key)) != 1){
-				//alert(new_game[key]['cid']);
-				if (typeof card_array[key] == "undefined"){
-					var fname = key + '.svg';
-					var new_card = new card(fname, key);
-					added_card = 1;
-				}
-			}
-			*/
-			if (typeof card_array[new_game.query[key].cid] == "undefined") {
-				var fname = new_game.query[key].cid + '.svg';
-				var new_card = new card(fname, new_game.query[key].cid);
+			var cur_key = new_game.query[key];
+			if (typeof card_array[cur_key.cid] == "undefined") {
+
+				var fname = cur_key.cid + '.svg';
+				var new_card = new card(fname, cur_key.cid);
+
 				added_card = 1;
 			}
 		}
@@ -116,19 +84,18 @@ function mk_network()
 		//TODO!! Perhaps remove the entry from the JSON or table instead of doing check
 		//TODO!! The thing still updates the selected card, even though I told it not to...
 		for(key in new_game.query){
-			if (selected_card != new_game.query[key].cid) {
-				//alert("Updating key:" + key);
-				var card_div = document.getElementById('card' + new_game.query[key].cid);
-				card_div.style.left = new_game.query[key].x_pos + 'px';
-				card_div.style.top = new_game.query[key].y_pos + 'px';
+			var cur_key = new_game.query[key];
+			if (selected_card != cur_key.cid) {
+				var card_div = document.getElementById('card' + cur_key.cid);
+				card_div.style.left = cur_key.x_pos + 'px';
+				card_div.style.top = cur_key.y_pos + 'px';
 				
-				card_array[new_game.query[key].cid].db_flip_card((+new_game.query[key].flipped));
-				if((+new_game.query[key].locked) == -1){
-					card_array[new_game.query[key].cid].set_selected(0);
+				card_array[cur_key.cid].db_flip_card((+cur_key.flipped));
+				if((+cur_key.locked) == -1){
+					card_array[cur_key.cid].set_selected(0);
 					
-				} else if((+new_game.query[key].locked) != this.player_id){
-					//alert("Card with red border: " + key);
-					card_array[new_game.query[key].cid].set_selected(-1);
+				} else if((+cur_key.locked) != this.player_id){
+					card_array[cur_key.cid].set_selected(-1);
 				}
 				
 			} else {
@@ -141,7 +108,6 @@ function mk_network()
 	//card_id: The index in the card array of the card in question
 	this.trans_card_pos = function(card_idx)
 	{
-		//alert("Beginning transmission of " + card_idx);
 		
 		var got_lock = this.secure_lock(card_idx);
 		if (got_lock == 1){
@@ -150,7 +116,7 @@ function mk_network()
 			
 			//Ignore this card's updates
 			selected_card = card_idx;
-			//alert(selected_card);
+
 			//Set the timer interval
 			this.send_update_timer = setInterval("network._trans_pos(" + '"' + card_idx + '"' +");", this.send_update_interval);
 			
@@ -170,12 +136,9 @@ function mk_network()
 		var x_pos = card.offsetLeft;
 		var y_pos = card.offsetTop;
 		
-		//alert('x_pos = ' + x_pos + '; y_pos' + y_pos);
 		//AJAX
 		var var_string = "op=1&game_id=" + this.game_id + "&cid=" + card_idx + "&pid=" + this.player_id + "&x_pos=" + x_pos + "&y_pos=" + y_pos;
-		//alert(var_string);
 		this.ajax("cards_mgmt.php", var_string, empty_funct, true);
-		//alert(ajax_obj.responseText);
 	}
 	
 	//Stop transmitting the current position of the card.
@@ -204,11 +167,9 @@ function mk_network()
 	this.secure_lock = function (card_idx)
 	{
 		var var_string = "op=4&player_id=" + this.player_id + "&card_id=" + card_idx + "&game_id=" + this.game_id;
-		//alert(var_string);
 		
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, err_funct, false);
 		var ajax_obj = JSON.parse(ajax_obj.responseText);
-		//alert(ajax_obj[0]);
 		
 		return (+ajax_obj);	//temp: will return database response soon
 	}//Asks the database for a selection lock. Returns 1 if successful
@@ -241,7 +202,6 @@ function mk_network()
 	//Responsible for carrying out AJAX requests
 	//async: true or false for asynchronous requests. non-async requests return an AJAX obj
 	this.ajax = function(file, var_string, funct, async){
-		//alert('Ajax accessed');
 		if(window.XMLHttpRequest){
 			var ajax_obj =  new XMLHttpRequest();
 		}else{
@@ -251,7 +211,6 @@ function mk_network()
 		ajax_obj.open('POST', this.web_root + file, async);
 		ajax_obj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		
-		///alert(var_string);
 		ajax_obj.send(var_string);
 		
 		if (async){
