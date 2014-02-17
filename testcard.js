@@ -1,8 +1,8 @@
 function test_all_card() {
     db_flip_card_test();
     test_set_position();
-    test_set_drag();
-    test_set_selected();
+   // test_set_drag();
+   // test_set_selected();
 }
 
 function db_flip_card_test()
