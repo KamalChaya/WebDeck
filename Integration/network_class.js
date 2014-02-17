@@ -19,11 +19,11 @@ function mk_network()
 	this.game_id = 4;
 	this.board_update_interval = 5000;	//milliseconds between updates
 	this.board_update_timer; 			//A reference to the update timer (incase we need to remove it)
-	this.last_update;				//Seconds since the EPOCH that we last updated =)	
+	this.last_update;					//Seconds since the EPOCH that we last updated =)	
 	this.send_update_interval = 2000;		//milliseconds between updating a card.
 	this.send_update_timer;			//A reference to the send timer (we will need to remove it)
 	this.selected_card = "";			//This variable disable updating the currently selected card. See finish_board_update()
-	this.player_id = 1;	//TEMP!! Make a player class for this.
+	this.player_id = 1;				//TEMP!! Make a player class for this.
 	this.test = 0;
 	//Member functions
 	//Responsible for getting the 52 cards from the server, creating them
@@ -35,10 +35,10 @@ function mk_network()
 		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
 		var new_game = JSON.parse(ajax_obj.responseText);
 
-		for(key in new_game.Cards){
-			cur_key = new_game.Cards[key];
-			var fname = cur_key.cid + '.svg';
-			var new_card = new card(fname, cur_key.cid);
+		for(card in new_game.Cards){
+			cur_card = new_game.Cards[card];
+			var fname = cur_card.cid + '.svg';
+			var new_card = new card(fname, cur_card.cid);
 		}
 
 		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
@@ -58,22 +58,22 @@ function mk_network()
 	{
 		var results = JSON.parse(ajax_obj.responseText);
 		last_update = results.time;
-		var added_care = 0;
+		var added_card = 0;
 
-		for (key in results.query) {
-			var cur_key = results.query[key];
-			if (typeof card_array[cur_key.cid] == "undefined") {
-				var fname = cur_key.cid + '.svg';
-				var new_card = new card(fname, cur_key.cid);
+		for (card in results.query) {
+			var cur_card = results.query[card];
+			if (typeof card_array[cur_card.cid] == "undefined") {
+				var fname = cur_card.cid + '.svg';
+				var new_card = new card(fname, cur_card.cid);
 
 				added_card = 1;
 			}
 		}
 
 		if (added_card == 1){
-			for(key in card_array){
-				if ((+new_game[key]['locked']) == player_id){
-					card_array[key].set_drag(1);
+			for(card in card_array){
+				if ((+new_game[card]['locked']) == player_id){
+					card_array[card].set_drag(1);
 				}
 			}
 		}
@@ -81,19 +81,20 @@ function mk_network()
 		//Set positions, flipped and locks.
 		//TODO!! Perhaps remove the entry from the JSON or table instead of doing check
 		//TODO!! The thing still updates the selected card, even though I told it not to...
-		for (key in results.query) {
-			var cur_key = results.query[key];
+		for (card in results.query) {
+			var cur_card = results.query[card];
 
-			if (selected_card != cur_key.cid) {
-				var card_div = document.getElementById('card' + cur_key.cid);
-				card_div.style.left = cur_key.xpos + 'px';
-				card_div.style.top = cur_key.y_pos + 'px';
+			if (selected_card != cur_card.cid) {
+				/*var card_div = document.getElementById('card' + cur_card.cid);
+				card_div.style.left = cur_card.xpos + 'px';
+				card_div.style.top = cur_card.y_pos + 'px';*/
+				card_array[cur_card.cid].set_position(cur_card.xpos, cur_card.y_pos)
 
-				card_array[cur_key.cid].db_flip_card((+cur_key.flipped));
-				if ((+cur_key.locked) == -1) {
-					card_array[cur_key.cid].set_selected(0);
-				} else if ((+cur_key.locked) != this.player_id) {
-					card_array[cur_key.cid].set_selected(-1);
+				card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
+				if ((+cur_card.locked) == -1) {
+					card_array[cur_card.cid].set_selected(0);
+				} else if ((+cur_card.locked) != this.player_id) {
+					card_array[cur_card.cid].set_selected(-1);
 				}
 			} else {
 				//alert("skipping card update");
