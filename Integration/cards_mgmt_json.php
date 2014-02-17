@@ -1,7 +1,7 @@
 <?php
 	include('db_connect.php');
-	include('php_table_encode_json.php');
-	
+	include('php_table_encode.php');
+
 	$customDelim = "~";
 	
 	$op = $_POST['op'];
@@ -53,7 +53,7 @@
 		
 		$sql = "INSERT INTO Cards (uid, cid, last_change, owner, x_pos, y_pos, flipped, game, locked)
 				VALUES (NULL, $card_id, current_time, $owner_id, $x_pos, $y_pos, 0, $game, 0);";
-		echo "   '".$sql."'      ";
+		//echo "   '".$sql."'      ";
 		$res = execute_query($sql);
 		if($res == true){
 			echo "1";
@@ -80,7 +80,7 @@
 				SET last_change = '$time', x_pos = $x_pos, y_pos = $y_pos
 				WHERE C.cid = '$card_id' AND C.game = $game AND C.locked = $player_id";
 		
-		echo "     " . $sql . "      ";
+		//echo "     " . $sql . "      ";
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
 			echo "1";
@@ -95,16 +95,18 @@
 		$time = $_POST['lastu'];
 		
 		$time = date('H:i:s', ($time));
-		echo $time;
-		echo 'Game ID: ' . $game_id;
+		//echo $time;
+		//echo 'Game ID: ' . $game_id;
 		
 		$sql = "	SELECT cid, x_pos, y_pos, flipped, locked
 				FROM Cards
 				WHERE game = $game_id AND last_change >= '$time';";
 		
-		echo "\n\n" . $sql . "\n\n";
-		$result = execute_query($sql);	
-		$tableString = php_entity_encode($result);
+		//echo "\n\n" . $sql . "\n\n";
+		$result = execute_query($sql);
+		$tableString = '{"time":"' . $time . '","query":';
+		$tableString .= php_entity_encode($result);
+		$tableString .= '}';
 		//echo "|" . time() . "|";	//That's ugly
 		echo $tableString;
 	}
@@ -114,8 +116,7 @@
 	function enter_session(){
 		$game_id = $_POST['game_id'];
 		
-		echo 'Game ID: ' . $game_id;
-		
+		//echo 'Game ID: ' . $game_id;
 		$sql = "	SELECT cid, x_pos, y_pos, flipped, locked
 				FROM Cards
 				WHERE game = $game_id;";
@@ -142,7 +143,7 @@
 				SET C.locked = $player_id, last_change = '$time'
 				WHERE C.locked = -1 AND C.game = $game_id AND C.cid = '$card_id' ;";
 				
-		echo "\n\n" . $sql . "\n\n";
+		//echo "\n\n" . $sql . "\n\n";
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
@@ -172,7 +173,7 @@
 				SET C.locked = -1, last_change = '$time'
 				WHERE C.locked = $player_id AND C.game = $game_id AND C.cid = '$card_id' ;";
 				
-		echo "\n\n" . $sql . "\n\n";
+		//echo "\n\n" . $sql . "\n\n";
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
@@ -201,7 +202,7 @@
 		$sql = "	UPDATE Cards C
 				SET C.flipped = $flipped, C.last_change = '$time'
 				WHERE C.locked = -1 AND C.cid = '$card_id' AND C.game = $game_id;";
-		echo "\n\n" . $sql . "\n\n";
+		//echo "\n\n" . $sql . "\n\n";
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){
