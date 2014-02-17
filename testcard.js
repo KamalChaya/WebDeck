@@ -1,3 +1,10 @@
+function test_all_card() {
+    db_flip_card_test();
+    test_set_position();
+    test_set_drag();
+    test_set_selected();
+}
+
 function db_flip_card_test()
 {
     card_array["5S"].set_position(200,200);
