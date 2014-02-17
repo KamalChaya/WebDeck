@@ -40,7 +40,7 @@ function card(fname, id)
 			
 		} else if (event.button == 0) {
 			//left click
-			network.send_card_pos(this.id);
+			network.grab_card(this.id);
 			
 		}
 	}
@@ -94,8 +94,8 @@ function card(fname, id)
 	this.set_position = function (x_pos, y_pos)
 	{
 		$('#' + this.card_id).css('position', 'absolute');
-		$('#' + this.card_id).css('top', x_pos);
-		$('#' + this.card_id).css('left', y_pos);
+		$('#' + this.card_id).css('top', y_pos);
+		$('#' + this.card_id).css('left', x_pos);
 	}
 	
 	//draggable: 1 to make the card draggable, 0 to make it not draggable
@@ -126,10 +126,11 @@ function card(fname, id)
 	//alert("Constructor called: fname " + fname + " id: " + id);
 	var cont_div = document.getElementById('container');
 	var card_div = "<div id = '" + this.card_id + "' class = 'card2 ' onmousedown = 'card_array[" +'"'+ id + '"' + "].handle_click(event); card_array[" + '"' + id + '"' + "].bring_to_top();' onmouseup = 'card_array[" + '"' + id + '"' + "].handle_release(event);'>";
-	card_div += "<image id = '" + this.imgid + "' src='" + this.image +"' alt=''>";
+	card_div += "<image id = '" + this.imgid + "' src='" + this.image +"' alt='"+this.card_id+"'></image>";
 	card_div += "</div>";
 	//alert(card_div);
 	cont_div.innerHTML += card_div;
+	//alert(cont_div.innerHTML);
 	//card_array.push(this);
 	card_array[id] = this;	//This links the id of the card to its position in the card array
 	//alert(card_array[id].id);

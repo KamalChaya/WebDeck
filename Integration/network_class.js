@@ -15,14 +15,14 @@ function empty_funct(ajax_obj)
 
 function mk_network()
 {
-	this.web_root = 'http://web.engr.oregonstate.edu/~cartejac/';
+	this.web_root = 'http://web.engr.oregonstate.edu/~cartejac/J_Int/';
 	this.game_id = 4;
 	this.board_update_interval = 5000;	//milliseconds between updates
 	this.board_update_timer; 			//A reference to the update timer (incase we need to remove it)
 	this.last_update;					//Seconds since the EPOCH that we last updated =)	
-	this.send_update_interval = 2000;		//milliseconds between updating a card.
+	this.send_update_interval = 5000;		//milliseconds between updating a card.
 	this.send_update_timer;			//A reference to the send timer (we will need to remove it)
-	this.selected_card = "";			//This variable disable updating the currently selected card. See finish_board_update()
+	this.grabbed_card = "";			//This variable disable updating the currently selected card. See finish_board_update()
 	this.player_id = 1;				//TEMP!! Make a player class for this.
 	this.test = 0;
 	//Member functions
@@ -31,18 +31,21 @@ function mk_network()
 	this.init_board = function()
 	{
 		//alert("Initializing board through network class");
+		
 		var var_string = 'op=3&game_id=' + this.game_id;
 		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
 		var new_game = JSON.parse(ajax_obj.responseText);
-
-		for(card in new_game.Cards){
-			cur_card = new_game.Cards[card];
+		
+		for(card_idx in new_game){
+			//alert(card_idx);
+			cur_card = new_game[card_idx];
 			var fname = cur_card.cid + '.svg';
+			//alert("Making card '" + fname + "'");
 			var new_card = new card(fname, cur_card.cid);
 		}
 
 		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
-		board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
+		//board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
 	}
 	
 	
@@ -60,8 +63,8 @@ function mk_network()
 		last_update = results.time;
 		var added_card = 0;
 
-		for (card in results.query) {
-			var cur_card = results.query[card];
+		for (card_idx in results.query) {
+			var cur_card = results.query[card_idx];
 			if (typeof card_array[cur_card.cid] == "undefined") {
 				var fname = cur_card.cid + '.svg';
 				var new_card = new card(fname, cur_card.cid);
@@ -70,25 +73,32 @@ function mk_network()
 			}
 		}
 
-		if (added_card == 1){
-			for(card in card_array){
-				if ((+new_game[card]['locked']) == player_id){
-					card_array[card].set_drag(1);
-				}
+		//if (added_card == 1){
+		//	card_array[grabbed_card].set_drag(1);
+			/*for (card_idx in results.query) {
+				var cur_card = results.query[card_idx];
+				
+				if ((+cur_card.lo
 			}
-		}
+			for(card_idx in card_array){
+				var cur_card = results.query[card_idx]
+				if ((+cur_card.locked) == player_id){
+					card_array[card_idx].set_drag(1);
+				}
+			}*/
+		//}
 		
 		//Set positions, flipped and locks.
 		//TODO!! Perhaps remove the entry from the JSON or table instead of doing check
 		//TODO!! The thing still updates the selected card, even though I told it not to...
-		for (card in results.query) {
-			var cur_card = results.query[card];
+		for (card_idx in results.query) {
+			var cur_card = results.query[card_idx];
 
-			if (selected_card != cur_card.cid) {
+			if (grabbed_card != cur_card.cid) {
 				/*var card_div = document.getElementById('card' + cur_card.cid);
 				card_div.style.left = cur_card.xpos + 'px';
 				card_div.style.top = cur_card.y_pos + 'px';*/
-				card_array[cur_card.cid].set_position(cur_card.xpos, cur_card.y_pos)
+				card_array[cur_card.cid].set_position(cur_card.x_pos, cur_card.y_pos);
 
 				card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
 				if ((+cur_card.locked) == -1) {
@@ -97,25 +107,25 @@ function mk_network()
 					card_array[cur_card.cid].set_selected(-1);
 				}
 			} else {
-				//alert("skipping card update");
+				//alert("skipping card update: " + grabbed_card);
 			}
 		}
 	}
 	
 	//Interface for changing a card's position. Started on mousedown
 	//card_id: The index in the card array of the card in question
-	this.send_card_pos = function(card_idx)
+	this.grab_card = function(card_idx)
 	{
 		//alert("Beginning transmission of " + card_idx);
-		
+
 		var got_lock = this.secure_lock(card_idx);
 		if (got_lock == 1){
 			//The user is permitted to move it
 			card_array[card_idx].set_selected(1);
 			
 			//Ignore this card's updates
-			selected_card = card_idx;
-			//alert(selected_card);
+			grabbed_card = card_idx;
+			//alert(grabbed_card);
 			//Set the timer interval
 			card_array[card_idx].set_drag(1);
 			this.send_update_timer = setInterval("network._send_pos(" + '"' + card_idx + '"' +");", this.send_update_interval);
@@ -132,6 +142,7 @@ function mk_network()
 	//	and sending card positions.
 	this._send_pos = function(card_idx)
 	{
+		alert("In send_pos");
 		var card = document.getElementById(card_array[card_idx].card_id);
 		var x_pos = card.offsetLeft;
 		var y_pos = card.offsetTop;
@@ -147,18 +158,18 @@ function mk_network()
 	//Stop transmitting the current position of the card.
 	this.stop_send = function(card_idx)
 	{
-		//if(card_idx != selected_card){
+		//if(card_idx != grabbed_card){
 		//	alert("A user was able to change their selected card without letting go of the first card. We got problems.");
 		//}
 		
 		//Remove the selection and lock
-		//alert("Stopping the selection of " + selected_card);
-		//card_array[selected_card].set_selected(0);
-		//this.remove_lock(selected_card);
+		//alert("Stopping the selection of " + grabbed_card);
+		//card_array[grabbed_card].set_selected(0);
+		//this.remove_lock(grabbed_card);
 		
 		clearInterval(this.send_update_timer);
 		
-		selected_card = "";
+		grabbed_card = "";
 	}
 	
 	//Needs a playerID to check for a lock
@@ -196,20 +207,22 @@ function mk_network()
 		//alert(var_string);
 		var result = this.ajax('cards_mgmt.php', var_string, err_funct, false);
 		var cards = JSON.parse(result.responseText);
-		
+		//alert(result.responseText);
 		for(card_idx in cards){
-			card_array[card_idx].set_selected(0);
+			//alert("'" + cards[card_idx].cid + "'");
+			card_array[cards[card_idx].cid].set_selected(0);
 		}
 	}
 	
 	this.flipdb = function(card_idx, flip_val)
 	{
-		var var_string = "op=6&card_id=" + card_idx + "&game_id=" + this.game_id + "&flipped=" + flip_val;
+		var var_string = "op=6&pid="+player_id+"&card_id=" + card_idx + "&game_id=" + this.game_id + "&flipped=" + flip_val;
 		//alert(var_string);
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, err_funct, false);
 		//alert(ajax_obj.responseText);
 		
 		var out_str = JSON.parse(ajax_obj.responseText);
+		//alert(out_str);
 		return out_str;
 	}	//Sets "flipped" to the new flip_val
 	

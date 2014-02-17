@@ -142,7 +142,7 @@
 		
 		$sql = "	UPDATE Cards C
 				SET C.locked = $player_id, last_change = '$time'
-				WHERE C.locked = -1 AND C.game = $game_id AND C.cid = '$card_id' ;";
+				WHERE (C.locked = -1 OR C.locked = $player_id) AND C.game = $game_id AND C.cid = '$card_id' ;";
 				
 		//echo "\n\n" . $sql . "\n\n";
 		
@@ -199,13 +199,14 @@
 		$game_id = $_POST['game_id'];
 		$card_id = $_POST['card_id'];
 		$flipped = $_POST['flipped'];
+		$player_id = $_POST['pid'];
 		
 		$time = time();
 		$time = date('H:i:s', $time);
 		
 		$sql = "	UPDATE Cards C
 				SET C.flipped = $flipped, C.last_change = '$time'
-				WHERE C.locked = -1 AND C.cid = '$card_id' AND C.game = $game_id;";
+				WHERE (C.locked = -1 OR C.locked = $player_id) AND C.cid = '$card_id' AND C.game = $game_id;";
 		
 		//echo "\n\n" . $sql . "\n\n";
 		
