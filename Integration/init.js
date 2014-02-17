@@ -25,6 +25,8 @@ function init(){
 	card_map [13] = 'K';
 	
 	network.init_board();
+
+	setInterval('chat.update()', 1000);
 	
 	/*for(var suit = 0; suit < 4; suit++) {
 		for(var value = 1; value < 14; value++) {

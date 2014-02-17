@@ -106,3 +106,21 @@ body{
 	margin-left: 10px;
 	margin-top: 10px;
 }
+
+/*** CHAT INTERFACE ***/
+
+#chat-area{
+	background-color:white;
+	position:relative;
+	width:75%;
+	height:50%;
+	left:5%;
+}
+
+#send-message-area{
+	position:relative;
+	left:5%;
+}
+#sendie{
+	resize:none;
+}
