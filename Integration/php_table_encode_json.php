@@ -21,6 +21,7 @@
 		while($row = $result->fetch_object()) {
 			$tmp = $row;
 			array_push($returnArray, $tmp);
+		}
 		
 		//Return the result for processing/echoing
 		return json_encode($returnArray);

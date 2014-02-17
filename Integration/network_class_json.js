@@ -3,7 +3,7 @@
 //	of a synchronous ajax call. If you see it, you did something wrong.
 function err_funct(ajax_obj)
 {
-	alert("This function should only be specified for a synchronous AJAX request! Check your function call!");
+	alert("This function should only be specified for a synchronous AJAX request! check your function call!");
 }
 
 //This function is simply a placeholder when the responseText of
@@ -15,7 +15,7 @@ function empty_funct(ajax_obj)
 
 function mk_network()
 {
-	this.web_root = 'http://web.engr.oregonstate.edu/~cartejac/';
+	this.web_root = 'http://web.engr.oregonstate.edu/~changjo/';
 	this.game_id = 4;
 	this.board_update_interval = 300;	//milliseconds between updates
 	this.board_update_timer; 			//A reference to the update timer (incase we need to remove it)
@@ -33,6 +33,7 @@ function mk_network()
 		//alert("Initializing board through network class");
 		var var_string = 'op=3&game_id=' + this.game_id;
 		var ajax_obj = this.ajax('cards_mgmt.php', var_string, this.finish_board_update, false);
+		//alert(ajax_obj.responseText);
 		var new_game = JSON.parse(ajax_obj.responseText);
 		//alert(new_game.fieldNames);
 
@@ -45,8 +46,8 @@ function mk_network()
 				//alert(new_card.id);
 			}
 			*/
-			var fname = key.cid + '.svg';
-			var new_card = new card(fname, key.cid);
+			var fname = new_game.Cards[key].cid + '.svg';
+			var new_card = new card(fname, new_game.Cards[key].cid);
 		}
 		
 		//Make the cards draggable
@@ -73,15 +74,20 @@ function mk_network()
 	this.finish_board_update = function(ajax_obj)
 	{
 		//alert(ajax_obj.responseText);
-		var results = ajax_obj.responseText.split("|");
-		last_update = results[1];
+		//var results = ajax_obj.responseText.split("|");
+		//last_update = results[1];
+		//last_update = date('H:i:s', time());
 
 		//alert(last_update);
 		//var new_game = JSEntityDecoder(ajax_obj.responseText, customDelim);
-		var new_game = JSON.parse(results[2]);
+		//var new_game = JSON.parse(results[2]);
+		var new_game = JSON.parse(ajax_obj.responseText);
+		//alert(new_game.time);
+		//alert(new_game.query[0].cid);
+		last_update = new_game.time;
 		var added_card = 0;
 		//alert(new_game.fieldNames);
-		for(key in new_game){
+		for(key in new_game.query){
 			/*
 			if((+isTableKey(key)) != 1){
 				//alert(new_game[key]['cid']);
@@ -92,9 +98,11 @@ function mk_network()
 				}
 			}
 			*/
-			var fname = key.cid + '.svg';
-			var new_card = new card(fname, key.cid);
-			added_card = 1;
+			if (typeof card_array[new_game.query[key].cid] == "undefined") {
+				var fname = new_game.query[key].cid + '.svg';
+				var new_card = new card(fname, new_game.query[key].cid);
+				added_card = 1;
+			}
 		}
 		
 		//Make the cards draggable again
@@ -107,20 +115,20 @@ function mk_network()
 		//Set positions, flipped and locks.
 		//TODO!! Perhaps remove the entry from the JSON or table instead of doing check
 		//TODO!! The thing still updates the selected card, even though I told it not to...
-		for(key in new_game){
-			if (selected_card != key) {
+		for(key in new_game.query){
+			if (selected_card != new_game.query[key].cid) {
 				//alert("Updating key:" + key);
-				var card_div = document.getElementById('card' + key.cid);
-				card_div.style.left = key.x_pos + 'px';
-				card_div.style.top = key.y_pos + 'px';
+				var card_div = document.getElementById('card' + new_game.query[key].cid);
+				card_div.style.left = new_game.query[key].x_pos + 'px';
+				card_div.style.top = new_game.query[key].y_pos + 'px';
 				
-				card_array[key.cid].db_flip_card((+key.flipped));
-				if((+key.locked) == -1){
-					card_array[key.cid].set_selected(0);
+				card_array[new_game.query[key].cid].db_flip_card((+new_game.query[key].flipped));
+				if((+new_game.query[key].locked) == -1){
+					card_array[new_game.query[key].cid].set_selected(0);
 					
-				} else if((+key.locked) != this.player_id){
+				} else if((+new_game.query[key].locked) != this.player_id){
 					//alert("Card with red border: " + key);
-					card_array[key.cid].set_selected(-1);
+					card_array[new_game.query[key].cid].set_selected(-1);
 				}
 				
 			} else {
@@ -243,7 +251,7 @@ function mk_network()
 		ajax_obj.open('POST', this.web_root + file, async);
 		ajax_obj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		
-		//alert(var_string);
+		///alert(var_string);
 		ajax_obj.send(var_string);
 		
 		if (async){
