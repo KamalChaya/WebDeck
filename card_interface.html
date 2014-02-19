@@ -1,60 +1,79 @@
 <html>
 	<head>
-		<title>WebDeck Card Interface</title>
-		
-		<link rel = 'stylesheet' type = 'text/css' href = 'spike.css'>
-		
 		<script type = 'text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js'></script>
 		<script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
 		<script type = "text/javascript" src="card_class.js"></script>
+		<script type = "text/javascript" src="network_class.js"></script>
+		<script type = "text/javascript" src = "tests/network_tests.js"> </script>
+		<script type = "text/javascript" src = "tests/testcard.js"> </script>
+		<script src="init.js"></script>
 		<script type = 'text/javascript'>
-			var card_array = new Array();
-			var card_map = new Array();
-			var top_z = 70;
+			var last_update = (8 * 3600) + 1; 	//The EPOCH was 16:00 our time........... The server has a locale!
+			var grabbed_card = "";
+			var player_id = 1;
+			var shift_down = 0;
+			var test_cnt = 7;
 			
-			// Regular Cards
-			for(var i = 2; i < 11; i++){
-				card_map[i] = i;
-			}
-
-			//Function: init()
-			//Description: Makes 52 card objects
-			function init(){
-				suit_map = new Array();
-				suit_map [0] = 'C';
-				suit_map [1] = 'D';
-				suit_map [2] = 'H';
-				suit_map [3] = 'S';
-				// Face cards
-				card_map [1] = 'A';
-				card_map [11] = 'J';
-				card_map [12] = 'Q';
-				card_map [13] = 'K';
-				
-				for(var suit = 0; suit < 4; suit++) {
-					for(var value = 1; value < 14; value++) {
-						//make_card(card_map[value] + suit_map[suit] + '.svg');
-						fname = card_map[value] + suit_map[suit] + '.svg';
-						var new_card = new card(fname, card_array.length);
-					}
-				}
-				for (var i = 0; i < card_array.length; i++){
-
-					$('#' + 'card' + i).css('position', 'absolute');
-            		$('#' + 'card' + i).css('z-index', 0);
-
-					$('#card' + i).draggable({containment: '#container'});
-					// $('#card' + i).mousedown(function(event, i) {
-					// 	card_array[i].bring_to_top();
-					// });
+			window.onclick = function(e)
+			{
+				//alert("You clicked on the page!");
+				if(e.button == 0){
+					//We got a left click
+					//release all locks
+					network.release_locks();
 				}
 			}
+			/*$(document).click(function(e) {
+				var target = $(e.target);
+				alert(target.attr('id'));
+			});*/
+			
+			window.onkeydown = function(e)
+			{
+				if(e.keyCode == 16){
+					alert("Got shift down!");
+					shift_down = 1;
+				}
+			}
+			
+			window.onkeyup = function(e)
+			{
+				if(e.keyCode == 16){
+					alert("Shift was released!");
+					shift_down = 0;
+				}
+			}
+			</script>
 
-		</script>
+			<!-- Chat Scripts -->
+    		<script type="text/javascript" src="chat.js"></script>
+    		<script type="text/javascript" src="chat_init.js"></script>
+
 	</head>
-	<body oncontextmenu="return false;" onload = 'init();'>
-		<div id = 'container'>
-			
-		</div><!--container-->
-	</body>
+	<body onload = "init();	setInterval('chat.update()', 1000);">
+	<link rel = 'stylesheet' type = 'text/css' href = 'interface.css'>
+		<div id="container">
+			<div id="hand">HAND</div>
+			<div id="context_menu">CONTEXT MENU
+				<button type = 'button' onclick = 'test_all_card();'>Tests</button>
+			</div>
+		</div>
+		<div id="chat_bar">
+			<div id="page-wrap">
+	        	<h2>WebDeck Chat</h2>
+		        <p id="name-area"></p>
+	        	<div id="chat-wrap">
+	        		<div id="chat-area">
+	        		</div>
+	        	</div>        
+	        	<form id="send-message-area">
+	            	<p>message: </p>
+	            	<textarea id="sendie" maxlength='1024'></textarea>
+	        </form>
+    		</div>
+		</div> 
+	</body>	
+
+<!-- Include whatever scripts you want in the section below.-->
+
 </html>
