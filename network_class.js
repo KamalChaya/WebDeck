@@ -124,7 +124,7 @@ function mk_network()
 		//alert("Beginning transmission of " + card_idx);
 
 		var got_lock = this.secure_lock(card_idx);
-		console.log("Got lock returned: " + got_lock + " in grab_card().");
+		console.log("Got lock returned: " + got_lock.result + " in grab_card().");
 		if (got_lock.result == 1){
 			//The user is permitted to move it
 			card_array[card_idx].set_selected(1);
@@ -219,7 +219,8 @@ function mk_network()
 	{
 		var var_string = 'op=7&game_id=' + this.game_id + "&player_id=" + this.player_id;
 		//alert(var_string);
-		var result = this.ajax('cards_mgmt.php', var_string, err_funct, false);
+		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
+		console.log(ajax_obj.responseText)
 		try {
 			var cards = JSON.parse(ajax_obj.responseText);
 		} catch (e) {
@@ -227,8 +228,9 @@ function mk_network()
 		}
 		//alert(result.responseText);
 		for(card_idx in cards.result){
+			cur_card = cards.result[card_idx];
 			//alert("'" + cards[card_idx].cid + "'");
-			card_array[cards[card_idx].cid].set_selected(0);
+			card_array[cur_card.cid].set_selected(0);
 		}
 	}
 	

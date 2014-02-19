@@ -27,11 +27,11 @@ function card(fname, id)
 		if(event.button == 2) {
 			//Right click
 			if (this.image == this.front){
-				if((+network.flipdb(this.id, 0)) == 1){
+				if((network.flipdb(this.id, 0).result) == 1){
 					this.image = this.back;
 				}
 			} else {
-				if((+network.flipdb(this.id, 1)) == 1){
+				if((+network.flipdb(this.id, 1).result) == 1){
 					this.image = this.front;
 				}
 				
@@ -69,7 +69,7 @@ function card(fname, id)
 		document.getElementById("card" + this.id + "_img").src = this.image;
 	}
 	
-	this.select_card = function()
+	this.select_card = function() // Deprecated?
 	{
 		if (this.select == -1){
 			//User can select this card
