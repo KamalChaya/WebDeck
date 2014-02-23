@@ -15,7 +15,8 @@ function empty_funct(ajax_obj)
 
 function mk_network()
 {
-	this.web_root = 'http://web.engr.oregonstate.edu/~changjo/WebDeck/';
+	var locations = document.URL.split("/");
+	this.web_root = document.URL.replace(locations[locations.length - 1], "");
 	this.game_id = 4;
 	this.board_update_interval = 500;	//milliseconds between updates
 	this.board_update_timer; 			//A reference to the update timer (incase we need to remove it)
