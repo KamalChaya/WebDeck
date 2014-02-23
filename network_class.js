@@ -17,7 +17,7 @@ function mk_network()
 {
 	var locations = document.URL.split("/");
 	this.web_root = document.URL.replace(locations[locations.length - 1], "");
-	this.game_id = local_storage["game_id"];
+	this.game_id = localStorage["game_id"];
 	this.board_update_interval = 500;	//milliseconds between updates
 	this.board_update_timer; 			//A reference to the update timer (incase we need to remove it)
 	this.last_update;					//Seconds since the EPOCH that we last updated =)	
