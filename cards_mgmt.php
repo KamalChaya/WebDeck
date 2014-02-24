@@ -36,10 +36,6 @@
 		case 7: 	//Release all locks and send back lock information
 			release_locks();
 			break;
-		
-		case 8:		//Set id of player based on username
-			set_player_id();
-			break;
 			
 		default:
 			echo 'unrecognized operation' . $op;
@@ -118,24 +114,15 @@
 		
 		$time = date('H:i:s', time());
 		
-		$sql = "SELECT C.cid
-				FROM Cards C
-				WHERE C.game_id = $game_id AND C.locked = $player_id AND C.cid = '$card_id'";
+		$sql = "UPDATE Cards C
+				SET C.locked = $player_id, last_change = '$time'
+				WHERE (C.locked = -1 OR C.locked = $player_id) AND C.game_id = $game_id AND C.cid = '$card_id' ;";
+						
 		$result = execute_query($sql);
-		if($result->num_rows == 0){
-			$sql = "UPDATE Cards C
-					SET C.locked = $player_id, last_change = '$time'
-					WHERE (C.locked = -1 OR C.locked = $player_id) AND C.game_id = $game_id AND C.cid = '$card_id' ;";
-							
-			$result = execute_query($sql);
-			if($mysqli->affected_rows != 0){
-				$result = '"1"';
-			} else {
-				$result = '"0"';
-			}
-
+		if($mysqli->affected_rows != 0){
+			$result = '"1"';
 		} else {
-			$result = '"2"'; //We already have it selected
+			$result = '"0"';
 		}
 
 		$result = make_json($sql, $game_id, $time, $result);
@@ -220,30 +207,5 @@
 				SET C.locked = -1
 				WHERE C.locked = $player_id AND C.game_id = $game_id;";
 		$result = execute_query($sql2);
-	}
-
-	function set_player_id()
-	{
-		$username = $_POST['username'];
-
-		//die($username);
-
-		$sql = "SELECT U.id
-				FROM User U
-				WHERE U.username = '".$username."'";
-
-		$result = execute_query($sql);
-
-		if($result->rows > 0) {
-			die("Got rows!");
-			$result = php_entity_encode($result);
-
-			$result = JSON.parse($result);
-		}
-		else {
-			die("No results!");
-		}
-
-		echo $result;
 	}
 ?>

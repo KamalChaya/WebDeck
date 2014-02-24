@@ -9,6 +9,9 @@ if (!name || name === ' ') {
 // strip tags
 name = name.replace(/(<([^>]+)>)/ig,"");
 
+//bold name;
+name = name.bold();
+
 // display name on page
 $("#name-area").html("You are: <span>" + name + "</span>");
 

@@ -41,7 +41,7 @@ function card(fname, id)
 		} else if (event.button == 0) {
 			//left click
 			console.log("Handling left click on card:");
-			select.grab_card(this.id);
+			network.grab_card(this.id);
 		}
 	}
 	
@@ -51,7 +51,6 @@ function card(fname, id)
 			//Do nothing, the card is flipped.
 		} else if (event.button == 0) {
 			//Release the card
-			console.log("Released card");
 			network.stop_send(this.id);
 		}
 	}
@@ -114,7 +113,6 @@ function card(fname, id)
 	this.set_selected = function(selected)
 	{
 		if (selected == 1){
-			console.log("Setting blue border");
 			document.getElementById(this.card_id).style.border = "2px solid blue";
 		} else if(selected == 0) {
 			document.getElementById(this.card_id).style.border = "0px solid black";
@@ -128,7 +126,7 @@ function card(fname, id)
 	//alert("Constructor called: fname " + fname + " id: " + id);
 	//NOTICE: the handle for a mouse click is associated with the image! This allows for seamless dragability!
 	var cont_div = document.getElementById('container');
-	var card_div = "<div id = '" + this.card_id + "' class = 'card2 ' onmousedown = 'card_array[" + '"' + id + '"' + "].bring_to_top();'  onmouseup = 'card_array[" + '"' + id + '"' + "].handle_release(event);'>";
+	var card_div = "<div id = '" + this.card_id + "' class = 'card2 ' onmousedown = 'card_array[" + '"' + id + '"' + "].bring_to_top();   ' onmouseup = 'card_array[" + '"' + id + '"' + "].handle_release(event);'>";
 	card_div += "<image id = '" + this.imgid + "' src='" + this.image +"'  onmousedown = 'card_array[" +'"'+ id + '"' + "].handle_click(event);' alt='"+this.card_id+"'></image>";
 	card_div += "</div>";
 	//alert(card_div);
