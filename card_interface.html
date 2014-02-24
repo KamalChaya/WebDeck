@@ -6,21 +6,22 @@
 		<script type = "text/javascript" src="network_class.js"></script>
 		<script type = "text/javascript" src = "tests/network_tests.js"> </script>
 		<script type = "text/javascript" src = "tests/testcard.js"> </script>
+		<script type = "text/javascript" src = "test_selection_class.js"> </script>
+		<script type = "text/javascript" src = "selection_class.js"> </script>
 		<script src="init.js"></script>
 		<script type = 'text/javascript'>
 			var last_update = (8 * 3600) + 1; 	//The EPOCH was 16:00 our time........... The server has a locale!
-			var grabbed_card = "";
 			var player_id = 1;
 			var shift_down = 0;
 			var test_cnt = 7;
-			
+			//
 			window.onclick = function(e)
 			{
 				//alert("You clicked on the page!");
 				if(e.button == 0){
 					//We got a left click
 					//release all locks
-					network.release_locks();
+					select.release_locks();
 				}
 			}
 			/*$(document).click(function(e) {
@@ -55,16 +56,15 @@
 		<div id="container">
 			<div id="hand">HAND</div>
 			<div id="context_menu">CONTEXT MENU
-				<button type = 'button' onclick = 'test_all_card();'>Tests</button>
+				<button type = 'button' onclick = 'test_grab_card();'>Tests</button>
 			</div>
 		</div>
 		<div id="chat_bar">
 			<div id="page-wrap">
-	        	<font face="verdana" color="#6b6a68">WebDeck Chat</font>
+	        	<h2>WebDeck Chat</h2>
 		        <p id="name-area"></p>
 	        	<div id="chat-wrap">
 	        		<div id="chat-area">
-				  
 	        		</div>
 	        	</div>        
 	        	<form id="send-message-area">
