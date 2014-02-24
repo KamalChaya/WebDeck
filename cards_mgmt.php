@@ -234,7 +234,7 @@
 
 		$result = execute_query($sql);
 
-		if($result.rows > 0) {
+		if($result->rows > 0) {
 			die("Got rows!");
 			$result = php_entity_encode($result);
 
