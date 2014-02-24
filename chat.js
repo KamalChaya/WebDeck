@@ -1,5 +1,4 @@
 
-
 var instanse = false;
 var state;
 var mes;
@@ -50,8 +49,11 @@ function updateChat(){
 			   success: function(data){
 				   if(data.text){
 						for (var i = 0; i < data.text.length; i++) {
-                            $('#chat-area').append($("<p>"+ data.text[i] +"</p>"));
-                        }								  
+						    /*
+						      Make Name Bold
+						     */
+						    $('#chat-area').append($("<p>"+ data.text[i] +"</p>"));
+						}								  
 				   }
 				   document.getElementById('chat-area').scrollTop = document.getElementById('chat-area').scrollHeight;
 				   instanse = false;
@@ -74,7 +76,7 @@ function sendChat(message, nickname)
 		   data: {  
 		   			'function': 'send',
 					'message': message,
-					'nickname': nickname,
+					'nickname': nickname+": ",
 					'file': file
 				 },
 		   dataType: "json",

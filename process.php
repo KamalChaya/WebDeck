@@ -50,7 +50,7 @@
 				} 
 			 
         	
-        	 fwrite(fopen('chat.txt', 'a'), "<span>". $nickname . "</span>" . $message = str_replace("\n", " ", $message) . "\n"); 
+        	 fwrite(fopen('chat.txt', 'a'), "<span class='poster'>". $nickname . "</span>" . $message = str_replace("\n", " ", $message) . "\n"); 
 		 }
         	 break;
     	
