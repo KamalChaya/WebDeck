@@ -36,6 +36,10 @@
 		case 7: 	//Release all locks and send back lock information
 			release_locks();
 			break;
+		
+		case 8:		//Set id of player based on username
+			set_player_id();
+			break;
 			
 		default:
 			echo 'unrecognized operation' . $op;
@@ -216,5 +220,30 @@
 				SET C.locked = -1
 				WHERE C.locked = $player_id AND C.game_id = $game_id;";
 		$result = execute_query($sql2);
+	}
+
+	function set_player_id()
+	{
+		$username = $_POST['username'];
+
+		//die($username);
+
+		$sql = "SELECT U.id
+				FROM User U
+				WHERE U.username = '".$username."'";
+
+		$result = execute_query($sql);
+
+		if($result.rows > 0) {
+			die("Got rows!");
+			$result = php_entity_encode($result);
+
+			$result = JSON.parse($result);
+		}
+		else {
+			die("No results!");
+		}
+
+		echo $result;
 	}
 ?>

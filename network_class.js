@@ -33,6 +33,9 @@ function mk_network()
 	{
 		//alert("Initializing board through network class");
 		
+		this.change_game(localStorage["game_id"]);
+		localStorage.removeItem("game_id");
+
 		var var_string = 'op=3&game_id=' + this.game_id;
 		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
 		try {
@@ -47,8 +50,9 @@ function mk_network()
 			var new_card = new card(fname, cur_card.cid);
 		}
 
-		this.change_game(localStorage["game_id"]);
-		localStorage.removeItem("game_id");
+		var testname = "testName";
+		var namequery = 'op=8&username=test';
+		var userid = this.ajax('cards_mgmt.php', namequery, err_funct, false);
 
 		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
 		board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
