@@ -47,6 +47,9 @@ function mk_network()
 			var new_card = new card(fname, cur_card.cid);
 		}
 
+		this.change_game(localStorage["game_id"]);
+		localStorage.removeItem("game_id");
+
 		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
 		board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
 	}
@@ -115,6 +118,18 @@ function mk_network()
 			} else {
 				//alert("skipping card update: " + grabbed_card);
 			}
+		}
+	}
+
+	this.change_game = function(new_game)
+	{
+		if(typeof new_game != 'undefined') {
+			this.game_id = new_game;
+			console.log("Changed game_id to ");
+			console.log(this.game_id);
+		}
+		else {
+			console.log("New game id is undefined");
 		}
 	}
 	

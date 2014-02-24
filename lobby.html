@@ -5,6 +5,15 @@
 			Template
 		</title>
 		<script type = "text/javascript" >
+			function launch_game()
+			{
+				var div = document.getElementById("game_id_input");
+				var id = div.value;
+
+				localStorage["game_id"] = id;
+
+				document.location = 'card_interface.html';
+			}
 		</script>
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
@@ -18,7 +27,7 @@
 			<div id = 'game_id_form'>
 				<label>Game ID: </label><input type = 'text' id = 'game_id_input' />
 				<!--parent.location='http://web.engr.oregonstate.edu/~alltucki/WebDeck/card_interface.html-->
-				<button onclick="window.open('http://web.engr.oregonstate.edu/~alltucki/WebDeck/card_interface.html');">Join Game</button>
+				<button onclick="launch_game();">Join Game</button>
 			</div><!--card_form-->
 			
 			</div><!--main-->
