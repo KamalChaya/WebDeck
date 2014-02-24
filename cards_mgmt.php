@@ -114,15 +114,24 @@
 		
 		$time = date('H:i:s', time());
 		
-		$sql = "UPDATE Cards C
-				SET C.locked = $player_id, last_change = '$time'
-				WHERE (C.locked = -1 OR C.locked = $player_id) AND C.game_id = $game_id AND C.cid = '$card_id' ;";
-						
+		$sql = "SELECT C.cid
+				FROM Cards C
+				WHERE C.game_id = $game_id AND C.locked = $player_id AND C.cid = '$card_id'";
 		$result = execute_query($sql);
-		if($mysqli->affected_rows != 0){
-			$result = '"1"';
+		if($result->num_rows == 0){
+			$sql = "UPDATE Cards C
+					SET C.locked = $player_id, last_change = '$time'
+					WHERE (C.locked = -1 OR C.locked = $player_id) AND C.game_id = $game_id AND C.cid = '$card_id' ;";
+							
+			$result = execute_query($sql);
+			if($mysqli->affected_rows != 0){
+				$result = '"1"';
+			} else {
+				$result = '"0"';
+			}
+
 		} else {
-			$result = '"0"';
+			$result = '"2"'; //We already have it selected
 		}
 
 		$result = make_json($sql, $game_id, $time, $result);
