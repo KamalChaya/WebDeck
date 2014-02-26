@@ -38,9 +38,21 @@
 			break;
 		
 		case 8:		//Set id of player based on username
-			set_player_id();
+			get_player_id();
 			break;
-			
+		
+		case 9:
+					//RESERVED
+			break;
+
+		case 10:
+			get_max_player();
+			break;
+
+		case 11:
+			add_new_player();
+			break;
+
 		default:
 			echo 'unrecognized operation' . $op;
 	}
@@ -222,7 +234,7 @@
 		$result = execute_query($sql2);
 	}
 
-	function set_player_id()
+	function get_player_id()
 	{
 		$username = $_POST['username'];
 
@@ -230,19 +242,34 @@
 
 		$sql = "SELECT U.id
 				FROM User U
-				WHERE U.username = '".$username."'";
+				WHERE U.username = '$username'";
 
 		$result = execute_query($sql);
+		$result = php_entity_encode($result);
 
-		if($result->rows > 0) {
-			die("Got rows!");
-			$result = php_entity_encode($result);
+		echo $result;
+	}
 
-			$result = JSON.parse($result);
-		}
-		else {
-			die("No results!");
-		}
+	function get_max_player()
+	{
+		$sql = "SELECT max(U.id) id
+				FROM User U";
+
+		$result = execute_query($sql);
+		$result = php_entity_encode($result);
+
+		echo $result;
+	}
+
+	function add_new_player()
+	{
+		$username = $_POST['username'];
+		$id = $_POST['uid'];
+
+		$sql = "INSERT INTO User (username, password, id)
+				VALUES ('$username', '000', '$id')";
+
+		$result = execute_query($sql);
 
 		echo $result;
 	}

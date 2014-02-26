@@ -50,9 +50,27 @@ function mk_network()
 			var new_card = new card(fname, cur_card.cid);
 		}
 
-		var testname = "testName";
-		var namequery = 'op=8&username=test';
+		var username = localStorage["wd_username"];
+		var namequery = 'op=8&username=' + username;
 		var userid = this.ajax('cards_mgmt.php', namequery, err_funct, false);
+		userid = JSON.parse(userid.responseText);
+
+		if(!jQuery.isEmptyObject(userid)) {
+			this.player_id = userid[0].id;
+		}
+		else {
+			var id_query = 'op=10';
+			var max_id = this.ajax('cards_mgmt.php', id_query, err_funct, false);
+			max_id = JSON.parse(max_id.responseText);
+
+			max_id = parseInt(max_id[0].id);
+			max_id = max_id + 1;
+			
+			id_query = 'op=11&username=' + username + "&uid=" + max_id;
+
+			this.ajax('cards_mgmt.php', id_query, err_funct, false);
+			console.log("Added new username " + username + " with id " + max_id);
+		}
 
 		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
 		board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
@@ -127,13 +145,13 @@ function mk_network()
 
 	this.change_game = function(new_game)
 	{
-		if(typeof new_game != 'undefined') {
+		if(typeof new_game != 'undefined' && new_game != "") {
 			this.game_id = new_game;
-			console.log("Changed game_id to ");
-			console.log(this.game_id);
+			//console.log("Changed game_id to ");
+			//console.log(this.game_id);
 		}
 		else {
-			console.log("New game id is undefined");
+			//console.log("New game id is undefined");
 		}
 	}
 	
