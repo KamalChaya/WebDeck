@@ -1,5 +1,5 @@
 // ask user for name with popup prompt    
-var name = prompt("Enter your chat name:", "Guest");
+var name = localStorage["wd_username"];
 
 // default name is 'Guest'
 if (!name || name === ' ') {

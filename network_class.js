@@ -57,20 +57,29 @@ function mk_network()
 
 		if(!jQuery.isEmptyObject(userid)) {
 			this.player_id = userid[0].id;
+			console.log("Found user " + username + " with id " + this.player_id);
 		}
 		else {
-			var id_query = 'op=10';
-			var max_id = this.ajax('cards_mgmt.php', id_query, err_funct, false);
-			max_id = JSON.parse(max_id.responseText);
+			if(confirm("Account not found. Would you like an account to be created for you?")) {
+				var id_query = 'op=10';
+				var max_id = this.ajax('cards_mgmt.php', id_query, err_funct, false);
+				max_id = JSON.parse(max_id.responseText);
 
-			max_id = parseInt(max_id[0].id);
-			max_id = max_id + 1;
-			
-			id_query = 'op=11&username=' + username + "&uid=" + max_id;
+				max_id = parseInt(max_id[0].id);
+				max_id = max_id + 1;
+				
+				id_query = 'op=11&username=' + username + "&uid=" + max_id;
 
-			this.ajax('cards_mgmt.php', id_query, err_funct, false);
-			console.log("Added new username " + username + " with id " + max_id);
+				this.ajax('cards_mgmt.php', id_query, err_funct, false);
+				console.log("Added new username " + username + " with id " + max_id);
+			}
+			else {
+				alert("Okay. Going back to the lobby.");
+				document.location = 'lobby.html';
+			}
 		}
+
+		localStorage.removeItem("wd_username");
 
 		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
 		board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
