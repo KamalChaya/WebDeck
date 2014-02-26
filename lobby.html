@@ -10,10 +10,30 @@
 			{
 				var div = document.getElementById("game_id_input");
 				var id = div.value;
+				var complete = 0;
 
-				localStorage["game_id"] = id;
+				if(id.length > 0) {
+					localStorage["game_id"] = id;
+					complete = complete + 1;
+				}
+				else {
+					alert("Please enter a game session to join!");
+				}
 
-				document.location = 'card_interface.html';
+				var userdiv = document.getElementById("username");
+				var userid = userdiv.value;
+
+				if(userid.length > 0) {
+					localStorage["wd_username"] = userid;
+					complete = complete + 1;
+				}
+				else {
+					alert("Please enter a username!");
+				}
+
+				if(complete == 2) {
+					document.location = 'card_interface.html';
+				}
 			}
 		</script>
 		<link rel="stylesheet" type="text/css" href="style.css" />
