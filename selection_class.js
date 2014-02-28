@@ -45,7 +45,7 @@ function mk_selection()
 	//Preconditions: This user must have a lock on a certain card.
 	this.remove_lock = function(card_idx)
 	{
-		var var_string =  "op=5&player_id=" + this.player_id + "&card_id=" + card_idx + "&game_id=" + this.game_id;
+		var var_string =  "op=5&player_id=" + player.player_id + "&card_id=" + card_idx + "&game_id=" + this.game_id;
 		var ajax_obj = network.ajax("cards_mgmt.php", var_string, err_funct, false);
 		try {
 			var board_state = JSON.parse(ajax_obj.responseText);
@@ -61,23 +61,10 @@ function mk_selection()
 		}
 	}
 
-	/*Removes all of the client's locks in the database, database sends back the card
-	ids of all cards selected. Then removes all of the selection borders.*/
-	/*this.release_all_locks = function()
-	{
-		var var_string = 'op=7&game_id=' + network.game_id + "&player_id=" + player_id;
-		var result = network.ajax('cards_mgmt.php', var_string, err_funct, false);
-		
-		var cards = JSON.parse(result.responseText);
-		for(card_idx in cards){
-			card_array[cards[card_idx].cid].set_selected(0);
-			this.selected_cards.splice(cards[card_idx].cid, 1);
-		}
-	}*/
 
 	this.release_locks = function()
 	{
-		var var_string = 'op=7&game_id=' + network.game_id + "&player_id=" + network.player_id;
+		var var_string = 'op=7&game_id=' + network.game_id + "&player_id=" + player.player_id;
 		var ajax_obj = network.ajax('cards_mgmt.php', var_string, err_funct, false);
 		console.log(ajax_obj.responseText)
 		try {
@@ -98,7 +85,7 @@ function mk_selection()
 	A 1 indicates success.*/
 	this.secure_lock = function (card_idx)
 	{
-		var var_string = "op=4&player_id=" + player_id + "&card_id=" + card_idx + "&game_id=" + network.game_id;
+		var var_string = "op=4&player_id=" + player.player_id + "&card_id=" + card_idx + "&game_id=" + network.game_id;
 		
 		var ajax_obj = network.ajax("cards_mgmt.php", var_string, err_funct, false);
 		//var ajax_obj = JSON.parse(ajax_obj.responseText);

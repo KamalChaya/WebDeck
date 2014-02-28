@@ -1,9 +1,11 @@
+console.log("attached player class.");
+
 //player_class
-function mk_player(id, name, ishost)//
+function mk_player()//
 {
-    this.id = id;
-    this.name = name;
-    this.ishost = ishost;
+    this.player_id;
+    this.username = "Joe";
+    this.ishost;
     this.hand = new Array();
 	this.next_hand_pos_x = 50;
 
@@ -30,3 +32,4 @@ function mk_player(id, name, ishost)//
 
     this.arrangehand = function(){}
     //sorts the cards by suit and by number
+}
