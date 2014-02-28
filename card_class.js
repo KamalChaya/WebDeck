@@ -26,18 +26,22 @@ function card(fname, id)
 	{
 		if(event.button == 2) {
 			//Right click
-			card = card_array[this.id];
+			console.log("this is image:" + this.imgdiv.src);
+			card = this.obj;
+			//card = card_array[this.id];
 			if (card.image == card.front){
 				if((network.flipdb(card.id, 0).result) == 1){
-					this.img.src = card.back;
+					card.image = card.back;
+					this.imgdiv.src = card.back;
 				}
 			} else {
 				if((network.flipdb(card.id, 1).result) == 1){
-					this.img.src = card.front;
+					card.image = card.front;
+					this.imgdiv.src = card.front;
 				}
 				
 			}
-			document.getElementById(this.id + "_img").src = this.image;
+			//document.getElementById(this.id + "_img").src = this.image;
 			
 		} else if (event.button == 0) {
 			//left click
@@ -145,6 +149,8 @@ function card(fname, id)
 	this.card_div.addEventListener("mousedown", card_array[id].bring_to_top, false);
 	this.card_div.addEventListener("mouseup", card_array[id].handle_release, false);
 	this.card_div.addEventListener("mousedown", card_array[id].handle_click, false);
+	this.card_div.obj = this;
+	this.card_div.imgdiv = image;
 
 	image.id = this.imgid;
 
