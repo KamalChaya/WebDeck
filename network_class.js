@@ -179,7 +179,7 @@ function mk_network()
 	
 	this.flipdb = function(card_idx, flip_val)
 	{
-		var var_string = "op=6&pid="+player_id+"&card_id=" + card_idx + "&game_id=" + this.game_id + "&flipped=" + flip_val;
+		var var_string = "op=6&pid="+ player.player_id +"&card_id=" + card_idx + "&game_id=" + this.game_id + "&flipped=" + flip_val;
 		//alert(var_string);
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, err_funct, false);
 		//alert(ajax_obj.responseText);

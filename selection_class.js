@@ -12,7 +12,6 @@ function mk_selection()
 	*/
 	this.grab_card = function(card_idx)
 	{
-		console.log("card_idx: " + card_idx);
 		var got_lock = this.secure_lock(card_idx);
 		console.log("Got lock returned: " + got_lock + " in grab_card().");
 		if (got_lock == 1){
@@ -30,6 +29,7 @@ function mk_selection()
 			//Set the timer interval
 			network.send_update_timer = setInterval("network._send_pos(" + '"' + card_idx + '"' +");", network.send_update_interval);
 		} else if (got_lock == 2) {
+			card_array[card_idx].set_drag(1);
 			this.grabbed_card = card_idx;
 			network.send_update_timer = setInterval("network._send_pos(" + '"' + card_idx + '"' +");", network.send_update_interval);
 
@@ -40,6 +40,12 @@ function mk_selection()
 			card_array[card_idx].set_drag(0);
 		}
 		
+	}
+
+	this.ungrab_card = function(card_idx)
+	{
+		network.stop_send(this.id);
+		this.grabbed_card = "";
 	}
 
 	//Will remove the user's lock on the currently selected card

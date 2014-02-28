@@ -26,13 +26,14 @@ function card(fname, id)
 	{
 		if(event.button == 2) {
 			//Right click
-			if (this.image == this.front){
-				if((network.flipdb(this.id, 0).result) == 1){
-					this.image = this.back;
+			card = card_array[this.id];
+			if (card.image == card.front){
+				if((network.flipdb(card.id, 0).result) == 1){
+					this.img.src = card.back;
 				}
 			} else {
-				if((+network.flipdb(this.id, 1).result) == 1){
-					this.image = this.front;
+				if((network.flipdb(card.id, 1).result) == 1){
+					this.img.src = card.front;
 				}
 				
 			}
@@ -52,7 +53,9 @@ function card(fname, id)
 		} else if (event.button == 0) {
 			//Release the card
 			console.log("Released card");
-			network.stop_send(this.id);
+			select.ungrab_card(this.id);
+			//network.stop_send(this.id);
+			//card_array[select.grabbed_card].set_drag(0);
 		}
 	}
 	
@@ -105,6 +108,7 @@ function card(fname, id)
 	//draggable: 1 to make the card draggable, 0 to make it not draggable
 	this.set_drag = function(draggable)
 	{
+		//console.log("set_drag: " + draggable);
 		if (draggable == 1){
 			$('#' + this.card_id).draggable({containment: '#container'});
 		} else {
@@ -145,7 +149,7 @@ function card(fname, id)
 	image.id = this.imgid;
 
 
-	console.log(image.src = this.image);
+	image.src = this.image;
 	image.alt = this.imgid;
 	image.addEventListener("mousedown", card_array[id].set_drag(1), false);
 
