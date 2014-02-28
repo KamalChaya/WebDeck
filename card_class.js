@@ -8,7 +8,7 @@ function card(fname, id)
 {
 	//Members
 	this.id = id;
-	this.card_id = "card" + this.id;		//The id of the div that contains this card
+	this.card_id = id;		//The id of the div that contains this card
 	this.front = 'card_fronts/' + fname;
 	this.back = "card_backs/Blue_Back.svg";
 	this.image = this.back;
@@ -36,7 +36,7 @@ function card(fname, id)
 				}
 				
 			}
-			document.getElementById("card" + this.id + "_img").src = this.image;
+			document.getElementById(this.id + "_img").src = this.image;
 			
 		} else if (event.button == 0) {
 			//left click
@@ -67,7 +67,7 @@ function card(fname, id)
 			this.image = this.back;
 			//flipdb(1)
 		}
-		document.getElementById("card" + this.id + "_img").src = this.image;
+		document.getElementById(this.id + "_img").src = this.image;
 	}
 	
 	this.select_card = function() // Deprecated?
@@ -85,11 +85,14 @@ function card(fname, id)
 		}
 	}
 	
-	this.bring_to_top = function() 
+	this.bring_to_top = function()
 	{
 		$('#' + this.card_id).css('position', 'absolute');
-		$('#' + this.card_id).css('z-index', top_z);
+		//$('#' + this.card_id).css('z-index', top_z);
+		this.style.zIndex = "" + top_z;
+		console.log("top_z" + top_z);
 		top_z = top_z + 1;
+		console.log("top_z" + top_z);
 	}
 
 	this.set_position = function (x_pos, y_pos)
@@ -113,29 +116,52 @@ function card(fname, id)
 	//	If another player selected it, it gets a red border.
 	this.set_selected = function(selected)
 	{
+		var card = document.getElementById(this.card_id).style;
 		if (selected == 1){
 			console.log("Setting blue border");
-			document.getElementById(this.card_id).style.border = "2px solid blue";
+			card.border = "2px solid blue";
 		} else if(selected == 0) {
-			document.getElementById(this.card_id).style.border = "0px solid black";
+			card.border = "0px solid black";
 		} else if(selected == -1){
 			//alert("Here");
-			document.getElementById(this.card_id).style.border = "2px solid red";
+			card.border = "2px solid red";
 		}
 	}
+
+	//Constructor Revised!
+	card_array[id] = this;	//This links the id of the card to its position in the card array
+	var cont_div = document.getElementById('container');
+	this.card_div = document.createElement("div");
+	var image = document.createElement("img");
+	this.card_div.appendChild(image);
+	cont_div.appendChild(this.card_div);
+
+	this.card_div.id = this.card_id;
+	this.card_div.classList.add("card2");
+	this.card_div.addEventListener("mousedown", card_array[id].bring_to_top, false);
+	this.card_div.addEventListener("mouseup", card_array[id].handle_release, false);
+	this.card_div.addEventListener("mousedown", card_array[id].handle_click, false);
+
+	image.id = this.imgid;
+
+
+	console.log(image.src = this.image);
+	image.alt = this.imgid;
+	image.addEventListener("mousedown", card_array[id].set_drag(1), false);
 
 	//Constructor
 	//alert("Constructor called: fname " + fname + " id: " + id);
 	//NOTICE: the handle for a mouse click is associated with the image! This allows for seamless dragability!
-	var cont_div = document.getElementById('container');
+	/*var cont_div = document.getElementById('container');
 	var card_div = "<div id = '" + this.card_id + "' class = 'card2 ' onmousedown = 'card_array[" + '"' + id + '"' + "].bring_to_top();'  onmouseup = 'card_array[" + '"' + id + '"' + "].handle_release(event);'>";
 	card_div += "<image id = '" + this.imgid + "' src='" + this.image +"'  onmousedown = 'card_array[" +'"'+ id + '"' + "].handle_click(event);' alt='"+this.card_id+"'></image>";
 	card_div += "</div>";
 	//alert(card_div);
 	cont_div.innerHTML += card_div;
 	//alert(cont_div.innerHTML);
+	*/
 	//card_array.push(this);
-	card_array[id] = this;	//This links the id of the card to its position in the card array
+
 	//alert(card_array[id].id);
 	this.set_position(10, 10);
 }

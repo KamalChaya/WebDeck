@@ -12,6 +12,7 @@ function mk_selection()
 	*/
 	this.grab_card = function(card_idx)
 	{
+		console.log("card_idx: " + card_idx);
 		var got_lock = this.secure_lock(card_idx);
 		console.log("Got lock returned: " + got_lock + " in grab_card().");
 		if (got_lock == 1){
@@ -36,7 +37,7 @@ function mk_selection()
 		} else {
 			console.log("Someone else has it selected");
 			//Ensure the user cannot move it
-			//card_array[card_idx].set_drag(0);
+			card_array[card_idx].set_drag(0);
 		}
 		
 	}
