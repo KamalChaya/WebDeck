@@ -1,13 +1,17 @@
 <html>
 	<head>
 		<script src="deck_class.js"></script>
+		<script type = 'text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js'></script>
+		<script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
 	</head>
 
 	<body>
+
 		<link rel = 'stylesheet' type = 'text/css' href = 'deck_test_interface.css'>
+		<link rel = 'stylesheet' type = 'text/css' href = 'deck.css'>
 		<div id="container">
 		</div>
-
+		<div id="tests">
 		<div id= "test1">If this is here, test 1 has failed.</div>
 		<div id= "test2">If this is here, test 2 has failed.</div>
 		<div id= "test3">If this is here, test 3 has failed.</div>
@@ -20,7 +24,7 @@
 		<div id= "test10">If this is here, test 10 has failed.</div>
 		<div id= "test11">If this is here, test 11 has failed.</div>
 		<div id= "test12">If this is here, test 12 has failed.</div>
-
+		</div>
 		<script>
 		//Test 1
 		var new_stack = new deck();
@@ -175,7 +179,14 @@
 
 		<script>
 		// Test 12: 
+		var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
+		var id = 'deck_1';
+		var new_stack = new deck(id,card_array);
+		new_stack.make_div();
+		new_stack.set_position(10,10);
+		if (typeof document.getElementById("deck_1") != 'undefined'){
 			document.getElementById("test12").innerHTML = ("Unit Test 12 Passes.");
+		}
 		</script>
 	</body>
 </html>

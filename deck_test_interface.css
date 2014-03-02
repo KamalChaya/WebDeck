@@ -19,7 +19,7 @@ body{
 }
 
 #container{
-	position: fixed;
+	position: absolute;
 	width: 800px;
 	height: 500px;
 	/*float: left;*/
@@ -37,13 +37,13 @@ body{
 	top: 0px;
 	left: 800px;
 }
-#hand{
+#tests{
 	position: absolute;
 	width: 650px;
 	height: 200px;
 	left: 0px;
 	top: 500px;
-	background-color: blue;
+	/*background-color: blue;*/
 }
 #context_menu{
 	position: absolute;

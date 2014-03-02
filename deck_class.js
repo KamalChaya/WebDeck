@@ -1,11 +1,17 @@
 function deck(stack_id,cards)
 {
+	// constructor
+
 	this.id = stack_id;
 	this.face_up = false; // deck is face down to begin with
-	this.img2 = "card_backs/Blue_Back_2";
-	this.img3 = "card_backs/Blue_Back_3";
-	this.img4 = "card_backs/Blue_Back_4";
+
+	this.img2 = "card_backs/Blue_Back_2"; // image for 2 or more cards
+	this.img3 = "card_backs/Blue_Back_3"; // image for 3 or more cards
+	this.img4 = "card_backs/Blue_Back_4"; // image for 4 or more cards
 	this.image = this.img4;
+	//var cont_div = document.getElementById('container');
+
+
 	this.cards = new Array();
 	if (typeof cards != 'undefined') {
 		this.cards = cards.slice(0);
@@ -74,19 +80,20 @@ function deck(stack_id,cards)
 	this.flip_deck = function flip_deck(){
 		this.face_up = !this.face_up;
 	}
+	this.make_div = function make_div(x,y){
+		var cont_div = document.getElementById("container");
+		this.deck_div = document.createElement("div");
+		this.deck_div.id = this.id;
+		this.deck_div.classList.add("deck");
+		cont_div.appendChild(this.deck_div);
+	}
 
-	var cont_div = document.getElementById('container');
-	var deck_div = "<div id = '" + this.card_id + "' class = 'card2 ' onmousedown = 'card_array[" +
-				'"' + id + '"' + "].bring_to_top();'  onmouseup = 'card_array[" + '"' + id + '"' +
-				"].handle_release(event);'>";
-	deck_div += "<image id = '" + this.imgid + "' src='" + this.image +"'  onmousedown = 'card_array[" +
-				'"'+ id + '"' + "].handle_click(event);' alt='"+this.card_id+"'></image>";
-	deck_div += "</div>";
-	//alert(card_div);
-	cont_div.innerHTML += deck_div;
-	//alert(cont_div.innerHTML);
-	//card_array.push(this);
-	card_array[id] = this;	//This links the id of the card to its position in the card array
-	//alert(card_array[id].id);
-	this.set_position(10, 10);
+	this.set_position = function (x_pos, y_pos)
+	{
+
+		$('#' + this.id).css('position','absolute');
+		$('#' + this.id).css('top', y_pos);
+		$('#' + this.id).css('left', x_pos);
+	}
+
 }
