@@ -5,10 +5,9 @@ function deck(stack_id,cards)
 	this.id = stack_id;
 	this.face_up = false; // deck is face down to begin with
 
-	this.img2 = "card_backs/Blue_Back_2"; // image for 2 or more cards
-	this.img3 = "card_backs/Blue_Back_3"; // image for 3 or more cards
-	this.img4 = "card_backs/Blue_Back_4"; // image for 4 or more cards
-	this.image = this.img4;
+	this.img2 = "card_backs/Blue_Back_2.svg"; // image for 2 or more cards
+	this.img3 = "card_backs/Blue_Back_3.svg"; // image for 3 or more cards
+	this.img4 = "card_backs/Blue_Back_4.svg"; // image for 4 or more cards
 	//var cont_div = document.getElementById('container');
 
 
@@ -83,9 +82,27 @@ function deck(stack_id,cards)
 	this.make_div = function make_div(x,y){
 		var cont_div = document.getElementById("container");
 		this.deck_div = document.createElement("div");
+		var image = document.createElement("img");
+		this.deck_div.appendChild(image);
+		cont_div.appendChild(this.deck_div);
+
 		this.deck_div.id = this.id;
 		this.deck_div.classList.add("deck");
-		cont_div.appendChild(this.deck_div);
+		this.deck_div.imgdiv = image;
+
+		image.id = this.imgid;
+
+		switch (this.cards.length) {
+		case 2:
+			image.src = this.img2;
+			break;
+		case 3:
+			image.src = this.img3;
+			break;
+		default:
+			image.src = this.img4;
+			break;
+		}
 	}
 
 	this.set_position = function (x_pos, y_pos)

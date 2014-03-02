@@ -8,7 +8,7 @@
 	<body>
 
 		<link rel = 'stylesheet' type = 'text/css' href = 'deck_test_interface.css'>
-		<link rel = 'stylesheet' type = 'text/css' href = 'deck.css'>
+		<link rel = 'stylesheet' type = 'text/css' href = 'deck_style.css'>
 		<div id="container">
 		</div>
 		<div id="tests">
@@ -24,169 +24,194 @@
 		<div id= "test10">If this is here, test 10 has failed.</div>
 		<div id= "test11">If this is here, test 11 has failed.</div>
 		<div id= "test12">If this is here, test 12 has failed.</div>
+		<div id= "test13">If this is here, test 12 has failed.</div>
+
 		</div>
+
 		<script>
-		//Test 1
-		var new_stack = new deck();
-		console.log("Test 1: Card constructor returned successfully.");
-		document.getElementById("test1").innerHTML = ("Unit Test 1 Passes.");
+			//Test 1
+			var new_stack = new deck();
+			console.log("Test 1: Card constructor returned successfully.");
+			document.getElementById("test1").innerHTML = ("Unit Test 1 Passes.");
 		</script>
 
 		<script>
-		// Test 2
-		var new_stack = new deck(1);
-		console.log("Test 2: New Stack ID:" + new_stack.id);
-		if (typeof new_stack.id != 'undefined'){
-			document.getElementById("test2").innerHTML = ("Unit Test 2 Passes.");
-		}
-		</script>
-
-		<script>
-		//Test 3
-		var new_stack = new deck(1);
-		console.log("Test 3: New Stack.Cards = " + new_stack.cards);
-		if (typeof new_stack.cards != 'undefined'){
-			document.getElementById("test3").innerHTML = ("Unit Test 3 Passes.");
-		}
-		</script>
-
-		<script>
-		//Test 4
-		var card_array = [1,2,3,4,5];
-		var new_stack = new deck(1,card_array);
-		console.log("Test 4: Element 0 of new stack is " + new_stack.cards[0]);
-		if (new_stack.cards[0] == 1){
-			document.getElementById("test4").innerHTML = ("Unit Test 4 Passes.");
-		}
-		</script>
-
-		<script>
-		//Test 5: shuffling
-
-		var card_array = [1,2,3,4,5];
-		var new_stack = new deck(1,card_array);
-		new_stack.shuffle();
-
-		for (var i in card_array) {
-			if (card_array[i] != new_stack.cards[i]) {
-				document.getElementById("test5").innerHTML = ("Unit Test 5 Passes.");
-				break;
+			// Test 2
+			var new_stack = new deck(1);
+			console.log("Test 2: New Stack ID:" + new_stack.id);
+			if (typeof new_stack.id != 'undefined'){
+				document.getElementById("test2").innerHTML = ("Unit Test 2 Passes.");
 			}
-		}
-		console.log("Test 5: Original array is " + card_array[0],card_array[1],card_array[2],card_array[3],card_array[4]);
-		console.log("Test 5: after shuffling order of cards is now " + new_stack.cards[0],new_stack.cards[1],new_stack.cards[2],new_stack.cards[3],new_stack.cards[4]);
 		</script>
 
 		<script>
-		//Test 6: add_card
-
-		var card_array = []; // top of the deck = last index
-		var new_stack = new deck(1,card_array);
-
-		new_stack.add_card(4); //  this should be in index 1
-		new_stack.add_card(2); // this should be in index 0
-
-		console.log("Test 6: cards added: " + new_stack.cards[0],new_stack.cards[1]);
-		if (new_stack.cards[0] == 2 && new_stack.cards[1] == 4){
-			document.getElementById("test6").innerHTML = ("Unit Test 6 Passes.");
-		}
-
+			//Test 3
+			var new_stack = new deck(1);
+			console.log("Test 3: New Stack.Cards = " + new_stack.cards);
+			if (typeof new_stack.cards != 'undefined'){
+				document.getElementById("test3").innerHTML = ("Unit Test 3 Passes.");
+			}
 		</script>
 
 		<script>
-		//Test 7: add_card
-
-		var card_array = []; // top of the deck = last index
-		var new_stack = new deck(1,card_array);
-
-		new_stack.add_card(4); //  this should be in index 1 (top of stack)
-		new_stack.add_card(2); // this should be in index 0 (bottom of stack)
-
-		var new_card = new_stack.draw_card();
-		console.log("Test 7: Drawing cards. new_card = " + new_card);
-		console.log("Test 7: Drawing cards. top card = " + new_stack.cards[0]);
-
-
-		if (new_card == 4 && new_stack.cards[0] == 2){
-			document.getElementById("test7").innerHTML = ("Unit Test 7 Passes.");
-		}
+			//Test 4
+			var card_array = [1,2,3,4,5];
+			var new_stack = new deck(1,card_array);
+			console.log("Test 4: Element 0 of new stack is " + new_stack.cards[0]);
+			if (new_stack.cards[0] == 1){
+				document.getElementById("test4").innerHTML = ("Unit Test 4 Passes.");
+			}
 		</script>
 
 		<script>
-		// Tests functions with string card ids
-		var card_array = []; // top of the deck = last index
-		var new_stack = new deck(1,card_array);
+			//Test 5: shuffling
 
-		new_stack.add_card('AH');
-		new_stack.add_card('2C');
-		new_stack.add_card('KD');
-		new_stack.add_card('10S');
+			var card_array = [1,2,3,4,5];
+			var new_stack = new deck(1,card_array);
+			new_stack.shuffle();
 
-		var new_card = new_stack.draw_card();
-
-		console.log("Test 8: Drawing cards. new_card = " + new_card);
-		console.log("Test 8: Drawing cards. top card = " + new_stack.cards[0]);
-
-		if (new_card == 'AH' && new_stack.cards[0] == '10S'){
-			document.getElementById("test8").innerHTML = ("Unit Test 8 Passes.");
-		}
+			for (var i in card_array) {
+				if (card_array[i] != new_stack.cards[i]) {
+					document.getElementById("test5").innerHTML = ("Unit Test 5 Passes.");
+					break;
+				}
+			}
+			console.log("Test 5: Original array is " + card_array[0],card_array[1],card_array[2],card_array[3],card_array[4]);
+			console.log("Test 5: after shuffling order of cards is now " + new_stack.cards[0],new_stack.cards[1],new_stack.cards[2],new_stack.cards[3],new_stack.cards[4]);
 		</script>
 
 		<script>
-		// Tests stack flipping
-		var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
-		var new_stack = new deck(1,card_array);
-		new_stack.flip_deck();
-		console.log("Test 9: First Card = " + new_stack.cards[0]);
-		var new_card = new_stack.draw_card();
-		console.log("Test 9: After drawing card, first Card = " + new_stack.cards[0]);
-		if (new_card == 'AH' && new_stack.cards[0] == '2C' && new_stack.face_up){
-			document.getElementById("test9").innerHTML = ("Unit Test 9 Passes.");
-		}
+			//Test 6: add_card
+
+			var card_array = []; // top of the deck = last index
+			var new_stack = new deck(1,card_array);
+
+			new_stack.add_card(4); //  this should be in index 1
+			new_stack.add_card(2); // this should be in index 0
+
+			console.log("Test 6: cards added: " + new_stack.cards[0],new_stack.cards[1]);
+			if (new_stack.cards[0] == 2 && new_stack.cards[1] == 4){
+				document.getElementById("test6").innerHTML = ("Unit Test 6 Passes.");
+			}
 		</script>
 
 		<script>
-		// Test 10: 
-		var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
-		var new_stack = new deck(1,card_array);
+			//Test 7: add_card
 
-		new_stack.flip_deck();
-		new_stack.add_card('QH');
+			var card_array = []; // top of the deck = last index
+			var new_stack = new deck(1,card_array);
 
-		console.log("Test 10: First card: " + new_stack.cards[0]);
-		console.log("Test 10: Last card: " + new_stack.cards[4]);
+			new_stack.add_card(4); //  this should be in index 1 (top of stack)
+			new_stack.add_card(2); // this should be in index 0 (bottom of stack)
 
-		if (new_stack.cards[0] == 'AH' && new_stack.cards[4] == 'QH'){
-			document.getElementById("test10").innerHTML = ("Unit Test 10 Passes.");
-		}
+			var new_card = new_stack.draw_card();
+			console.log("Test 7: Drawing cards. new_card = " + new_card);
+			console.log("Test 7: Drawing cards. top card = " + new_stack.cards[0]);
+
+
+			if (new_card == 4 && new_stack.cards[0] == 2){
+				document.getElementById("test7").innerHTML = ("Unit Test 7 Passes.");
+			}
 		</script>
 
 		<script>
-		// Test 10: 
-		var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
-		var new_stack = new deck(1,card_array);
+			// Tests functions with string card ids
+			var card_array = []; // top of the deck = last index
+			var new_stack = new deck(1,card_array);
 
-		new_stack.flip_deck();
-		new_stack.add_card('QH',true); // adds to top
+			new_stack.add_card('AH');
+			new_stack.add_card('2C');
+			new_stack.add_card('KD');
+			new_stack.add_card('10S');
 
-		console.log("Test 11: First card: " + new_stack.cards[0]);
-		console.log("Test 11: Last card: " + new_stack.cards[4]);
+			var new_card = new_stack.draw_card();
 
-		if (new_stack.cards[0] == 'QH' && new_stack.cards[4] == '10S'){
-			document.getElementById("test11").innerHTML = ("Unit Test 11 Passes.");
-		}
+			console.log("Test 8: Drawing cards. new_card = " + new_card);
+			console.log("Test 8: Drawing cards. top card = " + new_stack.cards[0]);
+
+			if (new_card == 'AH' && new_stack.cards[0] == '10S'){
+				document.getElementById("test8").innerHTML = ("Unit Test 8 Passes.");
+			}
 		</script>
 
 		<script>
-		// Test 12: 
-		var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
-		var id = 'deck_1';
-		var new_stack = new deck(id,card_array);
-		new_stack.make_div();
-		new_stack.set_position(10,10);
-		if (typeof document.getElementById("deck_1") != 'undefined'){
-			document.getElementById("test12").innerHTML = ("Unit Test 12 Passes.");
-		}
+			// Tests stack flipping
+			var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
+			var new_stack = new deck(1,card_array);
+			new_stack.flip_deck();
+			console.log("Test 9: First Card = " + new_stack.cards[0]);
+			var new_card = new_stack.draw_card();
+			console.log("Test 9: After drawing card, first Card = " + new_stack.cards[0]);
+			if (new_card == 'AH' && new_stack.cards[0] == '2C' && new_stack.face_up){
+				document.getElementById("test9").innerHTML = ("Unit Test 9 Passes.");
+			}
+		</script>
+
+		<script>
+			// Test 10: 
+			var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
+			var new_stack = new deck(1,card_array);
+
+			new_stack.flip_deck();
+			new_stack.add_card('QH');
+
+			console.log("Test 10: First card: " + new_stack.cards[0]);
+			console.log("Test 10: Last card: " + new_stack.cards[4]);
+
+			if (new_stack.cards[0] == 'AH' && new_stack.cards[4] == 'QH'){
+				document.getElementById("test10").innerHTML = ("Unit Test 10 Passes.");
+			}
+		</script>
+
+		<script>
+			// Test 11: 
+			var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
+			var new_stack = new deck(1,card_array);
+
+			new_stack.flip_deck();
+			new_stack.add_card('QH',true); // adds to top
+
+			console.log("Test 11: First card: " + new_stack.cards[0]);
+			console.log("Test 11: Last card: " + new_stack.cards[4]);
+
+			if (new_stack.cards[0] == 'QH' && new_stack.cards[4] == '10S'){
+				document.getElementById("test11").innerHTML = ("Unit Test 11 Passes.");
+			}
+		</script>
+
+		<script>
+		// Test 12: Div creation and image filling
+			var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
+			var id = 'deck_1';
+			var new_stack = new deck(id,card_array);
+			new_stack.make_div();
+			new_stack.set_position(10,10);
+			if (typeof document.getElementById("deck_1") != 'undefined'){
+				document.getElementById("test12").innerHTML = ("Unit Test 12 Passes.");
+				console.log("Test 12: Deck div created and accessed.")
+			}
+		</script>
+
+		<script>
+			// Test 13:
+			var card_array3 = ['AH', '2C', 'KD']; // top of the deck = last index
+			var card_array2 = ['3H', 'QC'];
+			var id2 = 'deck_2';
+			var id3 = 'deck_3';
+			
+			var deck2 = new deck(id2,card_array2);
+			deck2.make_div();
+			deck2.set_position(120,10);
+
+			var deck3 = new deck(id3,card_array3);
+			deck3.make_div();
+			deck3.set_position(240,10);
+
+			if (typeof document.getElementById("deck_2") != 'undefined' &&
+					typeof document.getElementById("deck_3") != 'undefined') {
+				document.getElementById("test13").innerHTML = ("Unit Test 13 Passes.");
+				console.log("Test 13: Deck div created and accessed.")
+			}
 		</script>
 	</body>
 </html>
