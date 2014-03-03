@@ -18,10 +18,10 @@ function mk_network()
 	var locations = document.URL.split("/");
 	this.web_root = document.URL.replace(locations[locations.length - 1], "");
 	this.game_id = 4;
-	this.board_update_interval = 1500;	//milliseconds between updates
+	this.board_update_interval = 500;	//milliseconds between updates
 	this.board_update_timer; 			//A reference to the update timer (incase we need to remove it)
 	//this.last_update;					//Seconds since the EPOCH that we last updated =)	
-	this.send_update_interval = 1300;		//milliseconds between updating a card.
+	this.send_update_interval = 300;		//milliseconds between updating a card.
 	this.send_update_timer;			//A reference to the send timer (we will need to remove it)
 	//Member functions
 	//Responsible for getting the 52 cards from the server, creating them
