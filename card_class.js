@@ -101,6 +101,13 @@ function card(fname, id)
 		top_z = top_z + 1;
 		console.log("top_z" + top_z);
 	}
+	
+	//Since bring_to_top relies on a click to set 'this'
+	//	we need a programmably-called z-index setter.
+	this.set_z_idx = function(new_z)
+	{
+		this.card_div.style.zIndex = new_z;
+	}
 
 	this.set_position = function (x_pos, y_pos)
 	{
@@ -134,6 +141,22 @@ function card(fname, id)
 			//alert("Here");
 			card.border = "2px solid red";
 		}
+	}
+	
+	
+	//Remove the card from the table if it exists
+	this.remove_card = function()
+	{
+		//check if it's on the table and remove it.
+		var cardDiv = document.getElementById(this.card_id);
+		if (cardDiv && cardDiv.parentNode && cardDiv.parentNode.removeChild){
+			cardDiv.parentNode.removeChild(cardDiv);
+		};
+	}
+	
+	this.reinst_card = function()
+	{
+		cont_div.appendChild(this.card_div);
 	}
 
 	//Constructor Revised!

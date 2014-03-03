@@ -18,10 +18,10 @@ function mk_network()
 	var locations = document.URL.split("/");
 	this.web_root = document.URL.replace(locations[locations.length - 1], "");
 	this.game_id = 4;
-	this.board_update_interval = 500;	//milliseconds between updates
+	this.board_update_interval = 1500;	//milliseconds between updates
 	this.board_update_timer; 			//A reference to the update timer (incase we need to remove it)
 	//this.last_update;					//Seconds since the EPOCH that we last updated =)	
-	this.send_update_interval = 300;		//milliseconds between updating a card.
+	this.send_update_interval = 1300;		//milliseconds between updating a card.
 	this.send_update_timer;			//A reference to the send timer (we will need to remove it)
 	//Member functions
 	//Responsible for getting the 52 cards from the server, creating them
@@ -127,20 +127,33 @@ function mk_network()
 		}
 
 		//Set positions, flipped and locks.
+		//Handle cards in other people's hands
 		for (card_idx in board_state.result) {
 			var cur_card = board_state.result[card_idx];
-
-			if (select.grabbed_card != cur_card.cid) {
-				card_array[cur_card.cid].set_position(cur_card.x_pos, cur_card.y_pos);
-
-				card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
-				if ((+cur_card.locked) == -1) {
-					card_array[cur_card.cid].set_selected(0);
-				} else if ((+cur_card.locked) != player.player_id) {
-					card_array[cur_card.cid].set_selected(-1);
+			
+			if (cur_card.in_hand == player.player_id) {
+				console.log("Found ", cur_card.cid, " in hand.");
+				
+			} else if(cur_card.in_hand == 0){
+			
+				if (select.grabbed_card != cur_card.cid) {
+					card_array[cur_card.cid].set_position(cur_card.x_pos, cur_card.y_pos);
+					card_array[cur_card.cid].set_z_idx(cur_card.z_pos);
+					if (cur_card.z_pos > top_z){ 
+						top_z = (+cur_card.z_pos) + 1;
+					}
+					
+					card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
+					if ((+cur_card.locked) == -1) {
+						card_array[cur_card.cid].set_selected(0);
+					} else if ((+cur_card.locked) != player.player_id) {
+						card_array[cur_card.cid].set_selected(-1);
+					}
+				} else {
+					//alert("skipping card update: " + grabbed_card);
 				}
 			} else {
-				//alert("skipping card update: " + grabbed_card);
+				card_array[cur_card.cid].remove_card();
 			}
 		}
 	}
@@ -161,9 +174,10 @@ function mk_network()
 		var card = document.getElementById(card_array[card_idx].card_id);
 		var x_pos = card.offsetLeft;
 		var y_pos = card.offsetTop;
+		var z_pos = card.style.zIndex;
 
 		//AJAX
-		var var_string = "op=1&game_id=" + this.game_id + "&cid=" + card_idx + "&pid=" + player.player_id + "&x_pos=" + x_pos + "&y_pos=" + y_pos;
+		var var_string = "op=1&game_id=" + this.game_id + "&cid=" + card_idx + "&pid=" + player.player_id + "&x_pos=" + x_pos + "&y_pos=" + y_pos + "&z_pos=" + z_pos;
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, empty_funct, true);
 		//console.log(ajax_obj.responseText);
 	}
@@ -189,6 +203,36 @@ function mk_network()
 		//alert(out_str);
 		return board_state;
 	}	//Sets "flipped" to the new flip_val
+	
+	
+	this.st_add_hand_db = function(card_idx)
+	{
+		var var_string = 'op=9&game_id=' + this.game_id + '&card_id=' + card_idx + "&player_id=" + player.player_id;
+		console.log(var_string);
+		var ajax_obj = network.ajax('cards_mgmt.php', var_string, this.fin_add_hand_db, false);
+	
+		try {
+			var ret_val = JSON.parse(ajax_obj.responseText);
+		} catch (e) {
+			console.log("Parsing error:", e);
+		}
+		
+		console.log("fin_add_hand_db result: ", ret_val.result);
+		return ret_val.result;
+	}
+
+	/*this.fin_add_hand_db = function(ajax_obj)
+	{
+		try {
+			var ret_val = JSON.parse(ajax_obj.responseText);
+		} catch (e) {
+			console.log("Parsing error:", e);
+		}
+		
+		console.log("fin_add_hand_db result: ", ret_val.result);
+		return ret_val.result;
+	}*/
+	
 	
 	//Responsible for carrying out AJAX requests
 	//async: true or false for asynchronous requests. non-async requests return an AJAX obj

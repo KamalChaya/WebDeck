@@ -1,6 +1,22 @@
 //test_player_class
+console.log("Attached hand_tests.js");
+var test_hand_num = 0;
 
-function test_add_all()
+function test_hand_harness()
+{
+	switch(test_hand_num){
+		case 0:
+			test_add_hand();
+			break;
+		case 1:
+			test_add_sel();
+			break;
+	}
+	
+	test_hand_num++;
+}
+
+function test_add_sel()
 {
     //Ensure cards are now in the hand array
     var failed = 0;
@@ -33,14 +49,13 @@ of an issue as we are only using this to test
 function test_add_hand() {
 
 
+	select.grab_card("5S");
 	player.add_hand("5S");
 
 	if (player.hand["5S"]) {
 		console.log("PASS: 5 of spades was successfully added to the player's hand array");
 		
-	}
-	
-	else {
+	} else {
 		console.log("FAIL: 5 of spades wasnt successfully added to the player's hand");
 	}
 	
@@ -56,7 +71,7 @@ function test_add_hand() {
 		console.log("FAIL: the five of spades was not successfully deselected");
 	}
 	
-	console.log("Verify that the five of spades appears in the hand area, and that it has no border.");
+	console.log("To Do: Verify that the five of spades appears in the hand area, and that it has no border.");
 }
 
 

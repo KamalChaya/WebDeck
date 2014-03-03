@@ -6,19 +6,20 @@
 		<script type = "text/javascript" src="network_class.js"></script>
 		<script type = "text/javascript" src = "tests/network_tests.js"> </script>
 		<script type = "text/javascript" src = "tests/testcard.js"> </script>
-		<script type = "text/javascript" src = "test_selection_class.js"> </script>
+		<script type = "text/javascript" src = "tests/test_selection_class.js"> </script>
+		<script type = "text/javascript" src = "tests/chat_tests.js"> </script>
+		<script type = "text/javascript" src = "tests/hand_tests.js"> </script>
 		<script type = "text/javascript" src = "selection_class.js"> </script>
 		<script type = "text/javascript" src = "player_class.js"> </script>
 		<script src="init.js"></script>
 		<script type = 'text/javascript'>
 			var last_update = (8 * 3600) + 1; 	//The EPOCH was 16:00 our time........... The server has a locale!
 			var shift_down = 0;
-			var test_cnt = 7;
-			//
+			
 			window.onclick = function(e)
 			{
 				//alert("You clicked on the page!");
-				if(e.button == 0){
+				if(e.button == 0 && e.target.name != "test"){
 					//We got a left click
 					//release all locks
 					select.release_locks();
@@ -71,7 +72,11 @@
 		<div id="container">
 			<div id="hand">HAND</div>
 			<div id="context_menu">CONTEXT MENU
-				<button type = 'button' onclick = 'test_grab_card();'>Tests</button>
+				<button type = 'button' name = 'test' onclick = 'test_hand_harness();'>Test Hand</button>
+				<button type = 'button' name = 'test' onclick = 'test_all_card();'> Test Card/Network </button>
+				<button type = 'button' name = 'test' onclick = 'chat_test_harness();'> Test Chat </button>
+				<button type = 'button' name = 'test' onclick = 'test_select_harness();'>Test Select</button>
+				<button type = 'button' name = 'test' onclick = 'window.location = "deck_test.html";'> Test Deck </button>
 			</div>
 		</div>
 		<div id="chat_bar">

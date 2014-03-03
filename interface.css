@@ -116,6 +116,7 @@ body{
 	height:50%;
 	left:5%;
 	overflow:visible;
+	overflow-y:scroll;
 	word-wrap:break-word;
 }
 

@@ -48,11 +48,29 @@ function mk_selection()
 		this.grabbed_card = "";
 	}
 
+	/*Requests the server to place a lock. Returns whether it was a successful lock or not.
+	A 1 indicates success.*/
+	this.secure_lock = function (card_idx)
+	{
+		var var_string = "op=4&player_id=" + player.player_id + "&card_id=" + card_idx + "&game_id=" + network.game_id;
+		
+		var ajax_obj = network.ajax("cards_mgmt.php", var_string, err_funct, false);
+		//var ajax_obj = JSON.parse(ajax_obj.responseText);
+		try {
+			var board_state = JSON.parse(ajax_obj.responseText);
+		} catch (e) {
+			console.log("Parsing error:", '"', e, '"');
+		}
+		
+		return (board_state.result);
+		//return (+ajax_obj);
+	}
+	
 	//Will remove the user's lock on the currently selected card
 	//Preconditions: This user must have a lock on a certain card.
 	this.remove_lock = function(card_idx)
 	{
-		var var_string =  "op=5&player_id=" + player.player_id + "&card_id=" + card_idx + "&game_id=" + this.game_id;
+		var var_string =  "op=5&player_id=" + player.player_id + "&card_id=" + card_idx + "&game_id=" + network.game_id;
 		var ajax_obj = network.ajax("cards_mgmt.php", var_string, err_funct, false);
 		try {
 			var board_state = JSON.parse(ajax_obj.responseText);
@@ -86,23 +104,5 @@ function mk_selection()
 			this.selected_cards.splice(cur_card.cid, 1);
 
 		}
-	}
-
-	/*Requests the server to place a lock. Returns whether it was a successful lock or not.
-	A 1 indicates success.*/
-	this.secure_lock = function (card_idx)
-	{
-		var var_string = "op=4&player_id=" + player.player_id + "&card_id=" + card_idx + "&game_id=" + network.game_id;
-		
-		var ajax_obj = network.ajax("cards_mgmt.php", var_string, err_funct, false);
-		//var ajax_obj = JSON.parse(ajax_obj.responseText);
-		try {
-			var board_state = JSON.parse(ajax_obj.responseText);
-		} catch (e) {
-			console.log("Parsing error:", '"', e, '"');
-		}
-		
-		return (board_state.result);
-		//return (+ajax_obj);
 	}
 }

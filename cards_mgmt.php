@@ -37,12 +37,12 @@
 			release_locks();
 			break;
 		
-		case 8:		//Set id of player based on username
+		case 8:	//Set id of player based on username
 			get_player_id();
 			break;
 		
-		case 9:
-					//RESERVED
+		case 9:	//Adding card to hand
+			add_to_hand();
 			break;
 
 		case 10:
@@ -52,7 +52,11 @@
 		case 11:
 			add_new_player();
 			break;
-
+			
+		case 12:	//Removing cards from hand
+			remove_hand();
+			break;
+			
 		default:
 			echo 'unrecognized operation' . $op;
 	}
@@ -66,11 +70,12 @@
 		$player_id = $_POST['pid'];
 		$x_pos = $_POST['x_pos'];
 		$y_pos = $_POST['y_pos'];
+		$z_pos = $_POST['z_pos'];
 		
 		$time = date('Y-m-d H:i:s', time());
 		
 		$sql = "UPDATE Cards C
-				SET last_update = NOW(), x_pos = $x_pos, y_pos = $y_pos
+				SET last_update = NOW(), x_pos = $x_pos, y_pos = $y_pos, z_pos = $z_pos
 				WHERE C.cid = '$card_id' AND C.game_id = $game_id AND C.locked = $player_id";
 		
 		$result = execute_query($sql);
@@ -110,7 +115,7 @@
 
 		$time = date('Y-m-d H:i:s', strtotime($time) - 30);
 		
-		$sql = "SELECT cid, x_pos, y_pos, flipped, locked
+		$sql = "SELECT cid, x_pos, y_pos, z_pos, flipped, locked, in_hand
 				FROM Cards
 				WHERE game_id = $game_id AND last_update > '$time';";
 		
@@ -235,6 +240,59 @@
 		$result = execute_query($sql2);
 	}
 
+	/* Function add_to_hand()
+	 * Return: If the card's in_hand value was changed, this returns a
+	 * 	0. Failure is a 1.
+	*/
+	function add_to_hand()
+	{
+		$card_id = $_POST['card_id'];
+		$game_id = $_POST['game_id'];
+		$player_id = $_POST['player_id'];
+		
+		$sql = "	UPDATE Cards C
+				SET C.in_hand = $player_id
+				WHERE C.cid = '$card_id' AND C.game_id = $game_id AND C.locked = $player_id";
+		
+		$result = execute_query($sql);
+		if($mysqli->affected_rows != 0){
+			$result = '"1"';	//Failure, did not add card to hand
+			
+		} else {
+			$result = '"0"';
+			
+		}
+
+		$result = make_json($sql, $game_id, "", $result);
+		echo $result;
+	}
+
+	//Empties selected cards from your hand to table at a 
+	//	hardcoded location. TODO: make this value not hardcoded.
+	// Will deselect cards too.
+	function remove_hand()
+	{
+		$player_id = $_POST['player_id'];
+		$game_id = $_POST['game_id'];
+		
+		$sql = "	UPDATE Cards C
+				SET C.locked = -1, C.in_hand = 0, C.x_pos = 200, C.y_pos = 200
+				WHERE C.in_hand = $player_id AND C.game_id = $game_id;";
+		
+		$result = execute_query($sql);
+		if($mysqli->affected_rows != 0){
+			$result = '"1"';	//Failure, did not add card to hand
+			
+		} else {
+			$result = '"0"';
+			
+		}
+
+		$result = make_json($sql, $game_id, "", $result);
+		echo $result;
+	}
+	
+	
 	function get_player_id()
 	{
 		$username = $_POST['username'];
