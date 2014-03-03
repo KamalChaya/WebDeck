@@ -107,10 +107,12 @@
 		$game_id = $_POST['game_id'];
 		$update = date('Y-m-d H:i:s', time());
 		$time = $_POST['lastu'];
+
+		$time = date('Y-m-d H:i:s', strtotime($time) - 30);
 		
 		$sql = "SELECT cid, x_pos, y_pos, flipped, locked
 				FROM Cards
-				WHERE game_id = $game_id AND last_update < '$time';";
+				WHERE game_id = $game_id AND last_update > '$time';";
 		
 		$result = execute_query($sql);
 		$result = php_entity_encode($result);
