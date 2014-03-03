@@ -20,11 +20,9 @@ function mk_network()
 	this.game_id = 4;
 	this.board_update_interval = 500;	//milliseconds between updates
 	this.board_update_timer; 			//A reference to the update timer (incase we need to remove it)
-	this.last_update;					//Seconds since the EPOCH that we last updated =)	
+	//this.last_update;					//Seconds since the EPOCH that we last updated =)	
 	this.send_update_interval = 500;		//milliseconds between updating a card.
 	this.send_update_timer;			//A reference to the send timer (we will need to remove it)
-	//this.grabbed_card = "";			//This variable disable updating the currently selected card. See finish_board_update()
-	this.test = 0;
 	//Member functions
 	//Responsible for getting the 52 cards from the server, creating them
 		//and making them draggable.
@@ -47,6 +45,19 @@ function mk_network()
 			cur_card = new_game.result[card_idx];
 			var fname = cur_card.cid + '.svg';
 			var new_card = new card(fname, cur_card.cid);
+
+			var cur_card = new_game.result[card_idx];
+
+			if (select.grabbed_card != cur_card.cid) {
+				card_array[cur_card.cid].set_position(cur_card.x_pos, cur_card.y_pos);
+
+				card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
+				if ((+cur_card.locked) == -1) {
+					card_array[cur_card.cid].set_selected(0);
+				} else if ((+cur_card.locked) != player.player_id) {
+					card_array[cur_card.cid].set_selected(-1);
+				}
+			}
 		}
 
 		var username = localStorage["wd_username"];
@@ -86,6 +97,7 @@ function mk_network()
 	
 	this.begin_board_update = function()
 	{
+		//console.log("last_update preceeding update: " + last_update);
 		var var_string = 'op=2&game_id=' + this.game_id + "&lastu=" + last_update;
 		this.ajax('cards_mgmt.php', var_string, this.finish_board_update, true);
 	}
@@ -99,6 +111,7 @@ function mk_network()
 			console.log("Parsing error:", e);
 		}
 		last_update = board_state.time;
+		//console.log("last_update following update: " + last_update);
 		var added_card = 0;
 
 		for (card_idx in board_state.result) {
@@ -134,11 +147,6 @@ function mk_network()
 	{
 		if(typeof new_game != 'undefined' && new_game != "") {
 			this.game_id = new_game;
-			//console.log("Changed game_id to ");
-			//console.log(this.game_id);
-		}
-		else {
-			//console.log("New game id is undefined");
 		}
 	}
 
@@ -151,30 +159,17 @@ function mk_network()
 		var card = document.getElementById(card_array[card_idx].card_id);
 		var x_pos = card.offsetLeft;
 		var y_pos = card.offsetTop;
-		
-		//alert('x_pos = ' + x_pos + '; y_pos' + y_pos);
+
 		//AJAX
 		var var_string = "op=1&game_id=" + this.game_id + "&cid=" + card_idx + "&pid=" + player.player_id + "&x_pos=" + x_pos + "&y_pos=" + y_pos;
-		//alert(var_string);
-		this.ajax("cards_mgmt.php", var_string, empty_funct, true);
-		//alert(ajax_obj.responseText);
+		var ajax_obj = this.ajax("cards_mgmt.php", var_string, empty_funct, true);
+		//console.log(ajax_obj.responseText);
 	}
 	
 	//Stop transmitting the current position of the card.
 	this.stop_send = function(card_idx)
 	{
-		//if(card_idx != grabbed_card){
-		//	alert("A user was able to change their selected card without letting go of the first card. We got problems.");
-		//}
-		
-		//Remove the selection and lock
-		//alert("Stopping the selection of " + grabbed_card);
-		//card_array[grabbed_card].set_selected(0);
-		//this.remove_lock(grabbed_card);
-		
 		clearInterval(this.send_update_timer);
-		
-		//grabbed_card = "";
 	}
 	
 	this.flipdb = function(card_idx, flip_val)

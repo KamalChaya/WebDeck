@@ -61,16 +61,16 @@
 	{
 		global $mysqli;
 		
+		$game_id = $_POST['game_id'];
 		$card_id = $_POST['cid'];
+		$player_id = $_POST['pid'];
 		$x_pos = $_POST['x_pos'];
 		$y_pos = $_POST['y_pos'];
-		$game_id = $_POST['game_id'];
-		$player_id = $_POST['pid'];
 		
-		$time = date('H:i:s', time());
+		$time = date('Y-m-d H:i:s', time());
 		
 		$sql = "UPDATE Cards C
-				SET last_change = '$time', x_pos = $x_pos, y_pos = $y_pos
+				SET last_update = NOW(), x_pos = $x_pos, y_pos = $y_pos
 				WHERE C.cid = '$card_id' AND C.game_id = $game_id AND C.locked = $player_id";
 		
 		$result = execute_query($sql);
@@ -88,7 +88,7 @@
 	function enter_session()
 	{
 		$game_id = $_POST['game_id'];
-		$time = date('H:i:s', time());
+		$time = date('Y-m-d H:i:s', time());
 		
 		$sql = "SELECT cid, x_pos, y_pos, flipped, locked
 				FROM Cards
@@ -106,14 +106,15 @@
 	{
 		$game_id = $_POST['game_id'];
 		$time = $_POST['lastu'];
-		$time = date('H:i:s', ($time));
 		
 		$sql = "SELECT cid, x_pos, y_pos, flipped, locked
 				FROM Cards
-				WHERE game_id = $game_id AND last_change >= '$time';";
+				WHERE game_id = $game_id AND last_update < '$time';";
 		
 		$result = execute_query($sql);
 		$result = php_entity_encode($result);
+
+		$time = date('Y-m-d H:i:s', time());
 
 		$result = make_json($sql, $game_id, $time, $result);
 		echo $result;
@@ -128,7 +129,7 @@
 		$card_id = $_POST['card_id'];
 		$player_id = $_POST['player_id'];
 		
-		$time = date('H:i:s', time());
+		$time = date('Y-m-d H:i:s', time());
 		
 		$sql = "SELECT C.cid
 				FROM Cards C
@@ -136,7 +137,7 @@
 		$result = execute_query($sql);
 		if($result->num_rows == 0){
 			$sql = "UPDATE Cards C
-					SET C.locked = $player_id, last_change = '$time'
+					SET C.locked = $player_id, last_update = NOW()
 					WHERE (C.locked = -1 OR C.locked = $player_id) AND C.game_id = $game_id AND C.cid = '$card_id' ;";
 							
 			$result = execute_query($sql);
@@ -165,11 +166,10 @@
 		$card_id = $_POST['card_id'];
 		$player_id = $_POST['player_id'];
 		
-		$time = time();
-		$time = date('H:i:s', $time);
+		$time = date('Y-m-d H:i:s', time());
 		
 		$sql = "UPDATE Cards C
-				SET C.locked = -1, last_change = '$time'
+				SET C.locked = -1, last_update = NOW()
 				WHERE C.locked = $player_id AND C.game_id = $game_id AND C.cid = '$card_id' ;";
 						
 		$result = execute_query($sql);
@@ -194,10 +194,10 @@
 		$flipped = $_POST['flipped'];
 		$player_id = $_POST['pid'];
 		
-		$time = date('H:i:s', time());
+		$time = date('Y-m-d H:i:s', time());
 		
 		$sql = "UPDATE Cards C
-				SET C.flipped = $flipped, C.last_change = '$time'
+				SET C.flipped = $flipped, C.last_update = NOW()
 				WHERE (C.locked = -1 OR C.locked = $player_id) AND C.cid = '$card_id' AND C.game_id = $game_id;";
 				
 		$result = execute_query($sql);
@@ -216,7 +216,7 @@
 		$game_id = $_POST['game_id'];
 		$player_id = $_POST['player_id'];
 
-		$time = date('H:i:s', time());
+		$time = date('Y-m-d H:i:s', time());
 				
 		$sql = "SELECT C.cid
 				FROM Cards C
@@ -237,8 +237,6 @@
 	function get_player_id()
 	{
 		$username = $_POST['username'];
-
-		//die($username);
 
 		$sql = "SELECT U.id
 				FROM User U
