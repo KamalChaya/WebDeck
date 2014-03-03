@@ -12,19 +12,19 @@
 		<div id="container">
 		</div>
 		<div id="tests">
-		<div id= "test1">If this is here, test 1 has failed.</div>
-		<div id= "test2">If this is here, test 2 has failed.</div>
-		<div id= "test3">If this is here, test 3 has failed.</div>
-		<div id= "test4">If this is here, test 4 has failed.</div>
-		<div id= "test5">If this is here, test 5 has failed.</div>
-		<div id= "test6">If this is here, test 6 has failed.</div>
-		<div id= "test7">If this is here, test 7 has failed.</div>
-		<div id= "test8">If this is here, test 8 has failed.</div>
-		<div id= "test9">If this is here, test 9 has failed.</div>
-		<div id= "test10">If this is here, test 10 has failed.</div>
-		<div id= "test11">If this is here, test 11 has failed.</div>
-		<div id= "test12">If this is here, test 12 has failed.</div>
-		<div id= "test13">If this is here, test 12 has failed.</div>
+		<div id= "test1">Test 1 has failed.</div>
+		<div id= "test2">Test 2 has failed.</div>
+		<div id= "test3">Test 3 has failed.</div>
+		<div id= "test4">Test 4 has failed.</div>
+		<div id= "test5">Test 5 has failed.</div>
+		<div id= "test6">Test 6 has failed.</div>
+		<div id= "test7">Test 7 has failed.</div>
+		<div id= "test8">Test 8 has failed.</div>
+		<div id= "test9">Test 9 has failed.</div>
+		<div id= "test10">Test 10 has failed.</div>
+		<div id= "test11">Test 11 has failed.</div>
+		<div id= "test12">Test 12 has failed.</div>
+		<div id= "test13">Test 12 has failed.</div>
 
 		</div>
 
@@ -32,7 +32,7 @@
 			//Test 1
 			var new_stack = new deck();
 			console.log("Test 1: Card constructor returned successfully.");
-			document.getElementById("test1").innerHTML = ("Unit Test 1 Passes.");
+			document.getElementById("test1").innerHTML = ("Test 1: Card Constructor test Passes.");
 		</script>
 
 		<script>
@@ -40,7 +40,7 @@
 			var new_stack = new deck(1);
 			console.log("Test 2: New Stack ID:" + new_stack.id);
 			if (typeof new_stack.id != 'undefined'){
-				document.getElementById("test2").innerHTML = ("Unit Test 2 Passes.");
+				document.getElementById("test2").innerHTML = ("Test 2: Creating Deck with an id Passes.");
 			}
 		</script>
 
@@ -49,7 +49,7 @@
 			var new_stack = new deck(1);
 			console.log("Test 3: New Stack.Cards = " + new_stack.cards);
 			if (typeof new_stack.cards != 'undefined'){
-				document.getElementById("test3").innerHTML = ("Unit Test 3 Passes.");
+				document.getElementById("test3").innerHTML = ("Test 3: Creating deck with an empty card array Passes.");
 			}
 		</script>
 
@@ -59,7 +59,7 @@
 			var new_stack = new deck(1,card_array);
 			console.log("Test 4: Element 0 of new stack is " + new_stack.cards[0]);
 			if (new_stack.cards[0] == 1){
-				document.getElementById("test4").innerHTML = ("Unit Test 4 Passes.");
+				document.getElementById("test4").innerHTML = ("Test 4: Creating deck with a passed-in array Passes.");
 			}
 		</script>
 
@@ -72,7 +72,7 @@
 
 			for (var i in card_array) {
 				if (card_array[i] != new_stack.cards[i]) {
-					document.getElementById("test5").innerHTML = ("Unit Test 5 Passes.");
+					document.getElementById("test5").innerHTML = ("Test 5: Shuffling the deck Passes.");
 					break;
 				}
 			}
@@ -91,7 +91,7 @@
 
 			console.log("Test 6: cards added: " + new_stack.cards[0],new_stack.cards[1]);
 			if (new_stack.cards[0] == 2 && new_stack.cards[1] == 4){
-				document.getElementById("test6").innerHTML = ("Unit Test 6 Passes.");
+				document.getElementById("test6").innerHTML = ("Test 6: Initial card adding Passes.");
 			}
 		</script>
 
@@ -110,7 +110,7 @@
 
 
 			if (new_card == 4 && new_stack.cards[0] == 2){
-				document.getElementById("test7").innerHTML = ("Unit Test 7 Passes.");
+				document.getElementById("test7").innerHTML = ("Test 7: Card adding and drawing Passes.");
 			}
 		</script>
 
@@ -130,12 +130,12 @@
 			console.log("Test 8: Drawing cards. top card = " + new_stack.cards[0]);
 
 			if (new_card == 'AH' && new_stack.cards[0] == '10S'){
-				document.getElementById("test8").innerHTML = ("Unit Test 8 Passes.");
+				document.getElementById("test8").innerHTML = ("Test 8: Tests with string card IDs Pass.");
 			}
 		</script>
 
 		<script>
-			// Tests stack flipping
+			// Tests deck flipping
 			var card_array = ['AH', '2C', 'KD', '10S']; // top of the deck = last index
 			var new_stack = new deck(1,card_array);
 			new_stack.flip_deck();
@@ -143,7 +143,7 @@
 			var new_card = new_stack.draw_card();
 			console.log("Test 9: After drawing card, first Card = " + new_stack.cards[0]);
 			if (new_card == 'AH' && new_stack.cards[0] == '2C' && new_stack.face_up){
-				document.getElementById("test9").innerHTML = ("Unit Test 9 Passes.");
+				document.getElementById("test9").innerHTML = ("Test 9: Flipping and drawing Passes.");
 			}
 		</script>
 
@@ -159,7 +159,7 @@
 			console.log("Test 10: Last card: " + new_stack.cards[4]);
 
 			if (new_stack.cards[0] == 'AH' && new_stack.cards[4] == 'QH'){
-				document.getElementById("test10").innerHTML = ("Unit Test 10 Passes.");
+				document.getElementById("test10").innerHTML = ("Test 10: Flipping and adding Passes.");
 			}
 		</script>
 
@@ -175,7 +175,7 @@
 			console.log("Test 11: Last card: " + new_stack.cards[4]);
 
 			if (new_stack.cards[0] == 'QH' && new_stack.cards[4] == '10S'){
-				document.getElementById("test11").innerHTML = ("Unit Test 11 Passes.");
+				document.getElementById("test11").innerHTML = ("Test 11: Better flipping and adding to top Passes.");
 			}
 		</script>
 
@@ -187,7 +187,7 @@
 			new_stack.make_div();
 			new_stack.set_position(10,10);
 			if (typeof document.getElementById("deck_1") != 'undefined'){
-				document.getElementById("test12").innerHTML = ("Unit Test 12 Passes.");
+				document.getElementById("test12").innerHTML = ("Test 12: Div creation Passes.");
 				console.log("Test 12: Deck div created and accessed.")
 			}
 		</script>
@@ -209,7 +209,7 @@
 
 			if (typeof document.getElementById("deck_2") != 'undefined' &&
 					typeof document.getElementById("deck_3") != 'undefined') {
-				document.getElementById("test13").innerHTML = ("Unit Test 13 Passes.");
+				document.getElementById("test13").innerHTML = ("Test 13: Multiple div creation Passes.");
 				console.log("Test 13: Deck div created and accessed.")
 			}
 		</script>
