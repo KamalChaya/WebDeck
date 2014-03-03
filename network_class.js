@@ -18,7 +18,7 @@ function mk_network()
 	var locations = document.URL.split("/");
 	this.web_root = document.URL.replace(locations[locations.length - 1], "");
 	this.game_id = 4;
-	this.board_update_interval = 500;	//milliseconds between updates
+	this.board_update_interval = 1000;	//milliseconds between updates
 	this.board_update_timer; 			//A reference to the update timer (incase we need to remove it)
 	//this.last_update;					//Seconds since the EPOCH that we last updated =)	
 	this.send_update_interval = 500;		//milliseconds between updating a card.
@@ -113,6 +113,8 @@ function mk_network()
 		last_update = board_state.time;
 		//console.log("last_update following update: " + last_update);
 		var added_card = 0;
+
+		//console.log(board_state.result);
 
 		for (card_idx in board_state.result) {
 			var cur_card = board_state.result[card_idx];

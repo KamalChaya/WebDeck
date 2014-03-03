@@ -105,6 +105,7 @@
 	function get_positions()
 	{
 		$game_id = $_POST['game_id'];
+		$update = date('Y-m-d H:i:s', time());
 		$time = $_POST['lastu'];
 		
 		$sql = "SELECT cid, x_pos, y_pos, flipped, locked
@@ -114,9 +115,7 @@
 		$result = execute_query($sql);
 		$result = php_entity_encode($result);
 
-		$time = date('Y-m-d H:i:s', time());
-
-		$result = make_json($sql, $game_id, $time, $result);
+		$result = make_json($sql, $game_id, $update, $result);
 		echo $result;
 	}
 	
