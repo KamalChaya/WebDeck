@@ -162,6 +162,22 @@ function mk_network()
 	{
 		if(typeof new_game != 'undefined' && new_game != "") {
 			this.game_id = new_game;
+
+		var game_query = 'op=13&game_id=' + this.game_id;
+		var num_cards = this.ajax('cards_mgmt.php', game_query, err_funct, false);
+		num_cards = JSON.parse(num_cards.responseText);
+		num_cards = num_cards[0].num_cards;
+		console.log(num_cards);
+
+		if (num_cards == 52){
+			console.log("have 52 cards");
+		} else {
+			console.log("not 52, make cards");
+			var this_game = 'op=14&game_id=' + this.game_id;
+			var make_cards = this.ajax('cards_mgmt.php', this_game, err_funct, false);
+			console.log(make_cards);
+		}
+
 		}
 	}
 

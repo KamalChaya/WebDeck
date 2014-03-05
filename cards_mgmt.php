@@ -56,6 +56,14 @@
 		case 12:	//Removing cards from hand
 			remove_hand();
 			break;
+
+		case 13:
+			count_cards();
+			break;
+
+		case 14:
+			make_cards();
+			break;
 			
 		default:
 			echo 'unrecognized operation' . $op;
@@ -89,24 +97,6 @@
 		echo $result;
 	}
 	
-	
-	function enter_session()
-	{
-		$game_id = $_POST['game_id'];
-		$time = date('Y-m-d H:i:s', time());
-		
-		$sql = "SELECT cid, x_pos, y_pos, flipped, locked
-				FROM Cards
-				WHERE game_id = $game_id;";
-
-		$result = execute_query($sql);
-		$result = php_entity_encode($result);
-
-		$result = make_json($sql, $game_id, $time, $result);
-		echo $result;
-	}
-	
-	
 	function get_positions()
 	{
 		$game_id = $_POST['game_id'];
@@ -125,6 +115,23 @@
 		$result = make_json($sql, $game_id, $update, $result);
 		echo $result;
 	}
+	
+	function enter_session()
+	{
+		$game_id = $_POST['game_id'];
+		$time = date('Y-m-d H:i:s', time());
+		
+		$sql = "SELECT cid, x_pos, y_pos, flipped, locked
+				FROM Cards
+				WHERE game_id = $game_id;";
+
+		$result = execute_query($sql);
+		$result = php_entity_encode($result);
+
+		$result = make_json($sql, $game_id, $time, $result);
+		echo $result;
+	}
+	
 	
 	//lock = -1 means the card is unlocked
 	function secure_lock()
@@ -240,6 +247,20 @@
 		$result = execute_query($sql2);
 	}
 
+	function get_player_id()
+	{
+		$username = $_POST['username'];
+
+		$sql = "SELECT U.id
+				FROM User U
+				WHERE U.username = '$username'";
+
+		$result = execute_query($sql);
+		$result = php_entity_encode($result);
+
+		echo $result;
+	}
+
 	/* Function add_to_hand()
 	 * Return: If the card's in_hand value was changed, this returns a
 	 * 	0. Failure is a 1.
@@ -267,6 +288,31 @@
 		echo $result;
 	}
 
+	function get_max_player()
+	{
+		$sql = "SELECT max(U.id) id
+				FROM User U";
+
+		$result = execute_query($sql);
+		$result = php_entity_encode($result);
+
+		echo $result;
+	}
+
+	function add_new_player()
+	{
+		$username = $_POST['username'];
+		$id = $_POST['uid'];
+
+		$sql = "INSERT INTO User (username, password, id)
+				VALUES ('$username', '000', '$id')";
+
+		$result = execute_query($sql);
+
+		echo $result;
+	}
+
+
 	//Empties selected cards from your hand to table at a 
 	//	hardcoded location. TODO: make this value not hardcoded.
 	// Will deselect cards too.
@@ -291,15 +337,14 @@
 		$result = make_json($sql, $game_id, "", $result);
 		echo $result;
 	}
-	
-	
-	function get_player_id()
-	{
-		$username = $_POST['username'];
 
-		$sql = "SELECT U.id
-				FROM User U
-				WHERE U.username = '$username'";
+	function count_cards()
+	{
+		$game_id = $_POST['game_id'];
+
+		$sql = "SELECT COUNT(game_id) AS num_cards
+				FROM Cards
+				WHERE game_id = $game_id";
 
 		$result = execute_query($sql);
 		$result = php_entity_encode($result);
@@ -307,27 +352,47 @@
 		echo $result;
 	}
 
-	function get_max_player()
+	function make_cards()
 	{
-		$sql = "SELECT max(U.id) id
-				FROM User U";
+		$card_map = array();
 
-		$result = execute_query($sql);
-		$result = php_entity_encode($result);
+	for($i = 2; $i < 11; ++$i){
+		$card_map[$i] = $i;
+	}
+	
+	$suit_map = array();
+	$suit_map [0] = 'C';
+	$suit_map [1] = 'D';
+	$suit_map [2] = 'H';
+	$suit_map [3] = 'S';
+	
+	// Face cards
+	$card_map [1] = 'A';
+	$card_map [11] = 'J';
+	$card_map [12] = 'Q';
+	$card_map [13] = 'K';
 
-		echo $result;
+	//Constants for now: change when we make lobby system.
+		$game_id = $_POST['game_id'];
+
+		$i = 0;
+		foreach($suit_map as $suit){
+			foreach($card_map as $card){
+				$sql = "	INSERT INTO Cards (uid, cid, game_id)
+							VALUES ($i, '" . $card . $suit ."', $game_id);";
+				$result = execute_query($sql);
+				
+				if ($result){
+					//echo $sql . "\n\n";
+				} else {
+					echo "Could not add card #" . $i . "\n";
+				}
+				
+				$i = $i + 1;
+			}
+		}
+
+
 	}
 
-	function add_new_player()
-	{
-		$username = $_POST['username'];
-		$id = $_POST['uid'];
-
-		$sql = "INSERT INTO User (username, password, id)
-				VALUES ('$username', '000', '$id')";
-
-		$result = execute_query($sql);
-
-		echo $result;
-	}
 ?>
