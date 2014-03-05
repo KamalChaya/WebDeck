@@ -1,3 +1,4 @@
+
 <html>
 	<head>
 		<script src="deck_class.js"></script>
@@ -24,10 +25,16 @@
 		<div id= "test10">Test 10 has failed.</div>
 		<div id= "test11">Test 11 has failed.</div>
 		<div id= "test12">Test 12 has failed.</div>
-		<div id= "test13">Test 12 has failed.</div>
+		<div id= "test13">Test 13 has failed.</div>
+		<div id= "test14">Test 14 has failed.</div>
+		<div id= "test15">Test 15 has failed.</div>
+		<div id= "test16">Test 16 has failed.</div>
+
 
 		</div>
-
+		<script>
+		var top_z = 70;
+		</script>
 		<script>
 			//Test 1
 			var new_stack = new deck();
@@ -39,7 +46,7 @@
 			// Test 2
 			var new_stack = new deck(1);
 			console.log("Test 2: New Stack ID:" + new_stack.id);
-			if (typeof new_stack.id != 'undefined'){
+			if (typeof new_stack.deck_id != 'undefined'){
 				document.getElementById("test2").innerHTML = ("Test 2: Creating Deck with an id Passes.");
 			}
 		</script>
@@ -194,16 +201,20 @@
 
 		<script>
 			// Test 13:
-			var card_array3 = ['AH', '2C', 'KD']; // top of the deck = last index
-			var card_array2 = ['3H', 'QC'];
 			var id2 = 'deck_2';
 			var id3 = 'deck_3';
 			
-			var deck2 = new deck(id2,card_array2);
+			var deck2 = new deck(id2);
+			for (var i = 0; i < 30; ++i) {
+				deck2.add_card(i);
+			}
 			deck2.make_div();
 			deck2.set_position(120,10);
 
-			var deck3 = new deck(id3,card_array3);
+			var deck3 = new deck(id3);
+			for (var i = 0; i < 50; ++i) {
+				deck3.add_card(i);
+			}
 			deck3.make_div();
 			deck3.set_position(240,10);
 
@@ -212,6 +223,46 @@
 				document.getElementById("test13").innerHTML = ("Test 13: Multiple div creation Passes.");
 				console.log("Test 13: Deck div created and accessed.")
 			}
+		</script>
+
+		<script>
+			new_stack.remove_deck();
+			//console.log(document.getElementById("deck_1"));
+			//console.log(document.getElementById("deck_2"));
+
+			if (document.getElementById("deck_1") == null &&
+				typeof new_stack == 'undefined') {
+				document.getElementById("test14").innerHTML = ("Test 14: Div destruction 1 passes.");
+				console.log("Test 14: Div 1 Destruction passed.");
+			}
+/*
+			deck2.remove_deck();
+			if (typeof document.getElementById("deck_2") == 'undefined' &&
+				typeof deck2 == 'undefined') {
+				document.getElementById("test14").innerHTML = ("Test 14: Div destruction 2 passes.");
+				console.log("Test 14: Div 1 Destruction passed.");
+			}
+
+			deck3.remove_deck();
+			if (typeof document.getElementById("deck_3") == 'undefined' &&
+				typeof deck3 == 'undefined') {
+				document.getElementById("test14").innerHTML = ("Test 14: Div destruction 3 passes.");
+				console.log("Test 14: Div 1 Destruction passed.");
+
+			}
+			*/
+		</script>
+		<script>
+			deck2.set_drag(1);
+			console.log("Test 15: Deck 2 should be draggable now.");
+			document.getElementById("test15").innerHTML = ("Test 15: Div draggability on deck 2 passes.");
+
+		</script>
+
+		<script>
+			deck2.bring_to_top();
+			console.log("Test 16: Deck 2 should be above deck 3 now.");
+			document.getElementById("test16").innerHTML = ("Test 16: Div draggability on deck 2 passes.");
 		</script>
 	</body>
 </html>

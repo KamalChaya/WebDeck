@@ -1,13 +1,13 @@
-function deck(stack_id,cards)
+function deck(deck_id,cards)
 {
 	// constructor
 
-	this.id = stack_id;
+	this.deck_id = deck_id;
 	this.face_up = false; // deck is face down to begin with
 
-	this.img2 = "card_backs/Blue_Back_2.svg"; // image for 2 or more cards
-	this.img3 = "card_backs/Blue_Back_3.svg"; // image for 3 or more cards
-	this.img4 = "card_backs/Blue_Back_4.svg"; // image for 4 or more cards
+	this.img_small = "card_backs/Blue_Back_3.svg"; // image for 2 or more cards
+	this.img_med = "card_backs/Blue_Back_6.svg"; // image for 3 or more cards
+	this.img_large = "card_backs/Blue_Back_9.svg"; // image for 4 or more cards
 	//var cont_div = document.getElementById('container');
 
 
@@ -64,10 +64,6 @@ function deck(stack_id,cards)
 		}
 	}
 	
-	this.add_to_bottom = function(card_id){
-		this.cards.unshift(card_id);
-
-	}
 	this.draw_card = function(){
 		if (this.face_up){
 			return this.cards.shift();
@@ -86,31 +82,49 @@ function deck(stack_id,cards)
 		this.deck_div.appendChild(image);
 		cont_div.appendChild(this.deck_div);
 
-		this.deck_div.id = this.id;
+		this.deck_div.id = this.deck_id;
 		this.deck_div.classList.add("deck");
 		this.deck_div.imgdiv = image;
 
 		image.id = this.imgid;
 
-		switch (this.cards.length) {
-		case 2:
-			image.src = this.img2;
-			break;
-		case 3:
-			image.src = this.img3;
-			break;
-		default:
-			image.src = this.img4;
-			break;
+		if (this.cards.length < 16) {
+			image.src = this.img_small;
+		} else if (this.cards.length < 31) {
+			image.src = this.img_med;
+		} else {
+			image.src = this.img_large;
 		}
 	}
 
+	this.remove_deck = function () {
+		var deck_div = document.getElementById(this.deck_id);
+		if (deck_div && deck_div.parentNode && deck_div.parentNode.removeChild){
+			deck_div.parentNode.removeChild(deck_div);
+		}
+	}
+
+	this.bring_to_top = function()
+	{
+		$('#' + this.deck_id).css('position', 'absolute');
+		this.deck_div.style.zIndex = "" + top_z;
+		console.log("top_z" + top_z);
+		top_z = top_z + 1;
+		console.log("top_z" + top_z);
+	}
+
+	this.set_drag = function (draggable){
+		if (draggable == 1){
+			$('#' + this.deck_id).draggable({containment: '#container'});
+		} else {
+			$('#' + this.deck_id).draggable("disable");
+		}
+	}
 	this.set_position = function (x_pos, y_pos)
 	{
 
-		$('#' + this.id).css('position','absolute');
-		$('#' + this.id).css('top', y_pos);
-		$('#' + this.id).css('left', x_pos);
+		$('#' + this.deck_id).css('position','absolute');
+		$('#' + this.deck_id).css('top', y_pos);
+		$('#' + this.deck_id).css('left', x_pos);
 	}
-
 }
