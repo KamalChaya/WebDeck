@@ -64,7 +64,15 @@
 		case 14:
 			make_cards();
 			break;
-			
+
+		case 15:
+			get_games();
+			break;
+
+		case 16:
+			remove_game();
+			break;
+
 		default:
 			echo 'unrecognized operation' . $op;
 	}
@@ -272,7 +280,7 @@
 		$player_id = $_POST['player_id'];
 		
 		$sql = "	UPDATE Cards C
-				SET C.in_hand = $player_id
+				SET C.in_hand = $player_id, C.last_update = NOW()
 				WHERE C.cid = '$card_id' AND C.game_id = $game_id AND C.locked = $player_id";
 		
 		$result = execute_query($sql);
@@ -393,6 +401,41 @@
 		}
 
 
+	}
+
+	function get_games()
+	{
+
+		$sql = "SELECT DISTINCT game_id
+				FROM Cards;";
+
+		//WHERE (time_to_sec(timediff(NOW(), last_update) / 3600) > 0;";
+
+		$result = execute_query($sql);
+
+		$result = php_entity_encode($result);
+
+		echo $result;
+	}
+
+	function remove_game()
+	{
+		$game_id = $_POST['game_id'];
+
+		$sql = "DELETE FROM Cards
+				WHERE game_id = $game_id AND
+					
+						time_to_sec(
+							timediff(
+								NOW(), (SELECT MAX(last_update))
+							))
+							/ 3600
+						 > 48;
+					;";
+
+		$result = execute_query($sql);
+
+		echo $result;
 	}
 
 ?>

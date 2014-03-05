@@ -40,6 +40,8 @@ function mk_network()
 		} catch (e) {
 			console.log("Parsing error:", e);
 		}
+
+		this.timeout_games();
 		
 		for(card_idx in new_game.result){
 			cur_card = new_game.result[card_idx];
@@ -93,6 +95,19 @@ function mk_network()
 		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
 		board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
 	}
+
+	this.timeout_games = function()
+	{
+		var var_string = 'op=15';
+		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
+		var return_text = JSON.parse(ajax_obj.responseText);
+		console.log(return_text);
+
+		for(i in return_text) {
+			var_string = 'op=16&game_id=' + return_text[i].game_id;
+			ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
+		}
+	}
 	
 	
 	this.begin_board_update = function()
@@ -118,6 +133,11 @@ function mk_network()
 
 		for (card_idx in board_state.result) {
 			var cur_card = board_state.result[card_idx];
+			/*
+						if(card_array[cur_card.cid]) {
+				card_array[cur_card.cid].reinst_card();
+			}
+			*/
 			if (typeof card_array[cur_card.cid] == "undefined") {
 				var fname = cur_card.cid + '.svg';
 				var new_card = new card(fname, cur_card.cid);
@@ -167,12 +187,12 @@ function mk_network()
 		var num_cards = this.ajax('cards_mgmt.php', game_query, err_funct, false);
 		num_cards = JSON.parse(num_cards.responseText);
 		num_cards = num_cards[0].num_cards;
-		console.log(num_cards);
+		//console.log(num_cards);
 
 		if (num_cards == 52){
-			console.log("have 52 cards");
+			//console.log("have 52 cards");
 		} else {
-			console.log("not 52, make cards");
+			//console.log("not 52, make cards");
 			var this_game = 'op=14&game_id=' + this.game_id;
 			var make_cards = this.ajax('cards_mgmt.php', this_game, err_funct, false);
 			console.log(make_cards);
