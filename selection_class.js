@@ -27,12 +27,17 @@ function mk_selection()
 			card_array[card_idx].set_drag(1);
 
 			//Set the timer interval
-			network.send_update_timer = setInterval("network._send_pos(" + '"' + card_idx + '"' +");", network.send_update_interval);
+			if (!card_array[card_idx].card_div.in_hand){
+				network.send_update_timer = setInterval("network._send_pos(" + '"' + card_idx + '"' +");", network.send_update_interval);
+			}
 		} else if (got_lock == 2) {
 			card_array[card_idx].set_drag(1);
 			this.grabbed_card = card_idx;
-			network.send_update_timer = setInterval("network._send_pos(" + '"' + card_idx + '"' +");", network.send_update_interval);
-
+			
+			if (!card_array[card_idx].card_div.in_hand){
+				network.send_update_timer = setInterval("network._send_pos(" + '"' + card_idx + '"' +");", network.send_update_interval);
+			}
+			
 			console.log("Already selected");
 		} else {
 			console.log("Someone else has it selected");

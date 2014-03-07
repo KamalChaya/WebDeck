@@ -77,21 +77,6 @@ function card(fname, id)
 		document.getElementById(this.id + "_img").src = this.image;
 	}
 	
-	this.select_card = function() // Deprecated?
-	{
-		if (this.select == -1){
-			//User can select this card
-			var got_lock = network.get_lock(card_id);
-			if(got_lock == 1){
-				//We got the lock, highlight the card
-			} else{
-				//No lock, don't highlight the card.
-			}
-		} else {
-			//Do nothing.
-		}
-	}
-	
 	this.bring_to_top = function()
 	{
 		$('#' + this.card_id).css('position', 'absolute');
@@ -120,8 +105,9 @@ function card(fname, id)
 	this.set_drag = function(draggable)
 	{
 		//console.log("set_drag: " + draggable);
+		var holding_div = this.card_div.parentNode.id
 		if (draggable == 1){
-			$('#' + this.card_id).draggable({containment: '#container'});
+			$('#' + this.card_id).draggable({containment: '#' + holding_div});
 		} else {
 			$('#' + this.card_id).draggable("disable");
 		}
@@ -148,15 +134,30 @@ function card(fname, id)
 	this.remove_card = function()
 	{
 		//check if it's on the table and remove it.
-		var cardDiv = document.getElementById(this.card_id);
-		if (cardDiv && cardDiv.parentNode && cardDiv.parentNode.removeChild){
-			cardDiv.parentNode.removeChild(cardDiv);
+		var card_div = document.getElementById(this.card_id);
+		if (card_div && card_div.parentNode && card_div.parentNode.removeChild){
+			card_div.parentNode.removeChild(card_div);
 		};
+		
+		this.card_div.in_hand = -1;
 	}
 	
+	//Adds the card back to the board
 	this.reinst_card = function()
 	{
 		cont_div.appendChild(this.card_div);
+		
+		this.card_div.in_hand = 0;
+	}
+	
+	//Handles moving the card to the hand div and setting its
+	//	in_hand member
+	this.move_to_hand = function()
+	{
+		var hand = document.getElementById("hand");
+		hand.appendChild(this.card_div);
+		
+		this.card_div.in_hand = 1;
 	}
 
 	//Constructor Revised!
@@ -174,6 +175,7 @@ function card(fname, id)
 	this.card_div.addEventListener("mousedown", card_array[id].handle_click, false);
 	this.card_div.obj = this;
 	this.card_div.imgdiv = image;
+	this.card_div.in_hand = 0;	//-1 for not instantiated, 0 for on board, 1 for in your hand
 
 	image.id = this.imgid;
 

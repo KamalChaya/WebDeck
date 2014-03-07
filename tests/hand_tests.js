@@ -46,9 +46,8 @@ test remove
 Note: the indexOf function does not work in IE8, this shouldn't be too much 
 of an issue as we are only using this to test
 */
-function test_add_hand() {
-
-
+function test_add_hand() 
+{
 	select.grab_card("5S");
 	player.add_hand("5S");
 
@@ -77,3 +76,28 @@ function test_add_hand() {
 
 
 //test rmv hand
+
+
+//test remove selected
+//Description: Will grab everything in your hand and remove it.
+//Preconditions: Cards in your hand are deselected initially.
+function test_remove_sel()
+{
+	for (card_idx in player.hand){
+		select.grab_card(card_idx);
+		select.ungrab_card(card_idx);
+	}
+	
+	console.log("Moving all cards in hand to the board.");
+	player.rmv_sel();
+	console.log("Ensure that all cards in the hand were put just above the hand.");
+	console.log("Verify that all cards have left the player's hand.");
+	console.log("Verify that said cards appear on another player's screen.");
+	console.log("Verify that the cards are unlocked in the database.");
+}
+
+
+
+//Adding a card that i already in your hand
+
+//rerfeshing the page.

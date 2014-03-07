@@ -326,12 +326,15 @@
 	// Will deselect cards too.
 	function remove_hand()
 	{
+		$x_pos = $_POST['x_pos'];
+		$y_pos = $_POST['y_pos'];
+		$card_id = $_POST['card_id'];
 		$player_id = $_POST['player_id'];
 		$game_id = $_POST['game_id'];
 		
 		$sql = "	UPDATE Cards C
-				SET C.locked = -1, C.in_hand = 0, C.x_pos = 200, C.y_pos = 200
-				WHERE C.in_hand = $player_id AND C.game_id = $game_id;";
+				SET C.locked = -1, C.in_hand = 0, C.x_pos = $x_pos, C.y_pos = $y_pos, C.last_update = NOW()
+				WHERE C.in_hand = $player_id AND C.game_id = $game_id AND C.cid = '$card_id';";
 		
 		$result = execute_query($sql);
 		if($mysqli->affected_rows != 0){

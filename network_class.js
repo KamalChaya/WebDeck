@@ -155,7 +155,10 @@ function mk_network()
 				console.log("Found ", cur_card.cid, " in hand.");
 				
 			} else if(cur_card.in_hand == 0){
-			
+				if ((+card_array[cur_card.cid].card_div.in_hand) == -1){
+					card_array[cur_card.cid].reinst_card();
+				}
+				
 				if (select.grabbed_card != cur_card.cid) {
 					card_array[cur_card.cid].set_position(cur_card.x_pos, cur_card.y_pos);
 					card_array[cur_card.cid].set_z_idx(cur_card.z_pos);
@@ -257,18 +260,25 @@ function mk_network()
 		return ret_val.result;
 	}
 
-	/*this.fin_add_hand_db = function(ajax_obj)
+	//Changes the in_hand field in the database to the global
+	//	in_hand value (0), meaning it's on the table. Also 
+	//	Sets the x position of the card accordingly, releases locks
+	//	and updates the last_update field.
+	this.rmv_hand_db = function(card_idx, x_pos, y_pos)
 	{
+		var var_string = 'op=12&game_id=' + this.game_id + '&card_id=' + card_idx + "&player_id=" + player.player_id + "&x_pos=" + x_pos + "&y_pos=" + y_pos;
+		console.log(var_string);
+		var ajax_obj = network.ajax('cards_mgmt.php', var_string, this.fin_add_hand_db, false);
+
 		try {
 			var ret_val = JSON.parse(ajax_obj.responseText);
 		} catch (e) {
 			console.log("Parsing error:", e);
 		}
 		
-		console.log("fin_add_hand_db result: ", ret_val.result);
+		console.log("rmv_hand_db result: ", ret_val.result);
 		return ret_val.result;
-	}*/
-	
+	}
 	
 	//Responsible for carrying out AJAX requests
 	//async: true or false for asynchronous requests. non-async requests return an AJAX obj
