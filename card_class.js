@@ -3,13 +3,12 @@
 //Parameters: Letter: the alphanumeric character to display on the card
 //		Num: the numeric value of the card
 
-
-function card(fname, id)
+function card(id)
 {
 	//Members
 	this.id = id;
 	this.card_id = id;		//The id of the div that contains this card
-	this.front = 'card_fronts/' + fname;
+	this.front = 'card_fronts/' + id + ".svg";
 	this.back = "card_backs/Blue_Back.svg";
 	this.image = this.back;
 	this.imgid = this.card_id + "_img";
@@ -131,6 +130,7 @@ function card(fname, id)
 	
 	
 	//Remove the card from the table if it exists
+	//Cards can be put in decks or in hands
 	this.remove_card = function()
 	{
 		//check if it's on the table and remove it.
@@ -160,7 +160,7 @@ function card(fname, id)
 		this.card_div.in_hand = 1;
 	}
 
-	//Constructor Revised!
+	//Constructor
 	card_array[id] = this;	//This links the id of the card to its position in the card array
 	var cont_div = document.getElementById('container');
 	this.card_div = document.createElement("div");
@@ -184,20 +184,7 @@ function card(fname, id)
 	image.alt = this.imgid;
 	image.addEventListener("mousedown", card_array[id].set_drag(1), false);
 
-	//Constructor
-	//alert("Constructor called: fname " + fname + " id: " + id);
-	//NOTICE: the handle for a mouse click is associated with the image! This allows for seamless dragability!
-	/*var cont_div = document.getElementById('container');
-	var card_div = "<div id = '" + this.card_id + "' class = 'card2 ' onmousedown = 'card_array[" + '"' + id + '"' + "].bring_to_top();'  onmouseup = 'card_array[" + '"' + id + '"' + "].handle_release(event);'>";
-	card_div += "<image id = '" + this.imgid + "' src='" + this.image +"'  onmousedown = 'card_array[" +'"'+ id + '"' + "].handle_click(event);' alt='"+this.card_id+"'></image>";
-	card_div += "</div>";
-	//alert(card_div);
-	cont_div.innerHTML += card_div;
-	//alert(cont_div.innerHTML);
-	*/
-	//card_array.push(this);
-
-	//alert(card_array[id].id);
+	//console.log(card_array[id].id);
 	this.set_position(10, 10);
 }
 

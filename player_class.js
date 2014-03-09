@@ -9,11 +9,11 @@ console.log("attached player class.");
 function mk_player()//
 {
 	this.player_id;
-	this.username = "Joe";	//Default
-	this.ishost;			//Defines host capabilities.
+	this.username = "Joe";		//Default
+	this.ishost;				//Defines host capabilities.
 	this.hand = new Array();	//Card ids in the hand. value=undefined implies the card was once in hand.
 	this.next_hand_pos_x = 50;	//The x_position of a newly added card in hand.
-	this.reinst_y = 350;
+	this.reinst_y = 350;		//The y-position of the card when placed on the table
 	
 	//Adds all selected cards to a player's hand
 	this.add_sel_hand = function()
