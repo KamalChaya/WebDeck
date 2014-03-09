@@ -73,11 +73,11 @@
 			remove_game();
 			break;
 
-		case 16:
+		case 17:
 			add_session();
 			break;
 
-		case 17:
+		case 18:
 			get_session();
 			break;
 
@@ -444,8 +444,6 @@
 					;";
 
 		$result = execute_query($sql);
-
-		echo $result;
 	}
 
 	function add_session()
@@ -454,12 +452,16 @@
 		$host_name = $_POST['host'];
 		$game_desc = $_POST['desc'];
 
+		
 		$sql = "INSERT INTO Games (game_id, host, description)
-				VALUES ($game_id, $host_name, $game_desc);";
-
+				VALUES ('$game_id', '$host_name', '$desc');"; 
 		$result = execute_query($sql);
 
-		echo $result;
+		if ($result){
+			echo $result;
+		} else {
+			echo "Failed to add\n";
+		}	
 	}
 
 	function get_session()

@@ -42,25 +42,6 @@ function mk_network()
 		}
 
 		this.timeout_games();
-		
-		for(card_idx in new_game.result){
-			cur_card = new_game.result[card_idx];
-			var fname = cur_card.cid + '.svg';
-			var new_card = new card(fname, cur_card.cid);
-
-			var cur_card = new_game.result[card_idx];
-
-			if (select.grabbed_card != cur_card.cid) {
-				card_array[cur_card.cid].set_position(cur_card.x_pos, cur_card.y_pos);
-
-				card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
-				if ((+cur_card.locked) == -1) {
-					card_array[cur_card.cid].set_selected(0);
-				} else if ((+cur_card.locked) != player.player_id) {
-					card_array[cur_card.cid].set_selected(-1);
-				}
-			}
-		}
 
 		var username = localStorage["wd_username"];
 		var namequery = 'op=8&username=' + username;
@@ -91,6 +72,15 @@ function mk_network()
 		}
 
 		localStorage.removeItem("wd_username");
+		
+		//Make the cards
+		var cur_card;
+		for(card_idx in new_game.result){
+			cur_card = new_game.result[card_idx];
+			var new_card = new card(cur_card.cid);
+
+			network.set_card_attr(cur_card);
+		}
 
 		//board_update_timer = setInterval("network.begin_board_update()", this.board_update_interval);
 		board_update_timer = setInterval(function(){network.begin_board_update()}, this.board_update_interval);
@@ -131,74 +121,85 @@ function mk_network()
 
 		//console.log(board_state.result);
 
-		for (card_idx in board_state.result) {
-			var cur_card = board_state.result[card_idx];
-			/*
-						if(card_array[cur_card.cid]) {
-				card_array[cur_card.cid].reinst_card();
-			}
-			*/
-			if (typeof card_array[cur_card.cid] == "undefined") {
-				var fname = cur_card.cid + '.svg';
-				var new_card = new card(fname, cur_card.cid);
-
-				added_card = 1;
-			}
-		}
-
 		//Set positions, flipped and locks.
 		//Handle cards in other people's hands
 		for (card_idx in board_state.result) {
 			var cur_card = board_state.result[card_idx];
 			
-			if (cur_card.in_hand == player.player_id) {
-				console.log("Found ", cur_card.cid, " in hand.");
-				
-			} else if(cur_card.in_hand == 0){
-				if ((+card_array[cur_card.cid].card_div.in_hand) == -1){
-					card_array[cur_card.cid].reinst_card();
-				}
-				
-				if (select.grabbed_card != cur_card.cid) {
-					card_array[cur_card.cid].set_position(cur_card.x_pos, cur_card.y_pos);
-					card_array[cur_card.cid].set_z_idx(cur_card.z_pos);
-					if (cur_card.z_pos > top_z){ 
-						top_z = (+cur_card.z_pos) + 1;
-					}
-					
-					card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
-					if ((+cur_card.locked) == -1) {
-						card_array[cur_card.cid].set_selected(0);
-					} else if ((+cur_card.locked) != player.player_id) {
-						card_array[cur_card.cid].set_selected(-1);
-					}
-				} else {
-					//alert("skipping card update: " + grabbed_card);
-				}
-			} else {
-				card_array[cur_card.cid].remove_card();
-			}
+			network.set_card_attr(cur_card);
 		}
 	}
-
+	
+	//Will set all visual and functional components of a card including:
+	//border, position, z_index, "inhandedness", flip value
+	this.set_card_attr = function(cur_card)
+	{
+		if (cur_card.in_hand == player.player_id) {
+			if (card_array[cur_card.cid].card_div.in_hand != 1){
+				//The card is not in hand, but it should be. For refreshing
+				card_array[cur_card.cid].move_to_hand();
+				card_array[cur_card.cid].set_position(player.next_hand_pos_x, 50);
+				player.next_hand_pos_x += 30;
+			}
+			console.log("Found ", cur_card.cid, " in hand. cur_card.in_hand: ", cur_card.in_hand);
+			
+		} else if(cur_card.in_hand == 0){
+			if ((+card_array[cur_card.cid].card_div.in_hand) == -1){
+				card_array[cur_card.cid].reinst_card();
+			}
+			
+			if (select.grabbed_card != cur_card.cid) {
+				card_array[cur_card.cid].set_position(cur_card.x_pos, cur_card.y_pos);
+				card_array[cur_card.cid].set_z_idx(cur_card.z_pos);
+				if (cur_card.z_pos > top_z){ 
+					top_z = (+cur_card.z_pos) + 1;
+				}
+				
+				card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
+				if ((+cur_card.locked) == -1) {
+					card_array[cur_card.cid].set_selected(0);
+					
+				} else if ((+cur_card.locked) != player.player_id) {
+					card_array[cur_card.cid].set_selected(-1);
+					
+				}
+			} else {
+				//alert("skipping card update: " + grabbed_card);
+			}
+		} else {
+			card_array[cur_card.cid].remove_card();
+		}
+	}
+	
 	this.change_game = function(new_game)
 	{
 		if(typeof new_game != 'undefined' && new_game != "") {
 			this.game_id = new_game;
+		}
+		var game_query = 'op=13&game_id=' + this.game_id;
+		var num_cards = this.ajax('cards_mgmt.php', game_query, err_funct, false);
+		num_cards = JSON.parse(num_cards.responseText);
+		num_cards = num_cards[0].num_cards;
+		//console.log(num_cards);
 
-			var game_query = 'op=13&game_id=' + this.game_id;
-			var num_cards = this.ajax('cards_mgmt.php', game_query, err_funct, false);
-			num_cards = JSON.parse(num_cards.responseText);
-			num_cards = num_cards[0].num_cards;
-			//console.log(num_cards);
+		if (num_cards == 52){
+			//console.log("have 52 cards");
+		} else {
+			var desc = prompt("No game session with that ID found. Creating a new session. Please enter a description: ","My fun game!");
 
-			if (num_cards == 52){
-				//BLAH
-			} else {
-				var this_game = 'op=14&game_id=' + this.game_id;
-				var make_cards = this.ajax('cards_mgmt.php', this_game, err_funct, false);
-				console.log(make_cards);
+			if (desc != null) {
+				var game_create = 'op=17&game_id=' + this.game_id + '&host=' + localStorage["wd_username"] + '&desc=' + desc;
+				var return_val = this.ajax('cards_mgmt.php', game_create, err_funct, false);
+				console.log(return_val);
 			}
+			else {
+				alert("A description is necessary. Going back to the lobby...");
+				document.location = 'lobby.html';
+			}
+
+			var this_game = 'op=14&game_id=' + this.game_id;
+			var make_cards = this.ajax('cards_mgmt.php', this_game, err_funct, false);
+			console.log(make_cards);
 
 		}
 	}
