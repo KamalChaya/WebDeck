@@ -73,6 +73,14 @@
 			remove_game();
 			break;
 
+		case 16:
+			add_session();
+			break;
+
+		case 17:
+			get_session();
+			break;
+
 		default:
 			echo 'unrecognized operation' . $op;
 	}
@@ -434,6 +442,33 @@
 							/ 3600
 						 > 48;
 					;";
+
+		$result = execute_query($sql);
+
+		echo $result;
+	}
+
+	function add_session()
+	{
+		$game_id = $_POST['game_id'];
+		$host_name = $_POST['host'];
+		$game_desc = $_POST['desc'];
+
+		$sql = "INSERT INTO Games (game_id, host, description)
+				VALUES ($game_id, $host_name, $game_desc);";
+
+		$result = execute_query($sql);
+
+		echo $result;
+	}
+
+	function get_session()
+	{
+		$game_id = $_POST['game_id'];
+
+		$sql = "SELECT *
+				FROM Games
+				WHERE game_id = $game_id;";
 
 		$result = execute_query($sql);
 
