@@ -367,23 +367,22 @@
 	{
 		$card_map = array();
 
-	for($i = 2; $i < 11; ++$i){
-		$card_map[$i] = $i;
-	}
-	
-	$suit_map = array();
-	$suit_map [0] = 'C';
-	$suit_map [1] = 'D';
-	$suit_map [2] = 'H';
-	$suit_map [3] = 'S';
-	
-	// Face cards
-	$card_map [1] = 'A';
-	$card_map [11] = 'J';
-	$card_map [12] = 'Q';
-	$card_map [13] = 'K';
+		for($i = 2; $i < 11; ++$i){
+			$card_map[$i] = $i;
+		}
+		
+		$suit_map = array();
+		$suit_map [0] = 'C';
+		$suit_map [1] = 'D';
+		$suit_map [2] = 'H';
+		$suit_map [3] = 'S';
+		
+		// Face cards
+		$card_map [1] = 'A';
+		$card_map [11] = 'J';
+		$card_map [12] = 'Q';
+		$card_map [13] = 'K';
 
-	//Constants for now: change when we make lobby system.
 		$game_id = $_POST['game_id'];
 
 		$i = 0;
