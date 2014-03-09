@@ -29,7 +29,7 @@
 		<div id= "test14">Test 14 has failed.</div>
 		<div id= "test15">Test 15 has failed.</div>
 		<div id= "test16">Test 16 has failed.</div>
-
+		<div id= "test17">Test 17 has failed.</div>
 
 		</div>
 		<script>
@@ -264,5 +264,15 @@
 			console.log("Test 16: Deck 2 should be above deck 3 now.");
 			document.getElementById("test16").innerHTML = ("Test 16: Div draggability on deck 2 passes.");
 		</script>
+
+		<script> // test 17: drawing cards
+			var drawn_card = deck2.draw_card();
+			console.log(document.getElementById(drawn_card));
+			if (document.getElementById(drawn_card) != null){
+			document.getElementById("test17").innerHTML = ("Test 17: New card should be on table from deck 2.");				
+			}
+
+		</script>
+
 	</body>
 </html>

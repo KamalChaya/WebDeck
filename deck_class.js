@@ -18,9 +18,34 @@ function deck(deck_id,cards)
 
 	//methods
 
+	//Handle Click
+	this.handle_click = function (event)
+	{
+		deck = this.obj;
+		if (event.button == 2) {
+			console.log("Caught a right click.");
+			deck.draw_deck();
+		} else if (event.button == 0) {
+			console.log("Caught a left click.");
+			deck.set_drag(1);
+		}
+	}
+
+	//Handle Button Release
+	this.handle_release = function (event)
+	{
+		deck = this.obj;
+		if (event.button == 2) {
+			//nothing
+		} else if (event.button == 0) {
+			//deck.set_drag(0);
+		}
+	}
+
 	//Shuffle
 	// Randomizes the order of card objects
-	this.shuffle = function() {
+	this.shuffle = function()
+	{
 		var temp_arr = this.cards.slice(0);
 		while(1) {
 			this.randomize();
@@ -32,7 +57,8 @@ function deck(deck_id,cards)
 		}
 	}
 
-	this.randomize = function () {
+	this.randomize = function ()
+	{
 		var current_idx = this.cards.length
 			, temp
 			, rand_idx;
@@ -47,7 +73,8 @@ function deck(deck_id,cards)
 		}
 	}
 
-	this.add_card = function(card_id, to_top){
+	this.add_card = function(card_id, to_top)
+	{
 		//this.add_to_bottom(card_id);
 		if (to_top) { //To top case
 			if (this.face_up) {
@@ -62,20 +89,44 @@ function deck(deck_id,cards)
 				this.cards.unshift(card_id);
 			}
 		}
+
+		card_array[card_id].remove_card();
 	}
 	
-	this.draw_card = function(){
+	this.draw_card = function()
+	{
+		var drawn_card;
 		if (this.face_up){
-			return this.cards.shift();
+			drawn_card = this.cards.shift();
 		} else {
-			return this.cards.pop();
+			drawn_card = this.cards.pop();
+		}
+		card_array[drawn_card].reinst_card();
+		var card_x_pos = this.deck_div.offsetLeft + 10;
+		var card_y_pos = this.deck_div.offsetTop + 10;
+		card_array[drawn_card].set_position(card_x_pos, card_y_pos);
+		//card_array[drawn_card].bring_to_top();
+		card_array[drawn_card].set_z_idx(top_z);
+		top_z++;
+	}
+
+	this.draw_deck = function() 
+	{
+		this.draw_card();
+
+		if (this.cards.length == 1) {
+			this.draw_card();
+			this.remove_deck();
 		}
 	}
 
-	this.flip_deck = function flip_deck(){
+	this.flip_deck = function flip_deck()
+	{
 		this.face_up = !this.face_up;
 	}
-	this.make_div = function make_div(x,y){
+
+	this.make_div = function make_div(x, y)
+	{
 		var cont_div = document.getElementById("container");
 		this.deck_div = document.createElement("div");
 		var image = document.createElement("img");
@@ -95,9 +146,19 @@ function deck(deck_id,cards)
 		} else {
 			image.src = this.img_large;
 		}
+
+		this.deck_div.obj = this;
+
+		this.deck_div.addEventListener("mousedown", this.bring_to_top, false);
+		this.deck_div.addEventListener("mouseup", this.handle_release, false);
+		this.deck_div.addEventListener("mousedown", this.handle_click, false);
+		image.addEventListener("mousedown", this.set_drag(1), false);
+
+		this.set_position(x, y);
 	}
 
-	this.remove_deck = function () {
+	this.remove_deck = function ()
+	{
 		var deck_div = document.getElementById(this.deck_id);
 		if (deck_div && deck_div.parentNode && deck_div.parentNode.removeChild){
 			deck_div.parentNode.removeChild(deck_div);
@@ -107,19 +168,21 @@ function deck(deck_id,cards)
 	this.bring_to_top = function()
 	{
 		$('#' + this.deck_id).css('position', 'absolute');
-		this.deck_div.style.zIndex = "" + top_z;
+		this.style.zIndex = "" + top_z;
 		console.log("top_z" + top_z);
 		top_z = top_z + 1;
 		console.log("top_z" + top_z);
 	}
 
-	this.set_drag = function (draggable){
+	this.set_drag = function (draggable)
+	{
 		if (draggable == 1){
 			$('#' + this.deck_id).draggable({containment: '#container'});
 		} else {
 			$('#' + this.deck_id).draggable("disable");
 		}
 	}
+
 	this.set_position = function (x_pos, y_pos)
 	{
 
@@ -127,4 +190,18 @@ function deck(deck_id,cards)
 		$('#' + this.deck_id).css('top', y_pos);
 		$('#' + this.deck_id).css('left', x_pos);
 	}
+
+	this.remove_cards = function ()
+	{
+		for (var card_idx in this.cards) {
+			var card_div = document.getElementById(this.cards[card_idx]);
+			if (typeof card_div != 'undefined') {
+				card_array[this.cards[card_idx]].remove_card();
+			}
+		}
+	}
+
+	//Constructor Code
+
+	this.remove_cards();
 }

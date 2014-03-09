@@ -1,0 +1,124 @@
+
+<html>
+	<head>
+		<script src="deck_class.js"></script>
+		<script type = 'text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js'></script>
+		<script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+		<script type = "text/javascript" src="card_class.js"></script>
+		<script>
+			document.addEventListener("contextmenu", function(e){
+    			e.preventDefault();
+			}, false);
+		</script>
+
+	</head>
+
+	<body>
+
+		<link rel = 'stylesheet' type = 'text/css' href = 'deck_test_interface.css'>
+		<link rel = 'stylesheet' type = 'text/css' href = 'deck_style.css'>
+		<link rel = 'stylesheet' type = 'text/css' href = 'interface.css'>
+
+		<div id="container">
+
+		</div>
+
+		<div id="tests">
+		<div id= "test17">Test 17 has failed.</div>
+		<div id= "test18">Test 18 has failed.</div>
+		<div id= "test19">Test 19 has failed.</div>
+		<div id= "test20">Test 20 has failed.</div>
+
+		</div>
+
+		<script>
+		var top_z = 70;
+		var card_array = [];
+		</script>
+
+		<script>//Test 17: Making a deck
+		// add cards to an array
+		var my_cards = ['AH', '2C', 'KD', '10S']; // top of the deck = last index	
+		// make 4 cards on table.
+		for (var card_idx in my_cards) {
+			var card_id = my_cards[card_idx];
+			var fname = "card_fronts/" + card_id + ".svg";
+			var new_card = new card(fname,card_id);
+		}
+		// make an extra card
+		var new_card = new card('3C.svg','3C');
+		// pass array to the deck
+		var new_deck = new deck('deck_1', my_cards);
+		new_deck.make_div(50, 50);
+		//new_deck.set_position(50, 50);
+		new_deck.set_drag(1);
+		// verify the cards are gone and the deck has the ids
+		var passes = 1;
+		for (var card_idx in my_cards) {
+			if (document.getElementById(my_cards[card_idx]) != null) {
+				passes = 0;
+				break;
+			}
+		}
+		if (passes && document.getElementById('deck_1') != null) {
+			document.getElementById('test17').innerHTML = ("Test 17: Cards made into a deck.");
+			console.log("Test 17: Cards made into a deck.");
+		}
+		</script>
+
+		<script> // Test 18: Drawing from the Deck.
+			passes = 1;
+
+			var drawn_card = new_deck.draw_card();
+			/*if (drawn_card != '10S') {
+				passes = 0;
+			}*/
+			if (document.getElementById('10S') == null) {
+				passes = 0;
+			}
+
+			if (passes) {
+				document.getElementById('test18').innerHTML = ("Test 18: Card successfully drawn from the deck.");
+				console.log("Test 18: Card drawn from the deck automatically.");
+			}
+		</script>
+		<script> // Test 19: adding a card from the screen to a deck
+			var passes = 1;
+			new_deck.add_card('3C',1);
+
+			if (document.getElementById('3C') != null){
+				passes = 0;
+				console.log("ERROR: Test 19: Card Div still present");
+			}
+
+			if (new_deck.cards[3] != '3C'){
+				passes = 0;
+				console.log("ERROR: Test 19: 3C not present in deck.");
+			}
+
+			if (passes) {
+				document.getElementById('test19').innerHTML = ("Test 19: Adding card to a deck.");
+				console.log("Test 19: Card 3C added to deck.")
+			}
+		</script>
+
+		<script>
+			var passes = 1;
+
+			for (var i = 0; i < 3; i++) {
+				new_deck.draw_deck();
+			}
+
+			if (new_deck) {
+				passes = 0;
+				console.log("ERROR: Test 20: The deck object was not DESTROYED.");
+				console.log(new_deck.deck_id);
+			}
+
+			if (passes) {
+				document.getElementById('test20').innerHTML = ("Test 20: Drawing all cards from the deck.");
+				console.log("Test 20: All cards drawn from deck, deck destroyed.");
+			}
+		</script>
+	</body>
+</html>
