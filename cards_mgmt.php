@@ -130,7 +130,7 @@
 		$result = execute_query($sql);
 		$result = php_entity_encode($result);
 
-		$result = get_pos_json($sql, $game_id, $update, $result, "");
+		$result = get_pos_json($sql, $game_id, $update, $result, '""');
 		echo $result;
 	}
 	
