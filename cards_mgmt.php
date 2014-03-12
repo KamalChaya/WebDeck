@@ -81,6 +81,10 @@
 			get_session();
 			break;
 
+		case 19:
+			reset_cards();
+			break;
+
 		default:
 			echo 'unrecognized operation' . $op;
 	}
@@ -474,6 +478,21 @@
 				WHERE game_id = $game_id;";
 
 		$result = execute_query($sql);
+
+		echo $result;
+	}
+
+	function reset_cards()
+	{
+		$game_id = $_POST['game_id'];
+
+		for($i = 0; $i < 52; ++$i) {
+			$rand_z = rand(0,52);
+			$sql = "UPDATE Cards
+					SET x_pos=0, y_pos=0, z_pos=$rand_z
+					WHERE game_id=$game_id AND uid=$i;";
+			$result = execute_query($sql);
+		}
 
 		echo $result;
 	}
