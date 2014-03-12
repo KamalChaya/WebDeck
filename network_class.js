@@ -99,6 +99,11 @@ function mk_network()
 		}
 	}
 	
+	this.reset_cards = function()
+	{
+		var var_string = 'op=19&game_id=' + this.game_id;
+		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
+	}
 	
 	this.begin_board_update = function()
 	{

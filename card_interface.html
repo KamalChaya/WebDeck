@@ -59,6 +59,11 @@
 			document.addEventListener("contextmenu", function(e){
     			e.preventDefault();
 			}, false);
+
+			function reset_cards()
+			{
+
+			}
 			//document.addEventListener("onmouseup", card_array[selection.])
 			</script>
 
@@ -81,6 +86,7 @@
 					<button type = 'button' name = 'test' onclick = 'window.location = "deck_test.html";'> Test Deck </button>
 					<button type = 'button' onclick = 'player.add_sel_hand();'>Add Hand </button>
 					<button type = 'button' onclick = 'player.rmv_sel_hand();'>Remove Hand </button>
+					<button type = 'button' onclick = 'network.reset_cards();'>Reset </button>
 					
 				</div><!--context_menu-->
 			</div><!--personal-->
