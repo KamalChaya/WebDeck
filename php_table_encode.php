@@ -40,6 +40,30 @@
 
 	/*
 	make_json usage
+		$result should be the 
+		How to access once returned to the .js file and transformed into a
+		JSON object with JSON.parse():
+			The query executed:
+				<JSON object>.query
+			The Game ID being operated on:
+				<JSON object>.game_id
+			The return value of an UPDATE or INSERT:
+				<JSON object>.result
+	*/
+	function make_json($query, $game_id, $result)
+	{
+		$ret_query = query_trim($query);
+		$ret_query = json_encode($ret_query);
+
+		$ret_string = '{"query":' . $ret_query .
+						',"game_id":"' . $game_id . '"' .
+						',"result":' . $result . '}';
+
+		return $ret_string;
+	}
+
+	/*
+	make_json usage
 		If $result is a SELECTion, the calling function is responsible to call
 		php_entity_encode first.
 		How to access once returned to the .js file and transformed into a
@@ -55,7 +79,7 @@
 			The values from a SELECT:
 				<JSON object>.result[<index>].<field>
 	*/
-	function make_json($query, $game_id, $time, $result)
+	function get_pos_json($query, $game_id, $time, $cards, $decks)
 	{
 		$ret_query = query_trim($query);
 		$ret_query = json_encode($ret_query);
@@ -63,7 +87,8 @@
 		$ret_string = '{"query":' . $ret_query .
 						',"game_id":"' . $game_id . '"' .
 						',"time":"' . $time . '"' .
-						',"result":' . $result . '}';
+						',"cards":' . $cards . 
+						',"decks":' . $decks . '}';
 
 		return $ret_string;
 	}

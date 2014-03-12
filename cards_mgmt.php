@@ -99,9 +99,7 @@
 		$x_pos = $_POST['x_pos'];
 		$y_pos = $_POST['y_pos'];
 		$z_pos = $_POST['z_pos'];
-		
-		$time = date('Y-m-d H:i:s', time());
-		
+				
 		$sql = "UPDATE Cards C
 				SET last_update = NOW(), x_pos = $x_pos, y_pos = $y_pos, z_pos = $z_pos
 				WHERE C.cid = '$card_id' AND C.game_id = $game_id AND C.locked = $player_id";
@@ -113,7 +111,7 @@
 			$result = '"0"';
 		}
 
-		$result = make_json($sql, $game_id, $time, $result);
+		$result = make_json($sql, $game_id, $result);
 		echo $result;
 	}
 	
@@ -132,15 +130,14 @@
 		$result = execute_query($sql);
 		$result = php_entity_encode($result);
 
-		$result = make_json($sql, $game_id, $update, $result);
+		$result = get_pos_json($sql, $game_id, $update, $result, "");
 		echo $result;
 	}
 	
 	function enter_session()
 	{
 		$game_id = $_POST['game_id'];
-		$time = date('Y-m-d H:i:s', time());
-		
+
 		$sql = "SELECT cid, x_pos, y_pos, flipped, locked
 				FROM Cards
 				WHERE game_id = $game_id;";
@@ -148,7 +145,7 @@
 		$result = execute_query($sql);
 		$result = php_entity_encode($result);
 
-		$result = make_json($sql, $game_id, $time, $result);
+		$result = make_json($sql, $game_id, $result);
 		echo $result;
 	}
 	
@@ -161,9 +158,7 @@
 		$game_id = $_POST['game_id'];
 		$card_id = $_POST['card_id'];
 		$player_id = $_POST['player_id'];
-		
-		$time = date('Y-m-d H:i:s', time());
-		
+				
 		$sql = "SELECT C.cid
 				FROM Cards C
 				WHERE C.game_id = $game_id AND C.locked = $player_id AND C.cid = '$card_id'";
@@ -184,7 +179,7 @@
 			$result = '"2"'; //We already have it selected
 		}
 
-		$result = make_json($sql, $game_id, $time, $result);
+		$result = make_json($sql, $game_id, $result);
 		echo $result;
 	}
 	
@@ -198,9 +193,7 @@
 		$game_id = $_POST['game_id'];
 		$card_id = $_POST['card_id'];
 		$player_id = $_POST['player_id'];
-		
-		$time = date('Y-m-d H:i:s', time());
-		
+				
 		$sql = "UPDATE Cards C
 				SET C.locked = -1, last_update = NOW()
 				WHERE C.locked = $player_id AND C.game_id = $game_id AND C.cid = '$card_id' ;";
@@ -212,7 +205,7 @@
 			$result = '"0"';
 		}
 
-		$result = make_json($sql, $game_id, $time, $result);
+		$result = make_json($sql, $game_id, $result);
 		echo $result;
 	}
 	
@@ -226,9 +219,7 @@
 		$card_id = $_POST['card_id'];
 		$flipped = $_POST['flipped'];
 		$player_id = $_POST['pid'];
-		
-		$time = date('Y-m-d H:i:s', time());
-		
+				
 		$sql = "UPDATE Cards C
 				SET C.flipped = $flipped, C.last_update = NOW()
 				WHERE (C.locked = -1 OR C.locked = $player_id) AND C.cid = '$card_id' AND C.game_id = $game_id;";
@@ -240,7 +231,7 @@
 			$result = '"0"';
 		}
 
-		$result = make_json($sql, $game_id, $time, $result);
+		$result = make_json($sql, $game_id, $result);
 		echo $result;
 	}
 	
@@ -248,8 +239,6 @@
 	{
 		$game_id = $_POST['game_id'];
 		$player_id = $_POST['player_id'];
-
-		$time = date('Y-m-d H:i:s', time());
 				
 		$sql = "SELECT C.cid
 				FROM Cards C
@@ -258,7 +247,7 @@
 		$result = execute_query($sql);
 		$result = php_entity_encode($result);
 
-		$result = make_json($sql, $game_id, $time, $result);
+		$result = make_json($sql, $game_id, $result);
 		echo $result;
 		
 		$sql2 = "UPDATE Cards C
@@ -304,7 +293,7 @@
 			
 		}
 
-		$result = make_json($sql, $game_id, "", $result);
+		$result = make_json($sql, $game_id, $result);
 		echo $result;
 	}
 
@@ -357,7 +346,7 @@
 			
 		}
 
-		$result = make_json($sql, $game_id, "", $result);
+		$result = make_json($sql, $game_id, $result);
 		echo $result;
 	}
 
