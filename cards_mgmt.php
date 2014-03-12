@@ -81,10 +81,6 @@
 			get_session();
 			break;
 
-		case 19:
-			reset_cards();
-			break;
-
 		default:
 			echo 'unrecognized operation' . $op;
 	}
@@ -400,9 +396,9 @@
 		$i = 0;
 		foreach($suit_map as $suit){
 			foreach($card_map as $card){
-				$shuffle_rand = rand(0, 52);
+				$rand_z = rand(0,52);
 				$sql = "	INSERT INTO Cards (uid, cid, z_pos, game_id)
-							VALUES ($i, '" . $card . $suit ."', $shuffle_rand, $game_id);";
+							VALUES ($i, '" . $card . $suit ."', $rand_z, $game_id);";
 				$result = execute_query($sql);
 				
 				if ($result){
@@ -449,15 +445,6 @@
 					;";
 
 		$result = execute_query($sql);
-
-		echo $result;
-
-		$sql = "DELETE FROM Games
-				WHERE game_id = $game_id"
-
-		$result = execute_query($sql);
-
-		echo $result;
 	}
 
 	function add_session()
@@ -487,21 +474,6 @@
 				WHERE game_id = $game_id;";
 
 		$result = execute_query($sql);
-
-		echo $result;
-	}
-
-	function reset_cards()
-	{
-		$game_id = $_POST['game_id'];
-
-		for($i = 0; $i < 52; $i++) {
-			$rand_pos = rand(0, 52);
-			$sql = "UPDATE Cards
-					SET x_pos=0,y_pos=0,z_pos=$rand_pos
-					WHERE game_id=$game_id AND uid=$i;";
-			$result = execute_query($sql);
-		}
 
 		echo $result;
 	}
