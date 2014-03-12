@@ -79,7 +79,7 @@
 			The values from a SELECT:
 				<JSON object>.result[<index>].<field>
 	*/
-	function get_pos_json($query, $game_id, $time, $cards, $decks)
+	function get_pos_json($query, $game_id, $time, $cards/*, $decks*/)
 	{
 		$ret_query = query_trim($query);
 		$ret_query = json_encode($ret_query);
@@ -87,8 +87,8 @@
 		$ret_string = '{"query":' . $ret_query .
 						',"game_id":"' . $game_id . '"' .
 						',"time":"' . $time . '"' .
-						',"cards":' . $cards . 
-						',"decks":' . $decks . '}';
+						',"cards":' . $cards . /*
+						',"decks":' . $decks . */'}';
 
 		return $ret_string;
 	}
