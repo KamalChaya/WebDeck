@@ -454,7 +454,7 @@
 
 		
 		$sql = "INSERT INTO Games (game_id, host, description)
-				VALUES ('$game_id', '$host_name', '$desc');"; 
+				VALUES ('$game_id', '$host_name', '$game_desc');"; 
 		$result = execute_query($sql);
 
 		if ($result){
