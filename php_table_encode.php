@@ -87,7 +87,7 @@
 		$ret_string = '{"query":' . $ret_query .
 						',"game_id":"' . $game_id . '"' .
 						',"time":"' . $time . '"' .
-						',"cards":' . $cards . /*
+						',"result":' . $cards . /*
 						',"decks":' . $decks . */'}';
 
 		return $ret_string;
