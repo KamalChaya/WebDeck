@@ -135,7 +135,8 @@ function card(id)
 	{
 		//check if it's on the table and remove it.
 		var card_div = document.getElementById(this.card_id);
-		if (card_div && card_div.parentNode && card_div.parentNode.removeChild){
+		//if (card_div && card_div.parentNode && card_div.parentNode.removeChild){
+		if (card_div){
 			card_div.parentNode.removeChild(card_div);
 		};
 		

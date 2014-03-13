@@ -166,9 +166,9 @@ function mk_network()
 				card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
 				player.next_hand_pos_x += 30;
 			}
-			console.log("Found ", cur_card.cid, " in hand. cur_card.in_hand: ", cur_card.in_hand);
+			//console.log("Found ", cur_card.cid, " in hand. cur_card.in_hand: ", cur_card.in_hand);
 			
-		} else if(cur_card.in_hand == 0){
+		} else if(cur_card.in_hand == 0 && card_array[cur_card.cid].card_div.in_hand != 1){
 			if ((+card_array[cur_card.cid].card_div.in_hand) == -1){
 				card_array[cur_card.cid].reinst_card();
 			}

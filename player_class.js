@@ -113,11 +113,11 @@ function mk_player()
 			card_array[card_idx].remove_card();
 			
 			//Put the div back on the table
-			card_array[card_idx].reinst_card();
+			//card_array[card_idx].reinst_card();
 			
 			//A little reformatting
-			card_array[card_idx].set_selected(0);
-			card_array[card_idx].set_position(x_pos, y_pos);
+			//card_array[card_idx].set_selected(0);
+			//card_array[card_idx].set_position(x_pos, y_pos);
 		}
 	}
 }

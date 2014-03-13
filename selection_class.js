@@ -12,6 +12,7 @@ function mk_selection()
 	*/
 	this.grab_card = function(card_idx)
 	{
+		network.stop_send("");
 		var got_lock = this.secure_lock(card_idx);
 		console.log("Got lock returned: " + got_lock + " in grab_card().");
 		if (got_lock == 1){
