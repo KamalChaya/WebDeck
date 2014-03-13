@@ -1,21 +1,26 @@
+//Player Class
 console.log("attached player class.");
 
-//player_class
 /* Hand Conditions: When a card is in your hand
- * 	1. It is not transmitting its position
+ * 	1. It is not transmitting its position at any time
  *	2. It is initially unlocked and unselected
  *	3. When replaced on the table, it is also unlocked and unselected.
  */
-function mk_player()//
+function mk_player()
 {
 	this.player_id;
-	this.username = "Joe";		//Default
-	this.ishost;				//Defines host capabilities.
+	this.username = "Joe";		//Default, overwritten in network class
 	this.hand = new Array();	//Card ids in the hand. value=undefined implies the card was once in hand.
-	this.next_hand_pos_x = 50;	//The x_position of a newly added card in hand.
-	this.reinst_y = 350;		//The y-position of the card when placed on the table
+	this.next_hand_pos_x = 50;	//The to-be x_position of a newly added card in hand.
+	this.reinst_y = 350;		//The to-be y-position of a card when placed on the table
 	
-	//Adds all selected cards to a player's hand
+	//Function: add_sel_hand()
+	//Description: Adds all selected cards to a player's hand
+	//	See selection_class.js for a definiton of "selected"
+	//Parms: None
+	//Preconditions: None really, the player may have any number
+	//	of cards selected including 0
+	//Returns: None
 	this.add_sel_hand = function()
 	{
 		console.log("Adding selected cards to hand.");
@@ -23,11 +28,13 @@ function mk_player()//
 		network.stop_send("");
 	    
 		for(card_idx in select.selected_cards){
-			//add to hand array
-			hand[card_idx] = card_idx;
-		
-			//Actually move
-			this.add_hand(card_idx);
+			if (select.selected_cards[card_idx]){
+				//add to hand array
+				hand[card_idx] = card_idx;
+			
+				//Actually move
+				this.add_hand(card_idx);
+			}
 		}
 		
 		this.next_hand_pos_x = 50;
@@ -37,9 +44,12 @@ function mk_player()//
 		}
 	}
 	
-	//Moves a card to the player's hand. It is unlocked
+	//Function: add_hand()
+	//Description: Moves a card to the player's hand. It is unlocked
 	//	and unselected once in the hand.
+	//Params: card_idx - The string index of a card e.g. "KS", "5C"
 	//Preconditions: Cards are on table and none are sending.
+	//Returns: Nothing
 	this.add_hand = function(card_idx)
 	{
 		//Remove the div from the table and place in hand, if possible.
@@ -62,7 +72,13 @@ function mk_player()//
 		}
 	}
 	
-	//Removes all selected cards in one's hand
+	//Function: rmv_sel_hand()
+	//Description: Removes all selected cards in one's hand
+	//Params: None
+	//Preconditions: None. The user may have selected any number of
+	//	cards from either their hand or the table. It will skip over cards
+	//	on the table.
+	//Returns: None
 	this.rmv_sel_hand = function()
 	{
 		select.grabbed_card = "";
@@ -77,8 +93,14 @@ function mk_player()//
 		this.next_hand_pos_x = 50;
 	}
     
-	//Removes card from one's hand and places
+	//Function: rmv_hand()
+	//Decsription: Removes card from one's hand and places
 	//	it one the table unlocked and unowned.
+	//Params: 	card_idx - The string index of a card e.g. "KS".
+	//		x_pos - The x position to place the card at on the table.
+	//		y_pos - The y position to place the card at on the table.
+	//Preconditions: The card is in the user's hand
+	//Returns: none
 	this.rmv_hand = function(card_idx, x_pos, y_pos)
 	{
 		//Update the database: handles new positions, locked values and in_hand
@@ -98,8 +120,4 @@ function mk_player()//
 			card_array[card_idx].set_position(x_pos, y_pos);
 		}
 	}
-
-	this.arrange_hand = function()
-	{}
-	//sorts the cards by suit and by number
 }
