@@ -28,7 +28,7 @@ function mk_network()
 	this.init_board = function()
 	{
 		this.change_game(localStorage["game_id"]);
-		localStorage.removeItem("game_id");
+		//localStorage.removeItem("game_id");
 
 		var var_string = 'op=3&game_id=' + this.game_id;
 		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
@@ -69,7 +69,7 @@ function mk_network()
 			}
 		}
 
-		localStorage.removeItem("wd_username");
+		//localStorage.removeItem("wd_username");
 		
 		//Make the cards
 		var cur_card;
@@ -157,11 +157,13 @@ function mk_network()
 	//	Postconditions: The specific local card is updated 
 	this.set_card_attr = function(cur_card)
 	{
+		//console.log("cur_card" + cur_card.cid);
 		if (cur_card.in_hand == player.player_id) {
 			if (card_array[cur_card.cid].card_div.in_hand != 1){
 				//The card is not in hand, but it should be. For refreshing
 				card_array[cur_card.cid].move_to_hand();
 				card_array[cur_card.cid].set_position(player.next_hand_pos_x, 50);
+				card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
 				player.next_hand_pos_x += 30;
 			}
 			console.log("Found ", cur_card.cid, " in hand. cur_card.in_hand: ", cur_card.in_hand);
@@ -314,6 +316,7 @@ function mk_network()
 		}
 		
 		console.log("rmv_hand_db result: ", ret_val.result);
+		console.log("SQL statement: ", ret_val.sql);
 		return ret_val.result;
 	}
 	

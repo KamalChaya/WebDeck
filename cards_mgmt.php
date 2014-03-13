@@ -131,7 +131,7 @@
 		$update = date('Y-m-d H:i:s', time());
 		$time = $_POST['lastu'];
 
-		$time = date('Y-m-d H:i:s', strtotime($time) - 30);
+		$time = date('Y-m-d H:i:s', strtotime($time) - 1000);
 		
 		$sql = "SELECT cid, x_pos, y_pos, z_pos, flipped, locked, in_hand
 				FROM Cards
@@ -573,7 +573,7 @@
 		for($i = 0; $i < 52; ++$i) {
 			$rand_z = rand(0,52);
 			$sql = "UPDATE Cards
-					SET x_pos=0, y_pos=0, z_pos=$rand_z
+					SET x_pos=0, y_pos=0, z_pos=$rand_z, flipped = 0
 					WHERE game_id=$game_id AND uid=$i;";
 			$result = execute_query($sql);
 		}

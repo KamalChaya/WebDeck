@@ -103,11 +103,11 @@ function mk_selection()
 			console.log("Parsing error:", e);
 		}
 
+
 		for(card_idx in cards.result){
 			cur_card = cards.result[card_idx];
 			card_array[cur_card.cid].set_selected(0);
-			this.selected_cards.splice(cur_card.cid, 1);
-
+			delete this.selected_cards[cur_card.cid];
 		}
 	}
 }
