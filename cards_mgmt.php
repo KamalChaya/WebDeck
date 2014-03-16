@@ -374,7 +374,7 @@
 		$id = $_POST['uid'];
 
 		$sql = "INSERT INTO User (username, id)
-				VALUES ('$username', $id')";
+				VALUES ('$username', '$id')";
 
 		$result = execute_query($sql);
 
