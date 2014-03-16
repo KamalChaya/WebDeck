@@ -60,7 +60,7 @@ function mk_network()
 				console.log("Found user " + player.username + " with id " + player.player_id);
 			} else {
 				alert("Okay. Going back to the lobby.");
-				document.location = 'lobby.html';
+				document.location = 'lobby.php';
 			}
 		}
 		//localStorage.removeItem("wd_username");
