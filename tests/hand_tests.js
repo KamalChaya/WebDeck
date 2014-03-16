@@ -1,110 +1,126 @@
 //test_player_class
+//All of these tests, like all others, print their expectations to the console.
+
 console.log("Attached hand_tests.js");
 var test_hand_num = 0;
 
 function test_hand_harness()
 {	
-	switch(test_hand_num){
-		case 0:
-			console.log("Removing network update functionality. Complete all tests to reinstantiate board updates.");
-			clearInterval(network.board_update_timer);
-			test_add_hand();
+	switch(test_hand_num % 6){
+		case 0: 
+			select.grab_card("5S");
+			card_array['5S'].set_position(200,200);
+			network.flipdb('5S', 1);
+			network._send_pos("5S");
+			select.ungrab_card("5S");
+			select.release_locks();
+			console.log("Verify that the five of spades is on the table and deselected.");
+			console.log("Open another instance of the UI and place it where it's visible.");
 			break;
+					
 		case 1:
-			test_add_sel();
-			break;
+			test_add_hand();
+			
 		case 2:
+			test_rmv_hand();
+			console.log("Select an arbitrary set of cards and press the 'Test Hand' button again.");			
+			break;
+			
+		case 3:
+			test_add_sel();
+			console.log("Please select an arbitrary number of cards in your hand for removal and press 'Test Hand'.");
+			break;
+			
+		case 4:
 			test_remove_sel();
 			break;
 		
-		case 3:
-			test_hand_refresh();
-			break;
-		
-		case 4:
+		case 5:
 			test_rmv_not_in_hand();
 			break;
 		
-		case 5:
+		case 6:
 			test_already_in_hand();
+			console.log("The next test will refresh the page to ensure cards remain in hands. Be prepared.");
+			break;
+			
+		case 7:
+			test_hand_refresh();
 			break;
 		
-		default:
-			console.log("Tests Complete. Reinstantiating board update functionality.");
-			network.board_update_timer = setInterval(function(){network.begin_board_update()}, network.board_update_interval);
 	}
 	
 	test_hand_num++;
 }
 
-function test_add_sel()
-{
-	//Ensure cards are now in the hand array
-	var failed = 0;
-	for (card_idx in select.selected_cards){
-		if(!player.hand[card_idx]){
-			failed = 1;
-			console.log(card_idx, "not in hand array");
-			break;
-		}
-	}
-	if (!failed){
-		console.log("All cards in hand array");
-	}
-}
-
-
-//precondition: 5 of spades should not be in player's hand
-/*
-Note: the indexOf function does not work in IE8, this shouldn't be too much 
-of an issue as we are only using this to test
-*/
 function test_add_hand() 
 {
 	select.grab_card("5S");
+	select.ungrab_card("5S");
 	player.add_hand("5S");
 
 	if (player.hand["5S"]) {
 		console.log("PASS: 5 of spades was successfully added to the player's hand array");
 		
 	} else {
-		console.log("FAIL: 5 of spades wasnt successfully added to the player's hand");
+		console.log("FAIL: 5 of spades was not successfully added to the player's hand array");
 	}
 	
 	console.log("Verify that in the database that the in_hand value for 5 of spades is equal to the player's ID: " + player.player_id);
-	console.log("Verify that for the five of spades, locked = -1");
+	console.log("Verify that for the five of spades locked = -1");
 	
 	//Verify that 5 of spades is not a selected card
 	if (select.selected_cards.indexOf("5S") == -1) {
-		console.log("PASS: the five of spades was successfully deselected");
+		console.log("PASS: the five of spades was successfully deselected in the selection class");
 	}
 	
 	else {
-		console.log("FAIL: the five of spades was not successfully deselected");
+		console.log("FAIL: the five of spades was not successfully deselected in the selection class");
 	}
 	
-	console.log("To Do: Verify that the five of spades appears in the hand area, and that it has no border.");
+	console.log("Verify that the five of spades appears in the hand area, and that it has no border.");
+	console.log("Verify that the five of spades no longer shows on the second interface.");
 }
 
+function test_rmv_hand()
+{
+	select.grab_card("5S");
+	select.ungrab_card("5S");
+	player.rmv_hand("5S");
+	
+	if (player.hand["5S"]){
+		console.log("Fail: The card was not removed from the player's hand array.");
+	} else {
+		console.log("Pass: The card was remove from the player's hand array.");
+	}
+	
+	if (select.selected_cards["5S"]){
+		console.log("Fail: Did not remove card from selected_cards array in select object.");
+	} else {
+		console.log("Pass: the card is no longer considered selected by the selection object.");
+	}
+	
+	console.log("Verify that the five of spades appears on the table (both screens) with no border");
+}
+
+
+function test_add_sel()
+{
+	player.add_sel_hand();
+	
+	console.log("Visually verify that the cards are now in your hand and do not appear on the second screen.");
+	console.log("Verify that the cards are deselected.");
+}
 
 //test remove selected
 //Description: Will grab everything in your hand and remove it.
 //Preconditions: Cards in your hand are deselected initially.
 function test_remove_sel()
 {
-	for (card_idx in player.hand){
-		if (hand[card_idx]){
-			select.grab_card(card_idx);
-			select.ungrab_card(card_idx);
-		}
-	}
-	
-	console.log("Moving all cards in hand to the board.");
 	player.rmv_sel_hand();
-	console.log("Ensure that all cards in the hand were put just above the hand.");
-	console.log("Verify that all cards have left the player's hand.");
+	console.log("Ensure that all selected cards in the hand were put just above the hand div.");
 	console.log("Verify that said cards appear on another player's screen.");
-	console.log("Verify that the cards are unlocked in the database.");
+	console.log("Verify that the cards are unlocked and in_hand = 0 in the database.");
 }
 
 
@@ -115,7 +131,6 @@ function test_remove_sel()
 function test_already_in_hand()
 {
 	//Remove everything
-	console.log("Start up another interface and ensure the interfaces are synced.");
 	select.release_locks();
 	
 	//Grab king of spades
@@ -169,6 +184,7 @@ function test_rmv_not_in_hand()
 {
 	console.log("Selecting King of Spades");
 	select.grab_card("KS");
+	select.ungrab_card("KS");
 	
 	console.log("Removing selected cards from hand.");
 	player.rmv_sel_hand();

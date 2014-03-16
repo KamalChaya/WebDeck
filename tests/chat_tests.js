@@ -1,9 +1,12 @@
 //test_chat
-console.log("attached test_chat.js");
+//All tests print their expectations and results to the console.
+
+console.log("Attached: test_chat.js");
 var chat_test_num = 0;
+
 function chat_test_harness()
 {
-	switch(chat_test_num){
+	switch(chat_test_num % 5){
 		case 0:
 			test_multi_chat();
 			break;
@@ -15,6 +18,13 @@ function chat_test_harness()
 		case 2:
 			test_chat_overflow();
 			break;
+		
+		case 3:
+			console.log("Open another session in a second browser and press 'test chat' again.");
+			break;
+		
+		case 4:
+			test_chat_sep();
 		
 		default:
 			break;
@@ -40,8 +50,7 @@ function test_chat_spec_char()
 
 function test_chat_sep()
 {
-	console.log("Ensure that two machines are logged into different game sessions.");
-	console.log("Submitting a hello message");
+	console.log("Submitting a hello message in one session");
 	
 	chat.send("Hello World!", "Jackson");
 	
@@ -59,5 +68,6 @@ function test_chat_overflow()
 	for (var i = 0; i < 20; ++i){
 		chat.send("OMG! Look for overflow!", "Jackson");
 	}
+	
 	console.log("Verify that the chat box developed a scroll bar and did not paste text off the screen.");
 }
