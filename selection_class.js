@@ -31,7 +31,6 @@ function mk_selection()
 		if (got_lock == 1){
 			//The user is permitted to move it
 			card_array[card_idx].set_selected(1);
-			card_array[card_idx].select
 
 			//Ignore this card's updates
 			this.grabbed_card = card_idx;

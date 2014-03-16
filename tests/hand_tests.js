@@ -9,8 +9,8 @@ function test_hand_harness()
 	switch(test_hand_num % 6){
 		case 0: 
 			select.grab_card("5S");
-			card_array['5S'].set_position(200,200);
 			network.flipdb('5S', 1);
+			card_array['5S'].set_position(200,200);
 			network._send_pos("5S");
 			select.ungrab_card("5S");
 			select.release_locks();
@@ -20,6 +20,7 @@ function test_hand_harness()
 					
 		case 1:
 			test_add_hand();
+			break;
 			
 		case 2:
 			test_rmv_hand();
