@@ -2,70 +2,25 @@
 	<head>
 		<script type = 'text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js'></script>
 		<script type = "text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
-		<script type = "text/javascript" src="card_class.js"></script>
-		<script type = "text/javascript" src="network_class.js"></script>
-		<script type = "text/javascript" src = "tests/network_tests.js"> </script>
-		<script type = "text/javascript" src = "tests/testcard.js"> </script>
-		<script type = "text/javascript" src = "tests/test_selection_class.js"> </script>
-		<script type = "text/javascript" src = "tests/chat_tests.js"> </script>
-		<script type = "text/javascript" src = "tests/hand_tests.js"> </script>
-		<script type = "text/javascript" src = "selection_class.js"> </script>
-		<script type = "text/javascript" src = "player_class.js"> </script>
-		<script src="init.js"></script>
-		<script type = 'text/javascript'>
-			var last_update = (8 * 3600) + 1; 	//The EPOCH was 16:00 our time........... The server has a locale!
-			var shift_down = 0;
-			
-			window.onclick = function(e)
-			{
-				//alert("You clicked on the page!");
-				if(e.button == 0 && e.target.name != "test"){
-					//We got a left click
-					//release all locks
-					select.release_locks();
-				}
-				console.log("onclicked!");
-			}
-			/*$(document).click(function(e) {
-				var target = $(e.target);
-				alert(target.attr('id'));
-			});*/
-			
-			window.onkeydown = function(e)
-			{
-				if(e.keyCode == 16){
-					//alert("Got shift down!");
-					shift_down += 1;
-				}
-			}
-			
-			window.onkeyup = function(e)
-			{
-				if(e.keyCode == 16){
-					//alert("Shift was released!");
-					shift_down -= 1;
-				}
-			}
-
-			window.onmouseup = function(e)
-			{
-				console.log("mouseup!");
-			}
-			window.onmousedown = function(e)
-			{
-				console.log("mousedown!");
-			}
-
-			document.addEventListener("contextmenu", function(e){
-    			e.preventDefault();
-			}, false);
-
-			//document.addEventListener("onmouseup", card_array[selection.])
-			</script>
-
-			<!-- Chat Scripts -->
+		
+		<!--Core Functionality-->			
+			<script type = "text/javascript" src="card_class.js"></script>
+			<script type = "text/javascript" src="network_class.js"></script>
+			<script type = "text/javascript" src = "selection_class.js"> </script>
+			<script type = "text/javascript" src = "player_class.js"> </script>		
+		
+		<!-- Chat Scripts -->
     		<script type="text/javascript" src="chat.js"></script>
-    		<script type="text/javascript" src="chat_init.js"></script>
+    		<script type="text/javascript" src="chat_init.js"></script>		
+		
+		<!--Tests-->
+			<script type = "text/javascript" src = "tests/network_tests.js"> </script>
+			<script type = "text/javascript" src = "tests/testcard.js"> </script>
+			<script type = "text/javascript" src = "tests/test_selection_class.js"> </script>
+			<script type = "text/javascript" src = "tests/chat_tests.js"> </script>
+			<script type = "text/javascript" src = "tests/hand_tests.js"> </script>
+			
+			<script src="init.js"></script>
 
 	</head>
 	<body onload = "network.init_board(); setInterval('chat.update()', 1000);">
@@ -73,13 +28,12 @@
 		<div id = 'board'>
 			<div id="container"> </div> <!--container-->
 			<div id = 'personal'>
-				<div id="hand">HAND</div>
+				<div id="hand">HAND</div> <!--hand-->
 				<div id="context_menu">CONTEXT MENU
-					<!--<button type = 'button' name = 'test' onclick = 'test_hand_harness();'>Test Hand</button>
+					<button type = 'button' name = 'test' onclick = 'test_hand_harness();'>Test Hand</button>
 					<button type = 'button' name = 'test' onclick = 'test_all_card();'> Test Card/Network </button>
 					<button type = 'button' name = 'test' onclick = 'chat_test_harness();'> Test Chat </button>
 					<button type = 'button' name = 'test' onclick = 'test_select_harness();'>Test Select</button>
-					<button type = 'button' name = 'test' onclick = 'window.location = "deck_test.html";'> Test Deck </button>-->
 					<button type = 'button' onclick = 'player.add_sel_hand();'>Add Hand </button>
 					<button type = 'button' onclick = 'player.rmv_sel_hand();'>Remove Hand </button>
 					<button type = 'button' onclick = 'network.reset_cards();'>Reset </button>
@@ -99,10 +53,8 @@
 	            	<p>message: </p>
 	            	<textarea id="sendie" maxlength='1024'></textarea>
 	        </form>
-    		</div>
-		</div> 
+    		</div><!--page_wrap-->
+		</div><!--chat_bar--> 
 	</body>	
-
-<!-- Include whatever scripts you want in the section below.-->
 
 </html>
