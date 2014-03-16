@@ -27,18 +27,6 @@ function mk_network()
 		//and making them draggable.
 	this.init_board = function()
 	{
-		this.change_game(localStorage["game_id"]);
-		//localStorage.removeItem("game_id");
-
-		var var_string = 'op=3&game_id=' + this.game_id;
-		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
-		try {
-			var new_game = JSON.parse(ajax_obj.responseText);
-		} catch (e) {
-			console.log("Parsing error:", e);
-		}
-
-		this.timeout_games();
 
 		var username = localStorage["wd_username"];
 		var namequery = 'op=8&username=' + username;
@@ -63,13 +51,32 @@ function mk_network()
 
 				this.ajax('cards_mgmt.php', id_query, err_funct, false);
 				console.log("Added new username " + username + " with id " + max_id);
+
+				namequery = 'op=8&username=' + username;
+				userid = this.ajax('cards_mgmt.php', namequery, err_funct, false);
+				userid = JSON.parse(userid.responseText);
+				player.player_id = userid[0].id;
+				player.username = username;
+				console.log("Found user " + player.username + " with id " + player.player_id);
 			} else {
 				alert("Okay. Going back to the lobby.");
 				document.location = 'lobby.html';
 			}
 		}
-
 		//localStorage.removeItem("wd_username");
+
+		this.change_game(localStorage["game_id"]);
+		//localStorage.removeItem("game_id");
+
+		var var_string = 'op=3&game_id=' + this.game_id;
+		var ajax_obj = this.ajax('cards_mgmt.php', var_string, err_funct, false);
+		try {
+			var new_game = JSON.parse(ajax_obj.responseText);
+		} catch (e) {
+			console.log("Parsing error:", e);
+		}
+
+		this.timeout_games();
 		
 		//Make the cards
 		var cur_card;
@@ -206,33 +213,39 @@ function mk_network()
 	//	Appropriate info is sent to the database, and information regarding the cards is sent to the client.
 	this.change_game = function(new_game)
 	{
-		if(typeof new_game != 'undefined' && new_game != "") {
+		if (typeof new_game != 'undefined' && new_game != "") {
 			this.game_id = new_game;
+			var game_query = 'op=13&game_id=' + this.game_id;
+			var num_cards = this.ajax('cards_mgmt.php', game_query, err_funct, false);
+			num_cards = JSON.parse(num_cards.responseText);
+			num_cards = num_cards[0].num_cards;
+
+			if (num_cards == 52){
+				//console.log("have 52 cards");
+			} else {
+				var desc = prompt("No game session with that ID found. Creating a new session. Please enter a description: ","My fun game!");
+
+				if (desc != null) {
+					var game_create = 'op=17&game_id=' + this.game_id + '&host=' + localStorage["wd_username"] + '&desc=' + desc;
+					var return_val = this.ajax('cards_mgmt.php', game_create, err_funct, false);
+					console.log(return_val);
+				}
+				else {
+					alert("A description is necessary. Going back to the lobby...");
+					document.location = 'lobby.html';
+				}
+
+				var this_game = 'op=14&game_id=' + this.game_id;
+				var make_cards = this.ajax('cards_mgmt.php', this_game, err_funct, false);
+				console.log(make_cards);
+
+			}
 		}
-		var game_query = 'op=13&game_id=' + this.game_id;
-		var num_cards = this.ajax('cards_mgmt.php', game_query, err_funct, false);
-		num_cards = JSON.parse(num_cards.responseText);
-		num_cards = num_cards[0].num_cards;
-
-		if (num_cards == 52){
-			//console.log("have 52 cards");
-		} else {
-			var desc = prompt("No game session with that ID found. Creating a new session. Please enter a description: ","My fun game!");
-
-			if (desc != null) {
-				var game_create = 'op=17&game_id=' + this.game_id + '&host=' + localStorage["wd_username"] + '&desc=' + desc;
-				var return_val = this.ajax('cards_mgmt.php', game_create, err_funct, false);
-				console.log(return_val);
-			}
-			else {
-				alert("A description is necessary. Going back to the lobby...");
-				document.location = 'lobby.html';
-			}
-
-			var this_game = 'op=14&game_id=' + this.game_id;
-			var make_cards = this.ajax('cards_mgmt.php', this_game, err_funct, false);
-			console.log(make_cards);
-
+		else {
+			//Should never trigger, since the lobby pre-checks. Still,
+			//better safe then sorry
+			alert("Game id is not valid. Going back to the lobby...")
+			document.location = 'lobby.html';
 		}
 	}
 
