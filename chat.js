@@ -20,7 +20,7 @@ function getStateOfChat(){
 			   url: "process.php",
 			   data: {  
 			   			'function': 'getState',
-						'file': file
+						'file': 'chat' + localStorage["game_id"] + '.txt'
 						},
 			   dataType: "json",
 			
@@ -43,7 +43,7 @@ function updateChat(){
 			   data: {  
 			   			'function': 'update',
 						'state': state,
-						'file': file
+						'file': 'chat' + localStorage["game_id"] + '.txt'
 						},
 			   dataType: "json",
 			   success: function(data){
@@ -77,7 +77,7 @@ function sendChat(message, nickname)
 		   			'function': 'send',
 					'message': message,
 					'nickname': nickname+": ",
-					'file': file
+					'file': 'chat' + localStorage["game_id"] + '.txt'
 				 },
 		   dataType: "json",
 		   success: function(data){
