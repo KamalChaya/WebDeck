@@ -43,35 +43,6 @@
 		<link rel="stylesheet" type="text/css" href="lobby.css" />
 	</head>
 	<body>
-
-		<?php 
-			include('db_connect.php');
-
-		$sql = "SELECT *
-				FROM Games 
-				ORDER BY Games.game_id ASC;";
-
-		$result = execute_query($sql);
-
-		echo "<table border='1'>
-		<tr>
-		<th>Game ID</th>
-		<th>Host</th>
-		<th>Description</th>
-		</th>";
-	
-		while($row = mysqli_fetch_array($result)){
-			echo "<tr>";
-			echo "<td>" . $row['game_id'] . "</td>";
-			echo "<td>" . $row['host'] . "</td>";
-			echo "<td>" . $row['description'] . "</td>";
-			echo "</tr>";
-		}
-		echo "</table>";
-
-		?>
-
-
 		<div id = "container">
 			<div id = "header">
 			</div><!--header-->
@@ -83,6 +54,34 @@
 				<label>Game ID: </label><input type = 'text' id = 'game_id_input' />
 				<!--parent.location='http://web.engr.oregonstate.edu/~alltucki/WebDeck/card_interface.html-->
 				<button onclick='launch_game();'>Join Game</button>
+
+				<?php 
+				include('db_connect.php');
+
+				$sql = "SELECT *
+				FROM Games 
+				ORDER BY Games.game_id ASC;";
+
+			$result = execute_query($sql);
+
+			echo "<table border='1'>
+			<tr>
+			<th>Game ID</th>
+			<th>Host</th>
+			<th>Description</th>
+			</th>";
+		
+			while($row = mysqli_fetch_array($result)){
+				echo "<tr>";
+				echo "<td>" . $row['game_id'] . "</td>";
+				echo "<td>" . $row['host'] . "</td>";
+				echo "<td>" . $row['description'] . "</td>";
+				echo "</tr>";
+			}
+			echo "</table>";
+
+			?>
+
 			</div><!--card_form-->
 			
 			</div><!--main-->
