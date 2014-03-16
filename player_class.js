@@ -38,10 +38,6 @@ function mk_player()
 		}
 		
 		this.next_hand_pos_x = 50;
-		console.log("Printing remaining cards in select:");
-		for(card_idx in select.selected_cards){
-			console.log(card_idx);
-		}
 	}
 	
 	//Function: add_hand()
@@ -54,7 +50,7 @@ function mk_player()
 	{
 		//Remove the div from the table and place in hand, if possible.
 		if (network.st_add_hand_db(card_idx) == "0"){
-			console.log("Adding ", card_idx, " to hand");
+			//console.log("Adding ", card_idx, " to hand");
 			this.hand[card_idx] = card_idx;
 		
 			//Deselect cards
@@ -84,7 +80,7 @@ function mk_player()
 		select.grabbed_card = "";
 		for (card_idx in select.selected_cards){
 			if (select.selected_cards[card_idx] != undefined){
-				console.log("Removing " + card_idx + " from hand.");
+				//console.log("Removing " + card_idx + " from hand.");
 				this.rmv_hand(card_idx, this.next_hand_pos_x, this.reinst_y);
 				this.next_hand_pos_x += 40;
 			}

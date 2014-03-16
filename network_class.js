@@ -171,9 +171,11 @@ function mk_network()
 				card_array[cur_card.cid].move_to_hand();
 				card_array[cur_card.cid].set_position(player.next_hand_pos_x, 50);
 				card_array[cur_card.cid].db_flip_card((+cur_card.flipped));
+				if (cur_card.locked == player.player_id){
+						card_array[cur_card.cid].set_selected(1);
+				}
 				player.next_hand_pos_x += 30;
 			}
-			//console.log("Found ", cur_card.cid, " in hand. cur_card.in_hand: ", cur_card.in_hand);
 			
 		} else if(cur_card.in_hand == 0 && card_array[cur_card.cid].card_div.in_hand != 1){
 			if ((+card_array[cur_card.cid].card_div.in_hand) == -1){
@@ -195,8 +197,6 @@ function mk_network()
 					card_array[cur_card.cid].set_selected(-1);
 					
 				}
-			} else {
-				//alert("skipping card update: " + grabbed_card);
 			}
 		} else {
 			card_array[cur_card.cid].remove_card();
@@ -255,13 +255,12 @@ function mk_network()
 	//	Postconditions: The info is sent through cards_mgmt.php
 	this._send_pos = function(card_idx)
 	{
-		console.log("_send_pos has been called: transmitting card position: " + card_idx);
+		//console.log("_send_pos has been called: transmitting card position: " + card_idx);
 		var card = document.getElementById(card_array[card_idx].card_id);
 		var x_pos = card.offsetLeft;
 		var y_pos = card.offsetTop;
 		var z_pos = card.style.zIndex;
 
-		//AJAX
 		var var_string = "op=1&game_id=" + this.game_id + "&cid=" + card_idx + "&pid=" + player.player_id + "&x_pos=" + x_pos + "&y_pos=" + y_pos + "&z_pos=" + z_pos;
 		var ajax_obj = this.ajax("cards_mgmt.php", var_string, empty_funct, true);
 	}
@@ -289,6 +288,7 @@ function mk_network()
 		} catch (e) {
 			console.log("Parsing error:", e);
 		}
+		
 		return board_state;
 	}
 	
@@ -299,7 +299,7 @@ function mk_network()
 	this.st_add_hand_db = function(card_idx)
 	{
 		var var_string = 'op=9&game_id=' + this.game_id + '&card_id=' + card_idx + "&player_id=" + player.player_id;
-		console.log(var_string);
+		//console.log(var_string);
 		var ajax_obj = network.ajax('cards_mgmt.php', var_string, this.fin_add_hand_db, false);
 	
 		try {
@@ -308,7 +308,6 @@ function mk_network()
 			console.log("Parsing error:", e);
 		}
 		
-		console.log("fin_add_hand_db result: ", ret_val.result);
 		return ret_val.result;
 	}
 
@@ -319,7 +318,7 @@ function mk_network()
 	this.rmv_hand_db = function(card_idx, x_pos, y_pos)
 	{
 		var var_string = 'op=12&game_id=' + this.game_id + '&card_id=' + card_idx + "&player_id=" + player.player_id + "&x_pos=" + x_pos + "&y_pos=" + y_pos;
-		console.log(var_string);
+		//console.log(var_string);
 		var ajax_obj = network.ajax('cards_mgmt.php', var_string, this.fin_add_hand_db, false);
 
 		try {
@@ -328,8 +327,6 @@ function mk_network()
 			console.log("Parsing error:", e);
 		}
 		
-		console.log("rmv_hand_db result: ", ret_val.result);
-		console.log("SQL statement: ", ret_val.sql);
 		return ret_val.result;
 	}
 	
@@ -354,8 +351,6 @@ function mk_network()
 			ajax_obj.onreadystatechange = function(){
 				if (ajax_obj.readyState == 4 && ajax_obj.status == 200) {
 					funct(ajax_obj);
-				} else {
-					//alert('Ready State: ' + ajax_obj.readyState + " Status: " + ajax_obj.status);
 				}
 			}
 		} else {

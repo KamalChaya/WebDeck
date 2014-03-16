@@ -6,7 +6,7 @@ var test_hand_num = 0;
 
 function test_hand_harness()
 {	
-	switch(test_hand_num % 6){
+	switch(test_hand_num % 8){
 		case 0: 
 			select.grab_card("5S");
 			network.flipdb('5S', 1);
@@ -34,15 +34,21 @@ function test_hand_harness()
 			
 		case 4:
 			test_remove_sel();
+			select.grab_card("KS");
+			card_array['KS'].set_position(280,200);
+			card_array['KS'].bring_to_top
+			network._send_pos("KS");
+			network.flipdb('KS', 1);
+			select.ungrab_card("KS");
+			console.log("Ensure that no user has selected the king of spades.");
 			break;
 		
 		case 5:
-			test_rmv_not_in_hand();
+			test_already_in_hand();			
 			break;
 		
 		case 6:
-			test_already_in_hand();
-			console.log("The next test will refresh the page to ensure cards remain in hands. Be prepared.");
+			test_rmv_not_in_hand();
 			break;
 			
 		case 7:
@@ -87,7 +93,7 @@ function test_rmv_hand()
 {
 	select.grab_card("5S");
 	select.ungrab_card("5S");
-	player.rmv_hand("5S");
+	player.rmv_hand("5S", 300, 300);
 	
 	if (player.hand["5S"]){
 		console.log("Fail: The card was not removed from the player's hand array.");
@@ -111,6 +117,7 @@ function test_add_sel()
 	
 	console.log("Visually verify that the cards are now in your hand and do not appear on the second screen.");
 	console.log("Verify that the cards are deselected.");
+	console.log("Verify that the cards have in_hand of ", player.player_id, " and locked = -1 in the database. Game id: ", network.game_id);
 }
 
 //test remove selected
@@ -132,13 +139,7 @@ function test_remove_sel()
 function test_already_in_hand()
 {
 	//Remove everything
-	select.release_locks();
-	
-	//Grab king of spades
-	select.grab_card("KS");
-	card_array['KS'].set_position(200,200);
-	network._send_pos("KS");
-	select.ungrab_card("KS");
+	//select.release_locks();
 	
 	//Add to hand
 	console.log("Adding King of spades to hand");
@@ -147,49 +148,39 @@ function test_already_in_hand()
 	//Select and add the card again
 	console.log("Adding King of Spades to hand again.");
 	select.grab_card("KS");
+	select.ungrab_card("KS");
 	player.add_sel_hand();
 	
 	console.log("Verify that the card is still in the user's hand and not on the table of any other interface.");
 	console.log("Verify that the card is unlocked in the database (locked = -1).");
-	console.log("Verify that the card is still owned by user ", player.player_id, " in the database.");
+	console.log("Verify that the card is still owned by user ", player.player_id, " in the database (look at in_hand).");
 	console.log("Visually verify that there is no border around the card and that it is selectable.");
+	console.log("Do not touch the king of spades.");
 }
 
-//refeshing the page.
-//Preconditions: No cards are selected.
-function test_hand_refresh()
-{
-	console.log("Testing page refreshing with respect to the hand.");
-	
-	//Grab king of spades
-	select.grab_card("KS");
-	card_array['KS'].set_position(200,200);
-	network._send_pos("KS");
-	select.ungrab_card("KS");
-	
-	console.log("Adding king of spades to hand.");
-	player.add_sel_hand();
-	
-	//Refresh the page.
-	window.location.reload();
-	
-	//Verify that the king of spades is still in your hand
-	console.log("Verify that the King of Spades appears in your hand.");
-	console.log("Please remove the king of spades from your hand for the next test.");
-}
 
-//Try to remove a card that is not in your hand
-//Preconditions: The King of Spades is not in your hand,
-//	And you have no cards selected.
 function test_rmv_not_in_hand()
 {
-	console.log("Selecting King of Spades");
+	player.rmv_hand("KS", 280, 200);	
+	card_array["KS"].reinst_card();	
+	
+	console.log("Selecting King of Spades out of the hand.");
 	select.grab_card("KS");
 	select.ungrab_card("KS");
 	
 	console.log("Removing selected cards from hand.");
 	player.rmv_sel_hand();
 	
-	console.log("Verify that the King of Spades is still on the table and is still selected.");
+	console.log("Verify that the King of Spades is still on the table and is still selected (blue border).");
 	console.log("Verify in the database that the King of Spades is still locked to ", player.player_id, " and that it has an in_hand of 0");
+}
+
+
+//refeshing the page.
+//Preconditions: No cards are selected.
+function test_hand_refresh()
+{
+	console.log("Add an arbitrary number of cards to your hand and refresh the page");
+	console.log("Verify that the cards appear selected as they were and in their original flipped position.");
+	console.log("Verify in the database that the cards retained their lock values and selection values.");
 }
