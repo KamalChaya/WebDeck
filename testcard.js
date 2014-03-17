@@ -1,75 +1,139 @@
+console.log("Attached test_card.js");
+var test_card_num = 0;
+
 function test_all_card() {
-    db_flip_card_test();
-    test_set_position();
-   // test_set_drag();
-   // test_set_selected();
+	clearInterval(network.board_update_timer);
+	clearInterval(network.send_update_timer);
+	
+	switch(test_card_num){
+	case 0:
+		test_network_init();
+		break;
+
+	case 1:
+		select.grab_card("5H");
+		test_set_position();
+		select.ungrab_card("5H");
+		select.release_locks();
+		break;
+		
+	case 2:
+		db_flip_1();
+		break;
+		
+	case 3:
+		db_flip_0();
+		break;
+
+	case 4: 
+		test_remove_card();
+		break;
+		
+	case 5:
+		test_reinst_card();
+		break;
+	}
+	
+	test_card_num += 1;
+	
 }
 
-function db_flip_card_test()
+//Will display the contents of the card array
+//Will ensure that the card divs exist.
+function test_network_init()
 {
-    card_array["5S"].set_position(200,200);
-    //set flip to 1, then waitt 3 secs and set it to 0
-    db_flip_1();
-    setTimeout(db_flip_0, 3000);
+	console.log("Card Test 0: Testing Divs and Card_array index names.")
+	var indices = "Expected format: 'key' -> div_exists\n\n";
+	var i = 1;
+	for (key in card_array){
+		indices += "'" + key + "' ->";
+		if (document.getElementById(key)){
+			indices += " div_exists.\t";
+		} else {
+			indices += " div_does_not_exist.\t";
+		}
+		
+		if (i % 4 == 0){
+			indices += "\n";
+		}
+		
+		i += 1;
+	}
+	
+	console.log(indices);
 }
 
-function db_flip_1() {
-    alert("verify that 5 of spades flips face up");
-    card_array["5S"].db_flip_card(1);
-}
-
-function db_flip_0() {
-    alert("verify taht five of spades flips face down");
-    card_array["5S"].db_flip_card(0);
-}
-
-function test_set_position() {
+function test_set_position() 
+{
+	console.log("Card Test 1: Testing set position.");
     var x;
     var y;
-    card_array["5S"].set_position(200,200);
+    card_array["5H"].set_position(400,100);
+    network._send_pos("5H");
 
-    x = document.getElementById("card5S").offsetLeft;
-    y = document.getElementById("card5S").offsetTop;
+    x = document.getElementById("5H").offsetLeft;
+    y = document.getElementById("5H").offsetTop;
 
-    if (x == 200 && y == 200) 
+    if (x == 400 && y == 100) 
     {
-	alert("setpos() test passed");
+	console.log("Card Test 1: setpos() test passed: Five of Hearts has moved to (400,100)");
+	console.log("Card Test 1: A card should have moved from the deck to the table.");
     } 
 }
 
-
-function test_set_drag() {
-    //move card out
-    card_array["5S"].set_position(200,200);
-
-    //test draggable values of 1 and 0 (0 tested 3 secs after 1)
-    test_set_drag_1();
-    setTimeout(test_set_drag_0, 10000);
+function db_flip_1() 
+{
+    console.log("Card Test 2: Flipping a card face up.");
+    console.log("Card Test 2: Manually flip the card in another tab.");
+    console.log("Card Test 2: The Five of Hearts should be face up.");
 }
 
-function test_set_drag_1() {
-    alert("verify that the five of spades card is draggable");
-    card_array["5S"].set_drag(1);
+function db_flip_0() 
+{
+	console.log("Card Test 3: Flipping a card face down.");
+	console.log("Card Test 3: Manually flip the card in another tab.")	
+    console.log("Card Test 3: The Five of Hearts should be facedown again.");
 }
 
-function test_set_drag_0() {
-    alert("verify that the five of spades card is not draggable"); 
-    card_array["5S"].set_drag(0);
+function test_remove_card()
+{
+	console.log("Card Test 4: Removing the Five of Hearts from the table.");
+	var div = document.getElementById("5H");
+	if (!div){
+		console.log("Please create the five of spades, it is not on the table");
+		return;
+	}
+	console.log("Card Test 4: Ensuring the Five of Hearts is visible...");
+	div.obj.set_z_idx(1000);
+
+	console.log("Card Test 4: Removing the Five of Hearts.");
+	div = document.getElementById("5H");
+	div.obj.remove_card();
+	
+	if(document.getElementById("5H")){
+		console.log("Card Test 4: FAILURE - Detected five of spades.");
+	} else {
+		console.log("Card Test 4: SUCCESS - Detected that five of spades is not on table.");
+	}
+	console.log("Card Test 4: Verify visually that the five of spades is gone from the table.");
+	
 }
 
-function test_set_selected() {
-    //move card out
-    card_array["5S"].set_position(200,200);
-    test_set_selected_1();
-    setTimeout(test_set_selected_0, 10000);
-}
 
-function test_set_selected_1() {
-    alert("verify that there is a blue border on the five of spades card");
-    card_array["5S"].set_selected(1);
-}
-
-function test_set_selected_0() {
-    alert("verify that there is no border on the five of spades card");
-    card_array["5S"].set_selected(0);
+function test_reinst_card()
+{
+	console.log("Card Test 5: Putting the card back on the table.");
+	var div = document.getElementById("5H");
+	if (div){
+		console.log("Please delete the five of spades, it is on the table");
+		return;
+	}
+	
+	card_array['5H'].reinst_card();
+	
+	if (document.getElementById("5H")){
+		console.log("Card Test 5: SUCCESS - Detected that the five of spades was reinstated!");
+	} else {
+		console.log("Card Test 5: FAILURE - Could not find the five of spacdes again.");
+	}
 }
